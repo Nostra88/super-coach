@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 420" width="500" height="420">
+  <defs>
+    <linearGradient id="goldFill" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" style="stop-color:#C8922A"/>
+      <stop offset="50%" style="stop-color:#B8832A"/>
+      <stop offset="100%" style="stop-color:#9A6B1A"/>
+    </linearGradient>
+    <linearGradient id="greenCrown" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B5E35"/>
+      <stop offset="100%" style="stop-color:#0D3D1E"/>
+    </linearGradient>
+    <linearGradient id="greenBrim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B5E35"/>
+      <stop offset="100%" style="stop-color:#0A2E16"/>
+    </linearGradient>
+    <filter id="brimShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.5)"/>
+    </filter>
+  </defs>
+
+  <!-- ═══ CROWN VERT GAUCHE ET DROITE ═══ -->
+  <path d="M 30 290
+           Q 28 200 60 155
+           Q 90 115 140 95
+           L 140 295 Z"
+        fill="url(#greenCrown)" stroke="#0a2e16" stroke-width="2.5"/>
+
+  <path d="M 470 290
+           Q 472 200 440 155
+           Q 410 115 360 95
+           L 360 295 Z"
+        fill="url(#greenCrown)" stroke="#0a2e16" stroke-width="2.5"/>
+
+  <!-- ═══ FRONT PANEL BLANC (centre) ═══ -->
+  <path d="M 140 95
+           Q 180 75 250 72
+           Q 320 75 360 95
+           L 360 295
+           Q 310 300 250 302
+           Q 190 300 140 295 Z"
+        fill="#F0EDE4" stroke="#1a1a1a" stroke-width="2.5"/>
+
+  <!-- Coutures pointillées panel gauche -->
+  <path d="M 158 100 Q 195 82 250 79 Q 305 82 342 100 L 342 288 Q 305 292 250 294 Q 195 292 158 288 Z"
+        fill="none" stroke="#cccccc" stroke-width="1.5" stroke-dasharray="6,5"/>
+
+  <!-- ═══ BOUTON DU DESSUS ═══ -->
+  <circle cx="250" cy="73" r="12" fill="#1B5E35" stroke="#0a2e16" stroke-width="2.5"/>
+  <circle cx="250" cy="73" r="6" fill="#0D3D1E"/>
+
+  <!-- Ligne centrale verticale -->
+  <line x1="250" y1="85" x2="250" y2="298" stroke="#cccccc" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+  <!-- Trous aération gauche -->
+  <ellipse cx="62" cy="210" rx="6" ry="9" fill="#0D3D1E" stroke="#0a2e16" stroke-width="1.5"/>
+  <!-- Trous aération droit -->
+  <ellipse cx="438" cy="210" rx="6" ry="9" fill="#0D3D1E" stroke="#0a2e16" stroke-width="1.5"/>
+
+  <!-- ═══ BANDE SÉPARATION CROWN/FRONT ═══ -->
+  <path d="M 30 292 Q 140 282 250 280 Q 360 282 470 292"
+        fill="none" stroke="#0a2e16" stroke-width="5"/>
+
+  <!-- ═══ VISIÈRE ═══ -->
+  <path d="M 55 315
+           Q 60 298 250 292
+           Q 440 298 445 315
+           Q 455 340 440 355
+           Q 370 375 250 378
+           Q 130 375 60 355
+           Q 45 340 55 315 Z"
+        fill="url(#greenBrim)" stroke="#0a2e16" stroke-width="3.5"
+        filter="url(#brimShadow)"/>
+
+  <!-- Coutures visière -->
+  <path d="M 75 322 Q 250 312 425 322" fill="none" stroke="#1B5E35" stroke-width="2" stroke-dasharray="7,5"/>
+  <path d="M 82 338 Q 250 328 418 338" fill="none" stroke="#1B5E35" stroke-width="1.5" stroke-dasharray="6,5"/>
+  <path d="M 90 352 Q 250 343 410 352" fill="none" stroke="#1B5E35" stroke-width="1" stroke-dasharray="5,4"/>
+
+  <!-- ═══ ÉCLAIR — CONTOUR NOIR EXTÉRIEUR ═══ -->
+  <path d="M 285 88
+           L 215 210
+           L 258 210
+           L 215 332
+           L 295 192
+           L 248 192 Z"
+        fill="#1a1a00" stroke="#1a1a00" stroke-width="14"
+        stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- ÉCLAIR — CONTOUR BLANC -->
+  <path d="M 285 88
+           L 215 210
+           L 258 210
+           L 215 332
+           L 295 192
+           L 248 192 Z"
+        fill="white" stroke="white" stroke-width="8"
+        stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- ÉCLAIR — REMPLISSAGE OR -->
+  <path d="M 285 88
+           L 215 210
+           L 258 210
+           L 215 332
+           L 295 192
+           L 248 192 Z"
+        fill="url(#goldFill)" stroke="#1a1a00" stroke-width="3"
+        stroke-linejoin="round" stroke-linecap="round"/>
+
+</svg>
