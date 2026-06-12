@@ -1389,7 +1389,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
           <div class="chip on" id="c-stake" onclick="toggleChip('stake')">🎯 <span id="cStakeLbl">Stakes</span></div>
         </div>
 
-        
+        <button class="go-btn" id="goBtn" onclick="analyze()">⚡ <span id="goBtnLbl">ANALYZE</span></button>
       </div>
 
       <!-- LIVE -->
@@ -2874,7 +2874,6 @@ function selectAvatar(id) {
 function updateGoBtn() {
   var btn = document.getElementById('goBtn');
   if (!btn) return;
-  // Sur TODAY : cacher le goBtn complètement
   if (activeTab === 'flux') {
     btn.style.display = 'none';
     return;
@@ -2889,11 +2888,7 @@ function updateGoBtn() {
     var ui = document.getElementById('urlInput');
     hasContent = (pi && pi.value.trim().length > 3) || (ui && ui.value.trim().length > 5);
   }
-  if (hasContent) {
-    btn.classList.add('active');
-  } else {
-    btn.classList.remove('active');
-  }
+  btn.classList.toggle('active', hasContent);
 }
 
 window.onload = function(){
@@ -4206,7 +4201,7 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
 
         <div class="settings-version" id="settingsVersionEl">SUPERCOACH v7.0 · Gemini AI · 2026
 
-        <button class="go-btn" id="goBtn" onclick="analyze()" style="display:none">⚡ <span id="goBtnLbl">ANALYZE</span></button></div>
+        </div>
       </div>
     </div>
   </div>
