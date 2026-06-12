@@ -27,7 +27,6 @@
   --text2:#8b949e;--text3:#6e7681;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{height:100%}
 html{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
   height:100%;overflow:hidden;overflow-x:hidden;
@@ -93,7 +92,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opa
 .roi-btn:active{opacity:.7;}
 
 /* ── MAIN ── */
-.main{max-width:820px;margin:0 auto;padding:18px 14px 100px;position:relative;z-index:1}
+.main{max-width:820px;margin:0 auto;padding:18px 14px 100px;position:relative;z-index:1
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
 
 /* ── HERO ── */
 .hero{text-align:center;padding:24px 12px 20px;animation:fadeUp .6s ease both}
@@ -1666,8 +1667,14 @@ function renderFluxList() {
 
   // ── Filtre commutateur ON/OFF multi-sport ──
   var showAll = activeSports.indexOf('all') > -1;
+  var wcOnly = activeSports.length===1 && activeSports[0]==='wc';
   var filtered = window.matchPool.filter(function(m) {
     if (showAll) return true;
+    if (wcOnly) {
+      return m.sportId==='wc' ||
+             /world.?cup|coupe.?du.?monde|copa.?mundial|coppa.?del.?mondo/i.test(m.competition||'') ||
+             (m.leagueId && [1,6,12].indexOf(m.leagueId) > -1);
+    }
     return activeSports.indexOf(m.sportId) > -1;
   });
   filtered = filtered.filter(function(m){ return !m.isFinished; });
@@ -1974,7 +1981,7 @@ var SPORTS = [
   {id:'f1',lk:'sportF1',l:'F1/Moto',e:'🏎️',c:'#f59e0b',b:'rgba(245,158,11,.07)'},
   {id:'baseball',lk:'sportBaseball',l:'Baseball',e:'⚾',c:'#10b981',b:'rgba(16,185,129,.07)'},
   {id:'other',lk:'sportOther',l:'Other',e:'🎯',c:'#8b949e',b:'rgba(139,148,158,.07)'},
-  {id:'wc',lk:'sportWC',l:'World Cup',e:'🏆',c:'#fde68a',b:'rgba(253,230,138,.08)'}
+  {id:'wc',lk:'sportWC',l:'World Cup',e:'⚽',c:'#C8922A',b:'rgba(200,146,42,.12)',exclusive:true}
 ];
 
 // ── STATE ──
@@ -2475,7 +2482,7 @@ function checkWCBanner(){
     banner.style.display='block';
     var t1=document.getElementById('wcBannerTitle');
     var t2=document.getElementById('wcBannerSub');
-    if(t1)t1.innerHTML='<span style="color:#C8922A;margin-right:5px">&#9917;</span>'+t('wcBanner');
+    if(t1){ t1.textContent='⚽ ' + t('wcBanner'); t1.style.color='#fde68a'; }
     if(t2)t2.textContent=t('wcSub');
   }
 }
@@ -2557,8 +2564,9 @@ function applyLang(){
   el=document.getElementById('roiTrackerTitle'); if(el) el.textContent=t('roiTrackerTitle');
   el=document.getElementById('roiTapHint'); if(el) el.textContent=t('roiTapHint');
   el=document.getElementById('clearHistoryBtn'); if(el) el.textContent=t('clearHistory');
-  // WC Banner sync langue
+  // WC Banner sync langue + re-render flux
   checkWCBanner();
+  if (window.matchPool && window.matchPool.length) renderFluxList();
   // Auth modal sync langue
   el=document.getElementById('authSubTitle'); if(el) el.textContent=t('authSignInSub');
   el=document.getElementById('authSubmitLbl'); if(el) el.textContent=t('authContinueEmail');
@@ -2938,42 +2946,31 @@ function buildSportGrid(){
 }
 
 function toggleSport(id){
-  // "All" : recoche tous les sports
-  if(id==='all'){
-    activeSports=['all'];
+  // Mode exclusif : WC isole uniquement les matchs Coupe du Monde
+  var sportObj = SPORTS.filter(function(s){ return s.id===id; })[0];
+  if (sportObj && sportObj.exclusive) {
+    // Si WC déjà actif seul → revenir à "All"
+    if (activeSports.length===1 && activeSports[0]==='wc') {
+      activeSports = ['all'];
+    } else {
+      activeSports = ['wc'];
+    }
+  } else if (id==='all') {
+    activeSports = ['all'];
   } else {
-    // Retirer 'all' si présent
-    var ai = activeSports.indexOf('all');
-    if(ai>-1) activeSports.splice(ai,1);
-    // Toggle ON/OFF du sport cliqué
+    // Retirer 'all' et 'wc' exclusif si présents
+    activeSports = activeSports.filter(function(s){ return s!=='all' && s!=='wc'; });
     var si = activeSports.indexOf(id);
-    if(si>-1){ activeSports.splice(si,1); }
-    else      { activeSports.push(id);    }
-    // Si tout décoché → revenir à 'all'
-    if(!activeSports.length) activeSports=['all'];
+    if (si > -1) {
+      activeSports.splice(si, 1);
+      if (!activeSports.length) activeSports = ['all'];
+    } else {
+      activeSports.push(id);
+    }
   }
-
-  // Mise à jour visuelle des icônes de la grille
-  SPORTS.forEach(function(s){
-    var el=document.getElementById('sc-'+s.id);
-    if(!el) return;
-    var on = (activeSports.indexOf('all')>-1 && s.id==='all') ||
-             activeSports.indexOf(s.id)>-1;
-    el.style.borderColor = on?s.c:'';
-    el.style.color       = on?s.c:'';
-    el.style.background  = on?s.b:'';
-    el.style.fontWeight  = on?'700':'';
-    var ico=el.querySelector('.sc-ico');
-    if(ico) ico.style.borderColor = on?s.c+'66':s.c+'33';
-  });
-
-  // Câblage direct flux TODAY : rechargement instantané
-  if(activeTab==='flux'){
-    window.fluxActiveSport = (activeSports.indexOf('all')>-1) ? 'all' : null;
-    // NE PAS vider selectedMatches — l'utilisateur garde ses coches
-    updateFluxBtn();
-    renderFluxList();
-  }
+  buildSportGrid();
+  // NE PAS vider selectedMatches
+  if (activeTab==='flux') renderFluxList();
 }
 
 function setMode(m){
