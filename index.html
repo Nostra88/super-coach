@@ -1797,6 +1797,17 @@ function updateCoachTip() {
 }
 
 function analyzeFlux() {
+  // DEBUG TEMPORAIRE
+  var dbgSel = (window.selectedMatches||[]).slice();
+  var dbgDom = [];
+  document.querySelectorAll('.flux-item').forEach(function(el){
+    if(el.classList.contains('selected')) dbgDom.push(el.dataset.matchId||'NO_ID');
+  });
+  var dbgPool = (window.matchPool||[]).length;
+  alert('SEL:'+dbgSel.length+' DOM:'+dbgDom.length+' POOL:'+dbgPool+'\n'+
+        'selectedMatches:'+JSON.stringify(dbgSel.slice(0,2))+'\n'+
+        'domIds:'+JSON.stringify(dbgDom.slice(0,2)));
+
   // PRIORITÉ 1 : selectedMatches (garanti correct par toggleFluxMatch)
   var ids = (window.selectedMatches || []).slice();
 
