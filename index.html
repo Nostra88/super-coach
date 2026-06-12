@@ -1430,7 +1430,8 @@ function loadFluxMatches() {
   if (listEl) listEl.innerHTML = '<div class="flux-loading">'+t('fluxLoading')+'</div>';
 
   window.matchPool = [];
-  window.selectedMatches = [];
+  // Ne pas vider selectedMatches — l'utilisateur garde ses coches
+  window.selectedMatches = window.selectedMatches || [];
   updateFluxBtn();
 
   // Appel centralisé au backend Render /fixtures
