@@ -1804,70 +1804,49 @@ function updateCoachTip() {
 }
 
 function analyzeFlux() {
-  // PRIORITÉ 1 : selectedMatches (garanti correct par toggleFluxMatch)
-  var ids = (window.selectedMatches || []).slice();
-
-  // PRIORITÉ 2 : lire le DOM si selectedMatches est vide
-  if (!ids.length) {
-    document.querySelectorAll('.flux-item').forEach(function(el) {
-      if (el.classList.contains('selected')) {
-        var mid = el.dataset.matchId;
-        if (mid) ids.push(mid);
-      }
-    });
-  }
-
-  if (!ids.length) {
+  var sel = window.selectedMatches || [];
+  if (!sel.length) {
     showOut('<div class="err-box">' + t('errNoMatches') + '</div>');
     return;
   }
 
-  // Récupérer les objets match
-  var allMatches = (window.matchPool || []).concat(window._filteredPool || []);
-  var seen = {};
-  var matches = allMatches.filter(function(m) {
-    if (seen[m.id]) return false;
-    seen[m.id] = true;
-    return ids.indexOf(String(m.id)) > -1;
+  // Construire les lignes directement depuis matchPool
+  var lines = [];
+  var pool = window.matchPool || [];
+  sel.forEach(function(id) {
+    for (var i = 0; i < pool.length; i++) {
+      if (String(pool[i].id) === String(id)) {
+        var m = pool[i];
+        lines.push(m.home + ' vs ' + m.away
+          + (m.competition ? ' — ' + m.competition : '')
+          + (m.time ? ' — ' + m.time : ''));
+        break;
+      }
+    }
   });
 
-  // Fallback DOM si matchPool ne contient pas les objets
-  if (!matches.length) {
+  // Si matchPool ne contient pas les IDs, construire depuis le DOM
+  if (!lines.length) {
     document.querySelectorAll('.flux-item').forEach(function(el) {
-      if (!el.classList.contains('selected')) return;
       var teams = el.querySelectorAll('.flux-team');
       if (teams.length >= 2) {
-        matches.push({
-          id: el.dataset.matchId || '',
-          home: teams[0].textContent.trim(),
-          away: teams[teams.length-1].textContent.trim(),
-          competition: '',
-          time: '',
-          matchDate: ''
-        });
+        lines.push(teams[0].textContent.trim() + ' vs ' + teams[teams.length-1].textContent.trim());
       }
     });
   }
 
-  if (!matches.length) {
+  if (!lines.length) {
     showOut('<div class="err-box">' + t('errNoMatches') + '</div>');
     return;
   }
 
-  var lines = matches.map(function(m) {
-    return m.home + ' vs ' + m.away
-      + (m.competition ? ' — ' + m.competition : '')
-      + (m.time ? ' — ' + m.time : '');
-  });
-  var content = lines.join('\n');
-
   var fluxBtn = document.getElementById('fluxAnalyzeBtn');
-  if (fluxBtn) fluxBtn.disabled = true;
+  if (fluxBtn) { fluxBtn.style.opacity = '0.5'; }
 
   showOut(thinkingHTML(false));
   startThinkingAnimation(false);
 
-  callBackend(buildPrompt(content, false)).then(function(raw) {
+  callBackend(buildPrompt(lines.join('\n'), false)).then(function(raw) {
     var p = parse(raw);
     if (p && p.matches && p.matches.length > 0) {
       p.matches = normM(p.matches);
@@ -1878,23 +1857,21 @@ function analyzeFlux() {
         if (out) out.scrollIntoView({behavior:'smooth'});
       }, 300);
     } else {
-      var fallback = extractFallbackMatches(raw);
-      if (fallback && fallback.matches && fallback.matches.length) {
-        showOut(renderResults(fallback));
+      var fb = extractFallbackMatches(raw);
+      if (fb && fb.matches && fb.matches.length) {
+        showOut(renderResults(fb));
       } else {
-        showOut(
-          '<div class="zero-edge"><div class="zero-edge-icon">⚠️</div>' +
+        showOut('<div class="zero-edge"><div class="zero-edge-icon">⚠️</div>' +
           '<div class="zero-edge-title">' + t('analysisFailed') + '</div>' +
-          '<div class="zero-edge-sub">' + t('errParseFail') + '</div>' +
-          '</div><button class="reset-btn" onclick="resetOut()">↺ ' + t('newAnalysis') + '</button>'
-        );
+          '<div class="zero-edge-sub">' + t('errParseFail') + '</div></div>' +
+          '<button class="reset-btn" onclick="resetOut()">↺ ' + t('newAnalysis') + '</button>');
       }
     }
   }).catch(function(e) {
     showOut('<div class="err-box">❌ ' + esc(e.message) + '</div>');
   }).finally(function() {
     stopThinkingAnimation();
-    if (fluxBtn) fluxBtn.disabled = false;
+    if (fluxBtn) { fluxBtn.style.opacity = '1'; }
   });
 }
 
