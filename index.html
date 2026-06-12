@@ -216,7 +216,13 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
   background:linear-gradient(135deg,var(--green),var(--green2),#3a9e64);
   color:var(--cream);box-shadow:0 4px 24px rgba(27,94,53,.28);
-  -webkit-appearance:none;transition:all .2s}
+  -webkit-appearance:none;transition:all .2s
+  opacity:0.4;transition:opacity .2s, box-shadow .2s;
+}
+.go-btn.active{
+  opacity:1;
+  box-shadow:0 0 16px rgba(45,138,85,.4);
+}
 .go-btn:disabled{opacity:.4;cursor:not-allowed;background:var(--s3);
   color:var(--green2);border:1px solid rgba(27,94,53,.2);box-shadow:none}
 .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.2);
@@ -1319,7 +1325,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
         </div>
 
         <div class="panel" id="panelManual">
-          <div class="input-wrap"><textarea id="manualInput" placeholder="Paste your matches here..."></textarea>
+          <div class="input-wrap"><textarea id="manualInput" placeholder="Paste your matches here..." oninput="updateGoBtn()"></textarea>
         <button class="clear-btn" id="clearBtn" onclick="clearInput()">✕ CLEAR</button>
         </div></div>
 
@@ -1329,7 +1335,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
               placeholder="https://... or paste content"
               class="single-web-input"
               inputmode="text" autocomplete="off" autocorrect="off"
-              autocapitalize="off" spellcheck="false"/>
+              autocapitalize="off" spellcheck="false"/ oninput="updateGoBtn()">
             <button class="url-btn" id="urlFetchBtn" onclick="fetchUrlSmart()" style="display:none">
               <span id="fetchBtnLbl">⚡ FETCH</span>
             </button>
@@ -1337,7 +1343,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
           </div>
           <div class="url-status" id="urlStatus"></div>
           <textarea id="pasteInput" style="display:none"
-            autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+            autocomplete="off" autocorrect="off" spellcheck="false" oninput="updateGoBtn()"></textarea>
           <div class="pmsg" id="pmsg" style="display:none"></div>
         </div>
 
@@ -2857,6 +2863,26 @@ function selectAvatar(id) {
     document.querySelectorAll('.avatar-opt').forEach(function(b){ b.classList.remove('selected'); });
     event.target.classList.add('selected');
   });
+}
+
+// ── WATCHER : active goBtn quand contenu détecté ──────
+function updateGoBtn() {
+  var btn = document.getElementById('goBtn');
+  if (!btn) return;
+  var hasContent = false;
+  if (activeTab === 'manual') {
+    var mi = document.getElementById('manualInput');
+    hasContent = mi && mi.value.trim().length > 3;
+  } else if (activeTab === 'paste') {
+    var pi = document.getElementById('pasteInput');
+    var ui = document.getElementById('urlInput');
+    hasContent = (pi && pi.value.trim().length > 3) || (ui && ui.value.trim().length > 5);
+  }
+  if (hasContent) {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
 }
 
 window.onload = function(){
