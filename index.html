@@ -913,9 +913,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .flux-analyze-btn.visible{
   display:flex;
 }
-.flux-analyze-btn:disabled{
-  opacity:0.4;pointer-events:none;
-}
+
 .flux-analyze-btn.visible{display:flex;}
 /* Espace pour éviter que le contenu passe sous le bouton fixe */
 #panelFlux{ padding-bottom: 80px; }
@@ -1760,8 +1758,11 @@ function updateFluxBtn() {
   window.selectedMatches = window.selectedMatches || [];
   var n = window.selectedMatches.length;
   if (btn) {
-    btn.disabled = (n === 0);
-    // Visible uniquement sur onglet TODAY
+    // JAMAIS disabled — iOS Safari bloque les clics sur disabled
+    // Gérer l'état visuellement via opacity
+    btn.disabled = false;
+    btn.style.opacity = (n === 0) ? '0.35' : '1';
+    // Toujours visible sur l'onglet flux
     if (activeTab === 'flux') {
       btn.classList.add('visible');
     } else {
