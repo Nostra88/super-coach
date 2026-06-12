@@ -1384,7 +1384,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
           <div class="chip on" id="c-stake" onclick="toggleChip('stake')">🎯 <span id="cStakeLbl">Stakes</span></div>
         </div>
 
-        <button class="go-btn" id="goBtn" onclick="analyze()">⚡ <span id="goBtnLbl">ANALYZE</span></button>
+        
       </div>
 
       <!-- LIVE -->
@@ -4199,7 +4199,9 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
           </div>
         </div>
 
-        <div class="settings-version" id="settingsVersionEl">SUPERCOACH v7.0 · Gemini AI · 2026</div>
+        <div class="settings-version" id="settingsVersionEl">SUPERCOACH v7.0 · Gemini AI · 2026
+
+        <button class="go-btn" id="goBtn" onclick="analyze()" style="display:none">⚡ <span id="goBtnLbl">ANALYZE</span></button></div>
       </div>
     </div>
   </div>
