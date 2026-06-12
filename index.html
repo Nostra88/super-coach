@@ -910,6 +910,12 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
 }
+.flux-analyze-btn.visible{
+  display:flex;
+}
+.flux-analyze-btn:disabled{
+  opacity:0.4;pointer-events:none;
+}
 .flux-analyze-btn.visible{display:flex;}
 /* Espace pour éviter que le contenu passe sous le bouton fixe */
 #panelFlux{ padding-bottom: 80px; }
@@ -1797,17 +1803,6 @@ function updateCoachTip() {
 }
 
 function analyzeFlux() {
-  // DEBUG TEMPORAIRE
-  var dbgSel = (window.selectedMatches||[]).slice();
-  var dbgDom = [];
-  document.querySelectorAll('.flux-item').forEach(function(el){
-    if(el.classList.contains('selected')) dbgDom.push(el.dataset.matchId||'NO_ID');
-  });
-  var dbgPool = (window.matchPool||[]).length;
-  alert('SEL:'+dbgSel.length+' DOM:'+dbgDom.length+' POOL:'+dbgPool+'\n'+
-        'selectedMatches:'+JSON.stringify(dbgSel.slice(0,2))+'\n'+
-        'domIds:'+JSON.stringify(dbgDom.slice(0,2)));
-
   // PRIORITÉ 1 : selectedMatches (garanti correct par toggleFluxMatch)
   var ids = (window.selectedMatches || []).slice();
 
