@@ -495,6 +495,58 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .nav-btn.on .nav-label{color:var(--gold)}
 .nav-btn.on .nav-icon{transform:scale(1.1);filter:drop-shadow(0 0 6px rgba(200,146,42,.5))}
 
+
+/* ── AUTH ── */
+.auth-btn{display:flex;align-items:center;gap:6px;background:rgba(45,138,85,.15);
+  border:1px solid rgba(45,138,85,.3);border-radius:20px;padding:6px 12px;
+  color:var(--t1);cursor:pointer;font-size:13px;}
+.auth-btn:active{opacity:.7;}
+#authName{max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.auth-sheet{padding:32px 24px;}
+.auth-logo{font-size:48px;text-align:center;margin-bottom:8px;}
+.auth-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;
+  text-align:center;color:var(--green);margin-bottom:4px;}
+.auth-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:24px;}
+.auth-input{width:100%;padding:14px 16px;background:var(--s2);border:1px solid var(--b1);
+  border-radius:10px;color:var(--t1);font-size:15px;margin-bottom:12px;
+  box-sizing:border-box;-webkit-appearance:none;}
+.auth-input:focus{outline:none;border-color:var(--green);}
+.auth-submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--green),var(--green2));
+  border:none;border-radius:10px;color:#fff;font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:2px;cursor:pointer;margin-bottom:16px;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1);}
+.auth-divider span{color:var(--t2);font-size:12px;}
+.google-btn{width:100%;padding:14px;background:var(--s2);border:1px solid var(--b1);
+  border-radius:10px;color:var(--t1);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;}
+.google-btn:active{opacity:.7;}
+
+.profile-sheet{padding:24px;}
+.profile-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.profile-avatar{font-size:48px;width:72px;height:72px;background:var(--s2);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--green);}
+.profile-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;}
+.profile-email{font-size:12px;color:var(--t2);margin:2px 0;}
+.profile-plan{display:inline-block;background:rgba(45,138,85,.2);color:var(--green);
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;}
+.profile-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px;}
+.profile-stat{background:var(--s2);border-radius:10px;padding:12px 8px;text-align:center;}
+.profile-stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--green);}
+.profile-stat-lbl{font-size:10px;color:var(--t2);margin-top:2px;}
+.profile-section-title{font-size:11px;color:var(--t2);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:10px;}
+.avatar-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.avatar-opt{background:var(--s2);border:2px solid var(--b1);border-radius:10px;
+  font-size:24px;width:50px;height:50px;cursor:pointer;}
+.avatar-opt:active,.avatar-opt.selected{border-color:var(--green);}
+.profile-avatar-picker{margin-bottom:24px;}
+.signout-btn{width:100%;padding:14px;background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.3);border-radius:10px;
+  color:#ef4444;font-size:15px;cursor:pointer;}
+
 /* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -1114,6 +1166,8 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 }
 .ds-ptxt{ font-size:12px;color:var(--text);line-height:1.4; }
 </style>
+  <!-- Supabase Auth SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1171,6 +1225,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
     <div class="logo-text">SUPER<span>COACH</span></div>
   </div>
   <div class="hdr-right">
+        <button class="auth-btn" id="authBtn" onclick="openSheet('authModal')">
+          <span id="authAvatar">👤</span>
+          <span id="authName"></span>
+        </button>
     <div class="live-pill" onclick="toggleClockFormat()" title="Tap to switch format">
       <div class="live-dot"></div>
       <span id="hdrClock">LIVE</span>
@@ -2553,6 +2611,161 @@ function toggleClockFormat() {
     setTimeout(function(){ pill.style.background = ''; }, 200);
   }
   updateClock();
+}
+
+// ══════════════════════════════════════════
+// AUTH — Supabase
+// ══════════════════════════════════════════
+var SUPABASE_URL = 'https://exezkqkyulzeslducsxi.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_LFbDRqlxiZ8bSLbfgQkaRA_06wGrtL3';
+var _sb = null;
+window._currentUser = null;
+
+function getSB() {
+  if (!_sb && window.supabase) {
+    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+  return _sb;
+}
+
+function initAuth() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.onAuthStateChange(function(event, session) {
+    if (session && session.user) {
+      window._currentUser = session.user;
+      fetchAndApplyProfile(session.user);
+    } else {
+      window._currentUser = null;
+      updateAuthUI(null);
+    }
+  });
+  sb.auth.getSession().then(function(res) {
+    if (res.data && res.data.session) {
+      window._currentUser = res.data.session.user;
+      fetchAndApplyProfile(res.data.session.user);
+    }
+  });
+}
+
+function fetchAndApplyProfile(user) {
+  var sb = getSB();
+  if (!sb) return;
+  sb.from('profiles').select('*').eq('id', user.id).single()
+  .then(function(res) {
+    if (res.data) {
+      window._userProfile = res.data;
+      updateAuthUI(user, res.data);
+      if (res.data.language) { lang = res.data.language; applyLang(); }
+    } else {
+      updateAuthUI(user, null);
+    }
+  });
+}
+
+function updateAuthUI(user, profile) {
+  var btn = document.getElementById('authBtn');
+  var avatar = document.getElementById('authAvatar');
+  var name = document.getElementById('authName');
+  if (!btn) return;
+  if (user) {
+    btn.onclick = function(){ openSheet('profileModal'); loadProfileModal(user, profile); };
+    if (avatar) avatar.textContent = getAvatarEmoji(profile && profile.avatar_id);
+    if (name) name.textContent = (profile && profile.username) || user.email.split('@')[0];
+  } else {
+    btn.onclick = function(){ openSheet('authModal'); };
+    if (avatar) avatar.textContent = '👤';
+    if (name) name.textContent = '';
+  }
+}
+
+function getAvatarEmoji(id) {
+  var map = {coach_01:'⚡',coach_02:'🎯',coach_03:'🏆',coach_04:'📊',coach_05:'🔥'};
+  return map[id] || '⚡';
+}
+
+function handleMagicLink() {
+  var email = document.getElementById('authEmail').value.trim();
+  if (!email || !email.includes('@')) return;
+  var sb = getSB();
+  if (!sb) return;
+  document.getElementById('authSubmitLbl').textContent = 'Sending...';
+  sb.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: window.location.origin }
+  }).then(function(res) {
+    if (res.error) {
+      alert('Error: ' + res.error.message);
+      document.getElementById('authSubmitLbl').textContent = 'Continue with email';
+      return;
+    }
+    document.getElementById('authFormSection').style.display = 'none';
+    document.getElementById('authMagicSent').style.display = 'block';
+    document.getElementById('authSentEmail').textContent = email;
+  });
+}
+
+function handleGoogleAuth() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+}
+
+function handleSignOut() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.signOut().then(function() {
+    window._currentUser = null;
+    window._userProfile = null;
+    closeSheet('profileModal');
+    updateAuthUI(null);
+  });
+}
+
+function loadProfileModal(user, profile) {
+  var sb = getSB();
+  document.getElementById('profileAvatarDisplay').textContent = getAvatarEmoji(profile && profile.avatar_id);
+  document.getElementById('profileNameDisplay').textContent = (profile && profile.username) || user.email.split('@')[0];
+  document.getElementById('profileEmailDisplay').textContent = user.email;
+  // Charger stats
+  if (sb && user) {
+    sb.from('stats').select('*').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profileWins').textContent = res.data.wins || 0;
+        document.getElementById('profileLosses').textContent = res.data.losses || 0;
+        document.getElementById('profileROI').textContent = (res.data.roi || 0) + '%';
+      }
+    });
+    sb.from('bankroll').select('*').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profileBankroll').textContent =
+          res.data.current_bankroll + ' ' + (res.data.currency || 'EUR');
+      }
+    });
+    sb.from('subscriptions').select('plan').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profilePlanDisplay').textContent = (res.data.plan || 'free').toUpperCase();
+      }
+    });
+  }
+}
+
+function selectAvatar(id) {
+  var sb = getSB();
+  if (!sb || !window._currentUser) return;
+  sb.from('profiles').update({avatar_id: id}).eq('id', window._currentUser.id)
+  .then(function() {
+    document.getElementById('profileAvatarDisplay').textContent = getAvatarEmoji(id);
+    document.getElementById('authAvatar').textContent = getAvatarEmoji(id);
+    document.querySelectorAll('.avatar-opt').forEach(function(b){ b.classList.remove('selected'); });
+    event.target.classList.add('selected');
+  });
 }
 
 window.onload = function(){
