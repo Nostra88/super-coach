@@ -857,8 +857,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 }
 .flux-list{
   display:flex;flex-direction:column;gap:6px;
-  max-height:340px;overflow-y:auto;
-  scrollbar-width:thin;scrollbar-color:var(--b2) transparent;
+  overflow-y:visible;
 }
 .flux-item{
   display:flex;align-items:center;gap:10px;
@@ -1647,7 +1646,10 @@ function renderFluxList() {
       var item = document.createElement('div');
       item.className = 'flux-item' + (isSelected ? ' selected' : '') + (m.isFriendly ? ' friendly' : '');
       item.dataset.matchId = m.id;
-      item.addEventListener('click', (function(mid){ return function(){ toggleFluxMatch(mid); }; })(m.id));
+      var _mid = m.id;
+      function _onTap(e){ e.preventDefault(); toggleFluxMatch(_mid); }
+      item.addEventListener('click', _onTap);
+      item.addEventListener('touchend', _onTap);
 
       // Checkbox
       var check = document.createElement('div');
