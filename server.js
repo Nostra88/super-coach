@@ -22,6 +22,60 @@ const GEMINI_KEY    = process.env.GEMINI_KEY    || '';
 const ODDS_API_KEY  = process.env.ODDS_API_KEY  || '';
 const APISPORTS_KEY = process.env.APISPORTS_KEY || '';
 
+// ── SUPABASE ADMIN CLIENT ──────────────────────────────
+const SUPABASE_URL  = process.env.SUPABASE_URL  || 'https://exezkqkyulzeslducsxi.supabase.co';
+const SUPABASE_KEY  = process.env.SUPABASE_SERVICE_KEY || '';
+
+// Helper : vérifier un JWT Supabase et retourner l'user_id
+async function verifySupabaseToken(token) {
+  if (!token || !SUPABASE_KEY) return null;
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 5000);
+    const resp = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      signal: ctrl.signal,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'apikey': SUPABASE_KEY,
+      }
+    });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.id || null;
+  } catch { return null; }
+}
+
+// Helper : mettre à jour les stats d'un utilisateur
+async function updateUserStats(userId, result) {
+  if (!userId || !SUPABASE_KEY) return;
+  try {
+    // Lire stats actuelles
+    const r1 = await fetch(`${SUPABASE_URL}/rest/v1/stats?user_id=eq.${userId}`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const stats = await r1.json();
+    if (!stats || !stats[0]) return;
+    const s = stats[0];
+    const wins   = s.wins   + (result === 'win'  ? 1 : 0);
+    const losses = s.losses + (result === 'loss' ? 1 : 0);
+    const draws  = s.draws  + (result === 'draw' ? 1 : 0);
+    const total  = wins + losses + draws;
+    // ROI simplifié
+    const roi = total > 0 ? Math.round(((wins - losses) / total) * 100 * 10) / 10 : 0;
+    await fetch(`${SUPABASE_URL}/rest/v1/stats?user_id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ wins, losses, draws, roi, last_updated: new Date().toISOString() })
+    });
+  } catch(e) { console.error('[Supabase] updateStats:', e.message); }
+}
+
+
 const MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
 
 app.use(cors({ origin:'*', methods:['GET','POST','OPTIONS'], allowedHeaders:['Content-Type','Accept'] }));
@@ -755,6 +809,34 @@ function normalizeAPISports(sport, data) {
     };
   }).filter(Boolean);
 }
+
+// ── USER STATS ─────────────────────────────────────────
+app.post('/user/stats', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  const { result } = req.body; // 'win' | 'loss' | 'draw'
+  if (!token || !result) return res.status(400).json({ error: 'Missing token or result' });
+  const userId = await verifySupabaseToken(token);
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+  await updateUserStats(userId, result);
+  res.json({ success: true });
+});
+
+// ── USER PROFILE ────────────────────────────────────────
+app.get('/user/me', async (req, res) => {
+  const token = (req.headers.authorization || '').replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'No token' });
+  const userId = await verifySupabaseToken(token);
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=*,stats(*),bankroll(*),subscriptions(plan,status)`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    res.json({ success: true, user: data[0] || null });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 
 app.get('/fixtures', async (req, res) => {
   // Date du jour Paris
