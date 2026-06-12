@@ -967,16 +967,16 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   color:var(--gold);flex-shrink:0;text-align:right;
 }
 .flux-analyze-btn{
-  position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  margin:0;padding:16px;
+  display:none;
+  width:100%;margin-top:10px;padding:16px;
   background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);
-  border:none;border-top:1px solid rgba(45,138,85,.3);
+  border:none;border-radius:12px;
   font-family:'Bebas Neue',sans-serif;font-size:18px;
   letter-spacing:1.5px;color:#fff;cursor:pointer;
-  display:none;align-items:center;justify-content:center;gap:8px;
-  transition:opacity .2s;
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+  align-items:center;justify-content:center;gap:8px;
+}
+.flux-analyze-btn.visible{
+  display:flex;
 }
 .flux-analyze-btn.visible{
   display:flex;
@@ -1846,13 +1846,11 @@ function updateFluxBtn() {
   window.selectedMatches = window.selectedMatches || [];
   var n = window.selectedMatches.length;
   if (btn) {
-    // JAMAIS disabled — iOS Safari bloque les clics sur disabled
-    // Gérer l'état visuellement via opacity
     btn.disabled = false;
-    btn.style.opacity = (n === 0) ? '0.35' : '1';
-    // Toujours visible sur l'onglet flux
-    if (activeTab === 'flux') {
+    // Visible uniquement sur onglet flux ET quand au moins 1 match coché
+    if (activeTab === 'flux' && n > 0) {
       btn.classList.add('visible');
+      btn.style.opacity = '1';
     } else {
       btn.classList.remove('visible');
     }
@@ -2921,26 +2919,30 @@ window.onload = function(){
 // ── SPORT GRID ──
 function buildSportGrid(){
   var g = document.getElementById('sportGrid');
+  if (!g) return;
   g.innerHTML = '';
   SPORTS.forEach(function(s){
-    var on = s.id==='all';
+    var on = activeSports.indexOf(s.id) > -1 || 
+             (activeSports.indexOf('all') > -1 && s.id === 'all');
     var el = document.createElement('div');
-    el.className = 'sc';
+    el.className = 'sc' + (on ? ' sc-on' : '');
     el.id = 'sc-'+s.id;
-    el.style.borderColor = on ? s.c : '';
-    el.style.color = on ? s.c : '';
-    el.style.background = on ? s.b : '';
-    if(on) el.style.fontWeight = '700';
+    el.style.borderColor = on ? s.c : 'var(--b1)';
+    el.style.color       = on ? s.c : 'var(--t2)';
+    el.style.background  = on ? s.b : 'transparent';
+    el.style.fontWeight  = on ? '700' : '400';
     var ico = document.createElement('div');
     ico.className = 'sc-ico';
-    ico.style.background = s.b;
-    ico.style.border = '1px solid '+s.c+(on?'66':'33');
+    ico.style.background  = on ? s.b : 'transparent';
+    ico.style.border      = '1px solid ' + s.c + (on ? 'aa' : '44');
+    ico.style.boxShadow   = on ? '0 0 6px '+s.c+'55' : 'none';
     ico.textContent = s.e;
     el.appendChild(ico);
     var lbl = document.createElement('span');
     lbl.textContent = s.lk ? t(s.lk) : s.l;
     el.appendChild(lbl);
-    el.addEventListener('click', (function(id){return function(){toggleSport(id);};})(s.id));
+    el.addEventListener('touchend', (function(id){return function(e){e.preventDefault();toggleSport(id);};})(s.id));
+    el.addEventListener('click',    (function(id){return function(){toggleSport(id);};})(s.id));
     g.appendChild(el);
   });
 }
