@@ -1382,9 +1382,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
           <div class="chip on" id="c-form" onclick="toggleChip('form')">📈 <span id="cFormLbl">Form</span></div>
           <div class="chip on" id="c-h2h" onclick="toggleChip('h2h')">⚔️ H2H</div>
           <div class="chip on" id="c-stake" onclick="toggleChip('stake')">🎯 <span id="cStakeLbl">Stakes</span></div>
-
-        
         </div>
+
+        <button class="go-btn" id="goBtn" onclick="analyze()">⚡ <span id="goBtnLbl">ANALYZE</span></button>
       </div>
 
       <!-- LIVE -->
@@ -2869,6 +2869,12 @@ function selectAvatar(id) {
 function updateGoBtn() {
   var btn = document.getElementById('goBtn');
   if (!btn) return;
+  // Sur TODAY : cacher le goBtn complètement
+  if (activeTab === 'flux') {
+    btn.style.display = 'none';
+    return;
+  }
+  btn.style.display = 'flex';
   var hasContent = false;
   if (activeTab === 'manual') {
     var mi = document.getElementById('manualInput');
