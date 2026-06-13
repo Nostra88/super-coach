@@ -1,0 +1,58 @@
+{
+  "id": "foot_wc_002",
+  "apiData": {
+    "sport": "football",
+    "home": "Canada",
+    "away": "Bolivia",
+    "competition": "FIFA World Cup 2026 - Group Stage",
+    "date": "2026-06-13T17:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 34,
+    "awayRank": 95,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 18,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {
+      "topScorer": true
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.6,
+        "homeUnderperforming": false,
+        "awayFor": 0.5,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.65,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "DRAW": 3.9,
+    "AWAY_WIN": 6.0
+  }
+}
