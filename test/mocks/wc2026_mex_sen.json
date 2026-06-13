@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_mex_sen",
+  "apiData": {
+    "sport": "football",
+    "home": "Mexico",
+    "away": "Senegal",
+    "competition": "World Cup 2026 Group C",
+    "date": "2026-06-11T19:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 14,
+    "awayRank": 20,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 28,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.8,
+        "homeUnderperforming": false,
+        "awayFor": 1.2,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.55,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.1,
+    "DRAW": 3.2,
+    "AWAY_WIN": 3.6
+  }
+}
