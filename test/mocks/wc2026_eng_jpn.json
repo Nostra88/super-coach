@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_eng_jpn",
+  "apiData": {
+    "sport": "football",
+    "home": "England",
+    "away": "Japan",
+    "competition": "World Cup 2026 Group H",
+    "date": "2026-06-18T19:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 4,
+    "awayRank": 17,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 23,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.3,
+        "homeUnderperforming": false,
+        "awayFor": 1.0,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.65,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.5,
+    "DRAW": 4.2,
+    "AWAY_WIN": 6.5
+  }
+}
