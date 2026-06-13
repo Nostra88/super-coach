@@ -1,0 +1,56 @@
+{
+  "id": "bball_nba_003",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Denver Nuggets",
+    "away": "Minnesota Timberwolves",
+    "competition": "NBA Playoffs 2026 - Conference Semis",
+    "date": "2026-05-10T02:30:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 3,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 18,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": true
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 5.8,
+        "away": -1.2
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "AWAY_WIN": 2.4
+  }
+}
