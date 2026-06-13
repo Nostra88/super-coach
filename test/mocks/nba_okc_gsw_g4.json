@@ -1,0 +1,56 @@
+{
+  "id": "nba_okc_gsw_g4",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Golden State Warriors",
+    "away": "Oklahoma City Thunder",
+    "competition": "NBA Playoffs 2026 - Round 1 Game 4",
+    "date": "2026-04-27T18:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 8,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 3,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 18,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": true,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 1,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 1.2,
+        "away": 8.4
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.8,
+    "AWAY_WIN": 1.45
+  }
+}
