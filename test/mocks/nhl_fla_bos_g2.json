@@ -1,0 +1,57 @@
+{
+  "id": "nhl_fla_bos_g2",
+  "apiData": {
+    "sport": "hockey",
+    "home": "Florida Panthers",
+    "away": "Boston Bruins",
+    "competition": "NHL Playoffs 2026 - Round 1",
+    "date": "2026-04-24T19:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 3,
+    "environment": {
+      "travelTimeHours": 3,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 24,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeStartingGoalieOut": false,
+      "awayStartingGoalieOut": true
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "corsi": {
+        "homePct": 55.8,
+        "awayPct": 46.2
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.6,
+    "DRAW": 5.0,
+    "AWAY_WIN": 2.5
+  }
+}
