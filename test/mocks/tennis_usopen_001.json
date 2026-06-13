@@ -1,0 +1,58 @@
+{
+  "id": "tennis_usopen_001",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Ben Shelton",
+    "away": "Taylor Fritz",
+    "competition": "US Open 2025 - QF",
+    "date": "2025-09-03T18:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 14,
+    "awayRank": 5,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 29,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "hard",
+        "homeWinPct": 65,
+        "awayWinPct": 74,
+        "h2hHomeWins": 1,
+        "h2hTotal": 3
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.8,
+    "AWAY_WIN": 1.45
+  }
+}
