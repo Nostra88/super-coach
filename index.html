@@ -1971,6 +1971,1324 @@ async function analyzeFlux() {
   });
 }
 
+// ── SPORTS ──
+var SPORTS = [
+  {id:'all',lk:'sportAll',l:'All',e:'🌍',c:'#C8922A',b:'rgba(200,146,42,.09)'},
+  {id:'foot',lk:'sportFoot',l:'Football',e:'⚽',c:'#4ade80',b:'rgba(74,222,128,.07)'},
+  {id:'basket',lk:'sportBasket',l:'Basketball',e:'🏀',c:'#f97316',b:'rgba(249,115,22,.07)'},
+  {id:'tennis',lk:'sportTennis',l:'Tennis',e:'🎾',c:'#eab308',b:'rgba(234,179,8,.07)'},
+  {id:'rugby',lk:'sportRugby',l:'Rugby',e:'🏉',c:'#84cc16',b:'rgba(132,204,22,.07)'},
+  {id:'mma',lk:'sportMMA',l:'MMA',e:'🥋',c:'#ef4444',b:'rgba(239,68,68,.07)'},
+  {id:'boxing',lk:'sportBoxing',l:'Boxing',e:'🥊',c:'#dc2626',b:'rgba(220,38,38,.07)'},
+  {id:'hockey',lk:'sportHockey',l:'Hockey',e:'🏒',c:'#3b82f6',b:'rgba(59,130,246,.07)'},
+  {id:'nfl',lk:'sportNFL',l:'NFL',e:'🏈',c:'#f97316',b:'rgba(249,115,22,.07)'},
+
+  {id:'handball',lk:'sportHandball',l:'Handball',e:'🤾',c:'#8b5cf6',b:'rgba(139,92,246,.07)'},
+  {id:'volley',lk:'sportVolley',l:'Volleyball',e:'🏐',c:'#06b6d4',b:'rgba(6,182,212,.07)'},
+  {id:'f1',lk:'sportF1',l:'F1/Moto',e:'🏎️',c:'#f59e0b',b:'rgba(245,158,11,.07)'},
+  {id:'baseball',lk:'sportBaseball',l:'Baseball',e:'⚾',c:'#10b981',b:'rgba(16,185,129,.07)'},
+  {id:'other',lk:'sportOther',l:'Other',e:'🎯',c:'#8b949e',b:'rgba(139,148,158,.07)'},
+  {id:'wc',lk:'sportWC',l:'World Cup',e:'🏆',c:'#C8922A',b:'rgba(200,146,42,.12)',exclusive:true}
+];
+
+// ── STATE ──
+var chips = {rot:true,inj:true,form:true,h2h:true,stake:true};
+var activeTab = 'flux';
+var mode = 'pre';
+var activeSports = ['all'];
+var lang = localStorage.getItem('sc_lang') || 'en';
+
+// ── LANG ──
+var L = {
+  en:{
+    copilot:'⚡ Your AI sports copilot',
+    sportAll:'All',sportFoot:'Football',sportBasket:'Basketball',sportTennis:'Tennis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxing',sportHockey:'Hockey',
+    sportHandball:'Handball',sportVolley:'Volleyball',sportF1:'F1/Moto',
+    sportBaseball:'Baseball',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Other',sportWC:'World Cup',
+    manualPlaceholder:'Paste your matches here:\n\n⚽ PSG vs Monaco — Ligue 1 — 20:45\n🏀 Lakers vs Celtics — NBA — 01:30\n🎾 Sinner vs Alcaraz\n\n💡 Add time & odds for Value Bet + Kelly',
+    oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH is an AI-powered sports analysis tool for informational purposes only. Not financial advice.',
+    liveContextLabel:'Additional context (recommended):',
+    roiTrackerTitle:'ROI TRACKER',roiTapHint:'Tap ✓/x on each match after the game!',
+    roiMatchesLabel:'matches',roiPreLabel:'PRE',clearHistory:'CLEAR HISTORY',
+    settingsTitle:'⚙️ SETTINGS',settingsSectionDisplay:'DISPLAY',settingsSectionAnalysis:'ANALYSIS',
+    settingsSectionData:'DATA',settingsSectionLegal:'LEGAL',
+    settingsClock24Label:'🕐 24h clock format',settingsClock24Sub:'Default: AM/PM',
+    settingsDiagLabel2:'📊 Response time bar',settingsDiagSub:'Shows fetch & AI timing',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Secondary opportunities (≥70%)',
+    settingsThresh:'🛡️ Confidence threshold',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ Clear ROI Tracker',settingsClearSub:'Erase all local history',
+    settingsApiLabel:'📡 API Status',settingsApiSub:'Test server connection',
+    settingsLegalLabel:'📋 Legal & Privacy',settingsGamble:'⚠️ Responsible gambling 18+',
+    urlLabel:'🔗 Paste a URL',urlDivider:'or paste text manually',fetchBtn:'⚡ FETCH',
+    gamble:'⚠️ GAMBLE RESPONSIBLY · 18+',legalLink:'Legal & Privacy',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Response time bar',settingsThreshLabel:'Confidence threshold',
+    settingsClearRoi:'CLEAR',settingsCheckApi:'CHECK',
+    roiEmptyTitle:'📭 No analysis saved yet.',roiEmptySub:'Launch your first analysis to track your ROI!',
+    pasteHolder:'Paste raw page content here...',
+    matchNotFound:'MATCH NOT VALIDATED',matchNotFoundSub:'Match not found. Please check your input.',
+    win:'Win',loss:'Loss',draw:'Draw',free:'FREE',
+    preName:'PRE-MATCH',preSub:'Full analysis',liveName:'HALF-TIME',liveSub:'Real-time recalc',
+    inputLabel:'⚡ Matches to analyze',inputLabelLive:'📡 Live Half-Time Analysis',
+    filterSport:'Filter by sport',tabList:'List',tabWeb:'Web page',
+    paste:'PASTE FROM CLIPBOARD',oddsLbl:'💰 ODDS',oddsHint:'→ Value Bet + Kelly',
+    rot:'C1 Rotations',inj:'Injuries',form:'Form',stake:'Stakes',
+    analyze:'ANALYZE',home:'Home 🏠',away:'Away ✈️',comp:'Competition',min:'Minute',
+    htScore:'Half-time score',liveOdds:'💰 2nd HALF ODDS',liveBtn:'ANALYZE LIVE',
+    roiTitle:'📊 My ROI',roiBtn:'📊 ROI',
+    navAnalyze:'Analyze',navRoi:'My ROI',navSettings:'Settings',
+    tapDetails:'TAP FOR DETAILS',newAnalysis:'↺ New Analysis',doNotBet:'⛔ DO NOT BET',
+    units:'UNIT',wins:'🟢 Wins',draws:'⚪ Draws',losses:'🔴 Losses',
+    potRoi:'POTENTIAL ROI',analyzing:'ANALYZING...',
+    fluxTab:'TODAY',fluxLoading:'Loading matches...',fluxEmpty:'No matches available.',
+    fluxSelectBtn:'Analyze selection',fluxNoneSelected:'Select at least 1 match',
+    wcBanner:'WORLD CUP 2026',wcSub:'USA · Canada · Mexico · Jun 11 → Jul 19',
+    coachTitle:'⚡ Coach advice',
+    coachFriendly:'Friendly matches have no real stakes. Confidence capped.',
+    coachVolume:'Over 5 picks: bookmaker margin multiplies. Edge collapses.',
+    coachSniper:'Sniper mode: 3 picks max · conf ≥75% · real competitions only.',
+    friendlyWarning:'⚠️ Friendly',bigParlay:'⚠️ Large parlay',
+    glossGuide:'GUIDE',
+    gT1:'C1 Rotations',gS1:'Squad depth & European schedule fatigue.',
+    gT2:'Injuries',gS2:'Key absences: GK -10%, Top scorer -8%, Captain -5%.',
+    gT3:'Form',gS3:'Last 5 matches. 3+ wins = +5% confidence boost.',
+    gT4:'H2H',gS4:'Head-to-head on same surface & venue only.',
+    gT5:'Stakes',gS5:'Relegation +15%, Title +10%, Derby = 50/50 reset.'
+  ,
+    'shareCopied':'✓ Copied! Share on Telegram / WhatsApp',
+    'shareLongPress':'⚠ Long press → Copy',
+    'errNoMatches':'❌ Please enter matches to analyze.',
+    'errNoTeams':'❌ Enter both team names.',
+    'errParseFail':'AI response could not be parsed. Try with fewer matches.',
+    'errParseFailLive':'AI response could not be parsed. Check the teams and score.',
+    'analysisFailed':'INCOMPLETE ANALYSIS',
+    'authSignInSub':'Sign in to save your analyses',
+    'authContinueEmail':'Continue with email',
+    'authOr':'or',
+    'authContinueGoogle':'Continue with Google',
+    'authCheckEmail':'Check your email',
+    'authMagicSub':'We sent a magic link to',
+    'authSignOut':'Sign out',
+    'authProfile':'My Profile'},
+  fr:{
+    copilot:'⚡ Ton copilote IA sportif',
+    sportAll:'Tous',sportFoot:'Football',sportBasket:'Basket',sportTennis:'Tennis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxe',sportHockey:'Hockey',
+    sportHandball:'Handball',sportVolley:'Volley',sportF1:'F1/Moto',
+    sportBaseball:'Baseball',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Autre',sportWC:'Coupe du Monde',
+    manualPlaceholder:'Colle tes matchs ici :\n\n⚽ PSG vs Monaco — Ligue 1 — 20:45\n🏀 Lakers vs Celtics — NBA — 01:30\n🎾 Sinner vs Alcaraz\n\n💡 Ajoute heure & cote pour Value Bet + Kelly',
+    oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH est un outil analyse sportive IA informatif uniquement. Pas de conseil financier.',
+    liveContextLabel:'Contexte additionnel (recommande) :',
+    roiTrackerTitle:'SUIVI ROI',roiTapHint:'Appuie sur chaque match apres la partie !',
+    roiMatchesLabel:'matchs',roiPreLabel:'PRE',clearHistory:'EFFACER',
+    settingsTitle:'⚙️ REGLAGES',settingsSectionDisplay:'AFFICHAGE',settingsSectionAnalysis:'ANALYSE',
+    settingsSectionData:'DONNEES',settingsSectionLegal:'LEGAL',
+    settingsClock24Label:'🕐 Format horloge 24h',settingsClock24Sub:'Par defaut : AM/PM',
+    settingsDiagLabel2:'📊 Barre temps reponse',settingsDiagSub:'Affiche les timings',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Opportunites secondaires (>=70%)',
+    settingsThresh:'🛡️ Seuil de confiance',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ Vider ROI Tracker',settingsClearSub:'Efface historique local',
+    settingsApiLabel:'📡 Statut API',settingsApiSub:'Tester connexion serveur',
+    settingsLegalLabel:'📋 Mentions legales',settingsGamble:'⚠️ Jeu responsable 18+',
+    urlLabel:'🔗 Colle une URL',urlDivider:'ou colle le texte',fetchBtn:'⚡ FETCH',
+    gamble:'⚠️ JEU RESPONSABLE · 18+',legalLink:'Legal & Confidentialite',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Barre temps reponse',settingsThreshLabel:'Seuil confiance',
+    settingsClearRoi:'EFFACER',settingsCheckApi:'VERIFIER',
+    roiEmptyTitle:'📭 Aucune analyse.',roiEmptySub:'Lance ta premiere analyse !',
+    pasteHolder:'Colle le contenu ici...',
+    matchNotFound:'MATCH NON VALIDE',matchNotFoundSub:'Match introuvable. Verifie ta saisie.',
+    win:'Victoire',loss:'Defaite',draw:'Nul',free:'GRATUIT',
+    preName:'AVANT-MATCH',preSub:'Analyse complete',liveName:'MI-TEMPS',liveSub:'Recalcul temps reel',
+    inputLabel:'⚡ Matchs a analyser',inputLabelLive:'📡 Analyse Live Mi-Temps',
+    filterSport:'Filtrer par sport',tabList:'Liste',tabWeb:'Page web',
+    paste:'COLLER',oddsLbl:'💰 COTE',oddsHint:'→ Value + Kelly',
+    rot:'Rotations C1',inj:'Blesses',form:'Forme',stake:'Enjeu',
+    analyze:'ANALYSER',home:'Domicile 🏠',away:'Exterieur ✈️',comp:'Competition',min:'Minute',
+    htScore:'Score mi-temps',liveOdds:'💰 COTE 2E MI-TEMPS',liveBtn:'ANALYSER LIVE',
+    roiTitle:'📊 Mon ROI',roiBtn:'📊 ROI',
+    navAnalyze:'Analyser',navRoi:'Mon ROI',navSettings:'Reglages',
+    tapDetails:'APPUYER POUR DETAILS',newAnalysis:'↺ Nouvelle Analyse',doNotBet:'⛔ NE PAS PARIER',
+    units:'UNITE',wins:'🟢 Victoires',draws:'⚪ Nuls',losses:'🔴 Defaites',
+    potRoi:'ROI POTENTIEL',analyzing:'ANALYSE...',
+    fluxTab:"AUJOURD'HUI",fluxLoading:'Chargement matchs...',fluxEmpty:'Aucun match disponible.',
+    fluxSelectBtn:'Analyser selection',fluxNoneSelected:'Selectionne au moins 1 match',
+    wcBanner:'COUPE DU MONDE 2026',wcSub:'USA · Canada · Mexique · 11 juin → 19 juil',
+    coachTitle:'⚡ Conseil du Coach',
+    coachFriendly:'Les matchs amicaux ont enjeu reel nul. Confiance bridee.',
+    coachVolume:'Au-dela 5 picks : marge bookmaker multiplie. Edge effondre.',
+    coachSniper:'Mode Sniper : 3 picks max · conf >=75% · competitions reelles.',
+    friendlyWarning:'⚠️ Amical',bigParlay:'⚠️ Grand combine',
+    glossGuide:'GUIDE',
+    gT1:'Rotations C1',gS1:'Profondeur banc et fatigue europeenne.',
+    gT2:'Blesses',gS2:'Absences cles : GK -10%, Buteur -8%, Capitaine -5%.',
+    gT3:'Forme',gS3:'5 derniers matchs. 3 victoires = +5% confiance.',
+    gT4:'H2H',gS4:'Confrontations directes meme surface et stade.',
+    gT5:'Enjeu',gS5:'Relegation +15%, Titre +10%, Derby = reset 50/50.'
+  ,
+    'shareCopied':'✓ Copié ! Partage sur Telegram / WhatsApp',
+    'shareLongPress':'⚠ Appui long → Copier',
+    'errNoMatches':'❌ Saisis des matchs à analyser.',
+    'errNoTeams':'❌ Saisis les deux équipes.',
+    'errParseFail':'Réponse IA non parseable. Essaie avec moins de matchs.',
+    'errParseFailLive':'Réponse IA non parseable. Vérifie les équipes et le score.',
+    'analysisFailed':'ANALYSE INCOMPLÈTE',
+    'authSignInSub':'Connecte-toi pour sauvegarder tes analyses',
+    'authContinueEmail':'Continuer avec email',
+    'authOr':'ou',
+    'authContinueGoogle':'Continuer avec Google',
+    'authCheckEmail':'Vérifie ta boîte mail',
+    'authMagicSub':'Lien magique envoyé à',
+    'authSignOut':'Déconnexion',
+    'authProfile':'Mon Profil'},
+  es:{
+    copilot:'⚡ Tu copiloto IA deportivo',
+    sportAll:'Todos',sportFoot:'Futbol',sportBasket:'Baloncesto',sportTennis:'Tenis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxeo',sportHockey:'Hockey',
+    sportHandball:'Balonmano',sportVolley:'Voleibol',sportF1:'F1/Moto',
+    sportBaseball:'Beisbol',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Otro',sportWC:'Copa del Mundo',
+    manualPlaceholder:'Pega tus partidos aqui...',oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH es herramienta IA solo informativa.',liveContextLabel:'Contexto adicional:',
+    roiTrackerTitle:'SEGUIMIENTO ROI',roiTapHint:'Pulsa en cada partido despues!',
+    roiMatchesLabel:'partidos',roiPreLabel:'PRE',clearHistory:'BORRAR',
+    settingsTitle:'⚙️ AJUSTES',settingsSectionDisplay:'VISUALIZACION',settingsSectionAnalysis:'ANALISIS',
+    settingsSectionData:'DATOS',settingsSectionLegal:'LEGAL',
+    settingsClock24Label:'🕐 Formato 24h',settingsClock24Sub:'Por defecto: AM/PM',
+    settingsDiagLabel2:'📊 Barra tiempos',settingsDiagSub:'Muestra tiempos',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Oportunidades secundarias',
+    settingsThresh:'🛡️ Umbral confianza',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ Borrar ROI',settingsClearSub:'Borrar historial',
+    settingsApiLabel:'📡 Estado API',settingsApiSub:'Probar conexion',
+    settingsLegalLabel:'📋 Legal y Privacidad',settingsGamble:'⚠️ Juego responsable 18+',
+    urlLabel:'🔗 Pega una URL',urlDivider:'o pega el texto',fetchBtn:'⚡ FETCH',
+    gamble:'⚠️ JUEGA RESPONSABLEMENTE · 18+',legalLink:'Legal y Privacidad',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Barra tiempos',settingsThreshLabel:'Umbral confianza',
+    settingsClearRoi:'BORRAR',settingsCheckApi:'VERIFICAR',
+    roiEmptyTitle:'📭 Sin analisis.',roiEmptySub:'Lanza tu primer analisis!',
+    pasteHolder:'Pega contenido aqui...',
+    matchNotFound:'PARTIDO NO VALIDADO',matchNotFoundSub:'Partido no encontrado.',
+    win:'Victoria',loss:'Derrota',draw:'Empate',free:'GRATIS',
+    preName:'PRE-PARTIDO',preSub:'Analisis completo',liveName:'MEDIO TIEMPO',liveSub:'Recalculo en vivo',
+    inputLabel:'⚡ Partidos a analizar',inputLabelLive:'📡 Analisis Medio Tiempo',
+    filterSport:'Filtrar por deporte',tabList:'Lista',tabWeb:'Pagina web',
+    paste:'PEGAR',oddsLbl:'💰 CUOTA',oddsHint:'→ Value Bet + Kelly',
+    rot:'Rotaciones C1',inj:'Lesiones',form:'Forma',stake:'Apuestas',
+    analyze:'ANALIZAR',home:'Local 🏠',away:'Visitante ✈️',comp:'Competicion',min:'Minuto',
+    htScore:'Marcador MT',liveOdds:'💰 CUOTA 2 TIEMPO',liveBtn:'ANALIZAR EN VIVO',
+    roiTitle:'📊 Mi ROI',roiBtn:'📊 ROI',
+    navAnalyze:'Analizar',navRoi:'Mi ROI',navSettings:'Ajustes',
+    tapDetails:'TOCA PARA DETALLES',newAnalysis:'↺ Nuevo Analisis',doNotBet:'⛔ NO APOSTAR',
+    units:'UNIDAD',wins:'🟢 Victorias',draws:'⚪ Empates',losses:'🔴 Derrotas',
+    potRoi:'ROI POTENCIAL',analyzing:'ANALIZANDO...',
+    fluxTab:'HOY',fluxLoading:'Cargando partidos...',fluxEmpty:'No hay partidos.',
+    fluxSelectBtn:'Analizar seleccion',fluxNoneSelected:'Selecciona al menos 1',
+    wcBanner:'COPA MUNDIAL 2026',wcSub:'USA · Canada · Mexico · 11 jun → 19 jul',
+    coachTitle:'⚡ Consejo Entrenador',coachFriendly:'Amistosos sin apuestas reales.',
+    coachVolume:'Mas de 5 picks: el edge colapsa.',coachSniper:'Sniper: max 3 picks · conf >=75%.',
+    friendlyWarning:'⚠️ Amistoso',bigParlay:'⚠️ Combinada grande',
+    glossGuide:'GUIA',gT1:'Rotaciones C1',gS1:'Profundidad plantilla.',
+    gT2:'Lesiones',gS2:'Bajas clave: portero -10%, Goleador -8%, Capitan -5%.',
+    gT3:'Forma',gS3:'Ultimos 5 partidos. 3 victorias = +5%.',
+    gT4:'H2H',gS4:'Historial misma superficie.',gT5:'Apuesta',gS5:'Descenso +15%, Titulo +10%.'
+  ,
+    'shareCopied':'✓ Copiado. Comparte en Telegram / WhatsApp',
+    'shareLongPress':'⚠ Pulsación larga → Copiar',
+    'errNoMatches':'❌ Introduce partidos para analizar.',
+    'errNoTeams':'❌ Introduce los dos equipos.',
+    'errParseFail':'Respuesta IA no parseada. Prueba con menos partidos.',
+    'errParseFailLive':'Respuesta IA no parseada. Verifica los equipos y el marcador.',
+    'analysisFailed':'ANÁLISIS INCOMPLETO',
+    'authSignInSub':'Inicia sesión para guardar tus análisis',
+    'authContinueEmail':'Continuar con email',
+    'authOr':'o',
+    'authContinueGoogle':'Continuar con Google',
+    'authCheckEmail':'Revisa tu correo',
+    'authMagicSub':'Enlace mágico enviado a',
+    'authSignOut':'Cerrar sesión',
+    'authProfile':'Mi Perfil'},
+  pt:{
+    copilot:'⚡ Seu copiloto IA esportivo',
+    sportAll:'Todos',sportFoot:'Futebol',sportBasket:'Basquete',sportTennis:'Tennis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxe',sportHockey:'Hoquei',
+    sportHandball:'Handebol',sportVolley:'Volei',sportF1:'F1/Moto',
+    sportBaseball:'Beisebol',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Outro',sportWC:'Copa do Mundo',
+    manualPlaceholder:'Cole seus jogos aqui...',oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH e ferramenta IA apenas informativa.',liveContextLabel:'Contexto adicional:',
+    roiTrackerTitle:'RASTREADOR ROI',roiTapHint:'Toque em cada jogo apos a partida!',
+    roiMatchesLabel:'jogos',roiPreLabel:'PRE',clearHistory:'LIMPAR',
+    settingsTitle:'⚙️ CONFIGURACOES',settingsSectionDisplay:'EXIBICAO',settingsSectionAnalysis:'ANALISE',
+    settingsSectionData:'DADOS',settingsSectionLegal:'LEGAL',
+    settingsClock24Label:'🕐 Formato 24h',settingsClock24Sub:'Padrao: AM/PM',
+    settingsDiagLabel2:'📊 Barra tempo',settingsDiagSub:'Mostra tempos',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Oportunidades secundarias',
+    settingsThresh:'🛡️ Limite confianca',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ Limpar ROI',settingsClearSub:'Apagar historico',
+    settingsApiLabel:'📡 Status API',settingsApiSub:'Testar conexao',
+    settingsLegalLabel:'📋 Legal e Privacidade',settingsGamble:'⚠️ Jogo responsavel 18+',
+    urlLabel:'🔗 Cole uma URL',urlDivider:'ou cole o texto',fetchBtn:'⚡ FETCH',
+    gamble:'⚠️ JOGUE COM RESPONSABILIDADE · 18+',legalLink:'Legal e Privacidade',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Barra tempo',settingsThreshLabel:'Limite confianca',
+    settingsClearRoi:'LIMPAR',settingsCheckApi:'VERIFICAR',
+    roiEmptyTitle:'📭 Nenhuma analise.',roiEmptySub:'Lance sua primeira analise!',
+    pasteHolder:'Cole o conteudo aqui...',
+    matchNotFound:'JOGO NAO VALIDADO',matchNotFoundSub:'Jogo nao encontrado.',
+    win:'Vitoria',loss:'Derrota',draw:'Empate',free:'GRATIS',
+    preName:'PRE-JOGO',preSub:'Analise completa',liveName:'INTERVALO',liveSub:'Recalculo tempo real',
+    inputLabel:'⚡ Jogos para analisar',inputLabelLive:'📡 Analise Intervalo',
+    filterSport:'Filtrar por esporte',tabList:'Lista',tabWeb:'Pagina web',
+    paste:'COLAR',oddsLbl:'💰 ODD',oddsHint:'→ Value Bet + Kelly',
+    rot:'Rotacoes C1',inj:'Lesoes',form:'Forma',stake:'Importancia',
+    analyze:'ANALISAR',home:'Casa 🏠',away:'Fora ✈️',comp:'Competicao',min:'Minuto',
+    htScore:'Placar intervalo',liveOdds:'💰 ODD 2 TEMPO',liveBtn:'ANALISAR AO VIVO',
+    roiTitle:'📊 Meu ROI',roiBtn:'📊 ROI',
+    navAnalyze:'Analisar',navRoi:'Meu ROI',navSettings:'Config',
+    tapDetails:'TOQUE PARA DETALHES',newAnalysis:'↺ Nova Analise',doNotBet:'⛔ NAO APOSTAR',
+    units:'UNIDADE',wins:'🟢 Vitorias',draws:'⚪ Empates',losses:'🔴 Derrotas',
+    potRoi:'ROI POTENCIAL',analyzing:'ANALISANDO...',
+    fluxTab:'HOJE',fluxLoading:'Carregando partidas...',fluxEmpty:'Nenhuma partida.',
+    fluxSelectBtn:'Analisar selecao',fluxNoneSelected:'Selecione pelo menos 1',
+    wcBanner:'COPA DO MUNDO 2026',wcSub:'EUA · Canada · Mexico · 11 jun → 19 jul',
+    coachTitle:'⚡ Conselho Treinador',coachFriendly:'Amistosos sem apostas reais.',
+    coachVolume:'Mais de 5 palpites: o edge colapsa.',coachSniper:'Sniper: max 3 · conf >=75%.',
+    friendlyWarning:'⚠️ Amistoso',bigParlay:'⚠️ Multipla grande',
+    glossGuide:'GUIA',gT1:'Rotacoes C1',gS1:'Profundidade elenco.',
+    gT2:'Lesoes',gS2:'Ausencias: Goleiro -10%, Artilheiro -8%, Capitao -5%.',
+    gT3:'Forma',gS3:'Ultimos 5 jogos. 3 vitorias = +5%.',
+    gT4:'H2H',gS4:'Confrontos mesma superficie.',gT5:'Apostas',gS5:'Rebaixamento +15%, Titulo +10%.'
+  ,
+    'shareCopied':'✓ Copiado! Compartilhe no Telegram / WhatsApp',
+    'shareLongPress':'⚠ Toque longo → Copiar',
+    'errNoMatches':'❌ Insere jogos para analisar.',
+    'errNoTeams':'❌ Insere os dois times.',
+    'errParseFail':'Resposta IA não parseada. Tenta com menos jogos.',
+    'errParseFailLive':'Resposta IA não parseada. Verifica os times e o placar.',
+    'analysisFailed':'ANÁLISE INCOMPLETA',
+    'authSignInSub':'Entre para salvar suas análises',
+    'authContinueEmail':'Continuar com email',
+    'authOr':'ou',
+    'authContinueGoogle':'Continuar com Google',
+    'authCheckEmail':'Verifique seu email',
+    'authMagicSub':'Link mágico enviado para',
+    'authSignOut':'Sair',
+    'authProfile':'Meu Perfil'},
+  it:{
+    copilot:'⚡ Il tuo copilota sportivo IA',
+    sportAll:'Tutti',sportFoot:'Calcio',sportBasket:'Basket',sportTennis:'Tennis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxe',sportHockey:'Hockey',
+    sportHandball:'Pallamano',sportVolley:'Pallavolo',sportF1:'F1/Moto',
+    sportBaseball:'Baseball',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Altro',sportWC:'Coppa del Mondo',
+    manualPlaceholder:'Incolla le partite qui...',oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH e strumento IA solo informativo.',liveContextLabel:'Contesto aggiuntivo:',
+    roiTrackerTitle:'TRACKER ROI',roiTapHint:'Tocca dopo il gioco!',
+    roiMatchesLabel:'partite',roiPreLabel:'PRE',clearHistory:'CANCELLA',
+    settingsTitle:'⚙️ IMPOSTAZIONI',settingsSectionDisplay:'VISUALIZZAZIONE',settingsSectionAnalysis:'ANALISI',
+    settingsSectionData:'DATI',settingsSectionLegal:'LEGALE',
+    settingsClock24Label:'🕐 Formato 24h',settingsClock24Sub:'Predefinito: AM/PM',
+    settingsDiagLabel2:'📊 Barra tempi',settingsDiagSub:'Mostra tempi',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Opportunita secondarie',
+    settingsThresh:'🛡️ Soglia confidenza',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ Svuota ROI',settingsClearSub:'Cancella cronologia',
+    settingsApiLabel:'📡 Stato API',settingsApiSub:'Testa connessione',
+    settingsLegalLabel:'📋 Legale',settingsGamble:'⚠️ Gioco responsabile 18+',
+    urlLabel:'🔗 URL',urlDivider:'o incolla il testo',fetchBtn:'⚡ FETCH',
+    gamble:'⚠️ GIOCA RESPONSABILMENTE · 18+',legalLink:'Legal',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Barra tempi',settingsThreshLabel:'Soglia confidenza',
+    settingsClearRoi:'CANCELLA',settingsCheckApi:'VERIFICA',
+    roiEmptyTitle:'Nessuna analisi.',roiEmptySub:'Le analisi appariranno qui.',
+    pasteHolder:'Incolla URL o contenuto...',
+    matchNotFound:'PARTITA NON TROVATA',matchNotFoundSub:'Partita non trovata.',
+    win:'V',loss:'S',draw:'P',free:'GRATIS',
+    preName:'PRE-MATCH',preSub:'Analisi pre-partita',liveName:'LIVE',liveSub:'Analisi in tempo reale',
+    inputLabel:'Inserisci le partite',inputLabelLive:'Punteggio live',
+    filterSport:'Tutti gli sport',tabList:'LISTA',tabWeb:'WEB PAGE',
+    paste:'INCOLLA',oddsLbl:'💰 QUOTE',oddsHint:'→ Value + Kelly',
+    rot:'Rotazioni',inj:'Infortuni',form:'Forma',stake:'Posta',
+    analyze:'ANALIZZA',home:'🏠 Casa',away:'✈️ Trasferta',comp:'Comp.',min:'Min',
+    htScore:'Intervallo',liveOdds:'Quote live',liveBtn:'⚡ LIVE',
+    roiTitle:'📊 Il mio ROI',roiBtn:'📊 ROI',
+    navAnalyze:'ANALIZZA',navRoi:'Il mio ROI',navSettings:'IMPOSTAZIONI',
+    tapDetails:'TOCCA PER DETTAGLI',newAnalysis:'↺ Nuova analisi',doNotBet:'⛔ NON SCOMMETTERE',
+    units:'UNITA',wins:'🟢 Vittorie',draws:'⚪ Pareggi',losses:'🔴 Sconfitte',
+    potRoi:'ROI POTENZIALE',analyzing:'Analisi...',
+    fluxTab:'OGGI',fluxLoading:'Caricamento...',fluxEmpty:'Nessuna partita.',
+    fluxSelectBtn:'Analizza selezione',fluxNoneSelected:'Seleziona almeno 1',
+    wcBanner:'COPPA DEL MONDO 2026',wcSub:'USA · Canada · Messico · 11 giu → 19 lug',
+    coachTitle:'⚡ Consiglio Coach',coachFriendly:'Amichevoli senza posta reale.',
+    coachVolume:'Oltre 5 pronostici: il margine moltiplica.',coachSniper:'Sniper: max 3 · conf >=75%.',
+    friendlyWarning:'⚠️ Amichevole',bigParlay:'⚠️ Combinata grande',
+    glossGuide:'GUIDA',gT1:'Rotazioni C1',gS1:'Profondita rosa.',
+    gT2:'Infortuni',gS2:'Portiere -10%, Cannoniere -8%, Capitano -5%.',
+    gT3:'Forma',gS3:'Ultimi 5 match. 3 vittorie = +5%.',
+    gT4:'H2H',gS4:'Scontri stessa superficie.',gT5:'Posta',gS5:'Retrocessione +15%, Titolo +10%.'
+  ,
+    'shareCopied':'✓ Copiato! Condividi su Telegram / WhatsApp',
+    'shareLongPress':'⚠ Tieni premuto → Copia',
+    'errNoMatches':'❌ Inserisci le partite da analizzare.',
+    'errNoTeams':'❌ Inserisci entrambe le squadre.',
+    'errParseFail':'Risposta IA non elaborata. Prova con meno partite.',
+    'errParseFailLive':'Risposta IA non elaborata. Verifica squadre e punteggio.',
+    'analysisFailed':'ANALISI INCOMPLETA',
+    'authSignInSub':'Accedi per salvare le tue analisi',
+    'authContinueEmail':'Continua con email',
+    'authOr':'o',
+    'authContinueGoogle':'Continua con Google',
+    'authCheckEmail':'Controlla la tua email',
+    'authMagicSub':'Link magico inviato a',
+    'authSignOut':'Esci',
+    'authProfile':'Il mio Profilo'},
+  de:{
+    copilot:'⚡ Dein KI-Sport-Copilot',
+    sportAll:'Alle',sportFoot:'Fussball',sportBasket:'Basketball',sportTennis:'Tennis',
+    sportRugby:'Rugby',sportMMA:'MMA',sportBoxing:'Boxen',sportHockey:'Eishockey',
+    sportHandball:'Handball',sportVolley:'Volleyball',sportF1:'F1/Moto',
+    sportBaseball:'Baseball',sportNFL:'NFL',sportNBA:'NBA',sportOther:'Andere',sportWC:'Weltmeisterschaft',
+    manualPlaceholder:'Spiele hier eingeben...',oddsHintFull:'→ Value Bet + Kelly',
+    footerDesc:'SUPERCOACH ist ein KI-Sportanalyse-Tool nur zu Informationszwecken.',
+    liveContextLabel:'Zusatzlicher Kontext:',
+    roiTrackerTitle:'ROI-TRACKER',roiTapHint:'Tippe nach jedem Spiel!',
+    roiMatchesLabel:'Spiele',roiPreLabel:'PRE',clearHistory:'LOSCHEN',
+    settingsTitle:'⚙️ EINSTELLUNGEN',settingsSectionDisplay:'ANZEIGE',settingsSectionAnalysis:'ANALYSE',
+    settingsSectionData:'DATEN',settingsSectionLegal:'LEGAL',
+    settingsClock24Label:'🕐 24h-Format',settingsClock24Sub:'Standard: AM/PM',
+    settingsDiagLabel2:'📊 Zeitenleiste',settingsDiagSub:'Zeigt Fetch- und KI-Zeiten',
+    settingsSubBetsLabel:'💎 Smart Sub-Bets',settingsSubBetsSub:'Nebenwetten',
+    settingsThresh:'🛡️ Vertrauensschwelle',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ ROI leeren',settingsClearSub:'Verlauf loschen',
+    settingsApiLabel:'📡 API-Status',settingsApiSub:'Serververbindung testen',
+    settingsLegalLabel:'📋 Legal & Datenschutz',settingsGamble:'⚠️ Verantwortungsvoll spielen 18+',
+    urlLabel:'🔗 URL einfugen',urlDivider:'oder Text einfugen',fetchBtn:'⚡ LADEN',
+    gamble:'⚠️ VERANTWORTUNGSVOLL SPIELEN · 18+',legalLink:'Legal',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'Zeitenleiste',settingsThreshLabel:'Vertrauensschwelle',
+    settingsClearRoi:'LOSCHEN',settingsCheckApi:'PRUFEN',
+    roiEmptyTitle:'Keine Analysen.',roiEmptySub:'Deine Analysen erscheinen hier.',
+    pasteHolder:'URL oder Seiteninhalt einfugen...',
+    matchNotFound:'SPIEL NICHT GEFUNDEN',matchNotFoundSub:'Spiel nicht gefunden.',
+    win:'S',loss:'N',draw:'U',free:'KOSTENLOS',
+    preName:'PRE-MATCH',preSub:'Vor-Spiel-Analyse',liveName:'LIVE',liveSub:'Live-Analyse',
+    inputLabel:'Spiele eingeben',inputLabelLive:'Live-Ergebnis',
+    filterSport:'Alle Sportarten',tabList:'LISTE',tabWeb:'WEBSEITE',
+    paste:'EINFUGEN',oddsLbl:'💰 QUOTEN',oddsHint:'→ Value + Kelly',
+    rot:'C1-Rotation',inj:'Verletzungen',form:'Form',stake:'Einsatz',
+    analyze:'ANALYSIEREN',home:'🏠 Heim',away:'✈️ Auswarts',comp:'Wettb.',min:'Min',
+    htScore:'Halbzeit',liveOdds:'Live-Quoten',liveBtn:'⚡ LIVE',
+    roiTitle:'📊 Mein ROI',roiBtn:'📊 ROI',
+    navAnalyze:'ANALYSIEREN',navRoi:'MEIN ROI',navSettings:'EINSTELLUNGEN',
+    tapDetails:'TIPPE FUR DETAILS',newAnalysis:'↺ Neue Analyse',doNotBet:'⛔ NICHT WETTEN',
+    units:'EINHEIT',wins:'🟢 Siege',draws:'⚪ Unentschieden',losses:'🔴 Niederlagen',
+    potRoi:'POTENZIELLER ROI',analyzing:'Analyse...',
+    fluxTab:'HEUTE',fluxLoading:'Spiele werden geladen...',fluxEmpty:'Keine Spiele.',
+    fluxSelectBtn:'Auswahl analysieren',fluxNoneSelected:'Mindestens 1 Spiel',
+    wcBanner:'WELTMEISTERSCHAFT 2026',wcSub:'USA · Kanada · Mexiko · 11. Jun → 19. Jul',
+    coachTitle:'⚡ Coach-Tipp',coachFriendly:'Freundschaftsspiele ohne echte Einsatze.',
+    coachVolume:'Uber 5 Picks: Buchmacher-Marge multipliziert.',coachSniper:'Sniper: max 3 · Vertr. >=75%.',
+    friendlyWarning:'⚠️ Freundschaftsspiel',bigParlay:'⚠️ Grosse Kombiwette',
+    glossGuide:'ANLEITUNG',gT1:'C1-Rotationen',gS1:'Kadertiefe und Mudigkeit.',
+    gT2:'Verletzungen',gS2:'TW -10%, Torjager -8%, Kapitan -5%.',
+    gT3:'Form',gS3:'Letzte 5 Spiele. 3 Siege = +5%.',
+    gT4:'H2H',gS4:'Direktvergleich gleiche Oberflache.',gT5:'Einsatz',gS5:'Abstieg +15%, Titel +10%.'
+  ,
+    'shareCopied':'✓ Kopiert! Teile auf Telegram / WhatsApp',
+    'shareLongPress':'⚠ Lang drücken → Kopieren',
+    'errNoMatches':'❌ Gib Spiele zum Analysieren ein.',
+    'errNoTeams':'❌ Gib beide Mannschaften ein.',
+    'errParseFail':'KI-Antwort nicht verarbeitet. Versuche mit weniger Spielen.',
+    'errParseFailLive':'KI-Antwort nicht verarbeitet. Prüfe die Mannschaften und das Ergebnis.',
+    'analysisFailed':'ANALYSE UNVOLLSTÄNDIG',
+    'authSignInSub':'Einloggen zum Speichern deiner Analysen',
+    'authContinueEmail':'Mit Email fortfahren',
+    'authOr':'oder',
+    'authContinueGoogle':'Mit Google fortfahren',
+    'authCheckEmail':'Überprüfe deine Email',
+    'authMagicSub':'Magic Link gesendet an',
+    'authSignOut':'Abmelden',
+    'authProfile':'Mein Profil'},
+  ar:{
+    copilot:'⚡ مساعدك الرياضي الذكي',
+    sportAll:'الكل',sportFoot:'كرة القدم',sportBasket:'كرة السلة',sportTennis:'التنس',
+    sportRugby:'الرغبي',sportMMA:'MMA',sportBoxing:'الملاكمة',sportHockey:'الهوكي',
+    sportHandball:'كرة اليد',sportVolley:'الكرة الطائرة',sportF1:'F1',
+    sportBaseball:'البيسبول',sportNFL:'NFL',sportNBA:'NBA',sportOther:'اخرى',sportWC:'كاس العالم',
+    manualPlaceholder:'ادخل مبارياتك هنا...',oddsHintFull:'→ Value + Kelly',
+    footerDesc:'SUPERCOACH اداة IA اعلامية فقط.',liveContextLabel:'سياق اضافي:',
+    roiTrackerTitle:'متتبع العائد',roiTapHint:'اضغط على كل مباراة!',
+    roiMatchesLabel:'مباريات',roiPreLabel:'قبل',clearHistory:'مسح',
+    settingsTitle:'⚙️ الاعدادات',settingsSectionDisplay:'العرض',settingsSectionAnalysis:'التحليل',
+    settingsSectionData:'البيانات',settingsSectionLegal:'قانوني',
+    settingsClock24Label:'🕐 تنسيق 24',settingsClock24Sub:'الافتراضي: AM/PM',
+    settingsDiagLabel2:'📊 شريط الوقت',settingsDiagSub:'توقيت الجلب والذكاء',
+    settingsSubBetsLabel:'💎 رهانات ذكية',settingsSubBetsSub:'فرص ثانوية',
+    settingsThresh:'🛡️ حد الثقة',settingsThreshVal:'70%',
+    settingsClearLabel:'🗑️ مسح ROI',settingsClearSub:'حذف السجل',
+    settingsApiLabel:'📡 حالة الخادم',settingsApiSub:'اختبار الاتصال',
+    settingsLegalLabel:'📋 القانوني',settingsGamble:'⚠️ المقامرة المسؤولة 18+',
+    urlLabel:'🔗 الصق رابط',urlDivider:'او الصق النص',fetchBtn:'⚡ جلب',
+    gamble:'⚠️ المقامرة المسؤولة · 18+',legalLink:'القانوني',
+    settingsVersion:'SUPERCOACH v9.0 · Gemini AI · 2026',
+    settingsDiagLabel:'شريط الوقت',settingsThreshLabel:'حد الثقة',
+    settingsClearRoi:'مسح',settingsCheckApi:'فحص',
+    roiEmptyTitle:'لا توجد تحليلات.',roiEmptySub:'ابدا تحليلك الاول!',
+    pasteHolder:'الصق المحتوى هنا...',
+    matchNotFound:'المباراة غير مؤكدة',matchNotFoundSub:'لم يتم العثور على المباراة.',
+    win:'فوز',loss:'خسارة',draw:'تعادل',free:'مجاني',
+    preName:'قبل المباراة',preSub:'تحليل كامل',liveName:'نصف الوقت',liveSub:'اعادة حساب',
+    inputLabel:'⚡ مباريات للتحليل',inputLabelLive:'📡 تحليل نصف الوقت',
+    filterSport:'تصفية',tabList:'قائمة',tabWeb:'صفحة ويب',
+    paste:'لصق',oddsLbl:'💰 الحصة',oddsHint:'→ قيمة + كيلي',
+    rot:'تدوير C1',inj:'اصابات',form:'الشكل',stake:'الرهانات',
+    analyze:'تحليل',home:'المضيف 🏠',away:'الضيف ✈️',comp:'البطولة',min:'الدقيقة',
+    htScore:'نتيجة نصف الوقت',liveOdds:'حصة الشوط الثاني',liveBtn:'تحليل مباشر',
+    roiTitle:'📊 عائدي',roiBtn:'📊 ROI',
+    navAnalyze:'تحليل',navRoi:'عائدي',navSettings:'اعدادات',
+    tapDetails:'اضغط للتفاصيل',newAnalysis:'↺ تحليل جديد',doNotBet:'⛔ لا تراهن',
+    units:'وحدة',wins:'🟢 انتصارات',draws:'⚪ تعادلات',losses:'🔴 خسائر',
+    potRoi:'العائد المحتمل',analyzing:'جار التحليل...',
+    fluxTab:'اليوم',fluxLoading:'جار تحميل المباريات...',fluxEmpty:'لا توجد مباريات.',
+    fluxSelectBtn:'تحليل الاختيار',fluxNoneSelected:'اختر مباراة واحدة',
+    wcBanner:'كاس العالم 2026',wcSub:'الولايات المتحدة · كندا · المكسيك',
+    coachTitle:'⚡ نصيحة المدرب',coachFriendly:'المباريات الودية لا رهانات.',
+    coachVolume:'اكثر من 5 اختيارات: الميزة تنهار.',coachSniper:'وضع القناص: 3 اختيارات كحد اقصى.',
+    friendlyWarning:'⚠️ مباراة ودية',bigParlay:'⚠️ مجموع كبير',
+    glossGuide:'دليل',gT1:'تناوب دوري الابطال',gS1:'عمق الفريق.',
+    gT2:'الاصابات',gS2:'حارس -10%، هداف -8%، قائد -5%.',
+    gT3:'الشكل',gS3:'5 مباريات. 3 انتصارات = +5%.',
+    gT4:'المواجهات',gS4:'السجل المباشر.',gT5:'الرهان',gS5:'الهبوط +15%، اللقب +10%.'
+  ,
+    'shareCopied':'✓ تم النسخ! شارك على تيليغرام',
+    'shareLongPress':'⚠ اضغط طويلاً → نسخ',
+    'errNoMatches':'❌ أدخل مباريات للتحليل.',
+    'errNoTeams':'❌ أدخل اسمي الفريقين.',
+    'errParseFail':'لم يتم معالجة استجابة الذكاء الاصطناعي. جرب مع مباريات أقل.',
+    'errParseFailLive':'لم تتم معالجة الاستجابة. تحقق من الفرق والنتيجة.',
+    'analysisFailed':'تحليل غير مكتمل',
+    'authSignInSub':'سجل دخولك لحفظ تحليلاتك',
+    'authContinueEmail':'المتابعة بالبريد',
+    'authOr':'أو',
+    'authContinueGoogle':'المتابعة مع Google',
+    'authCheckEmail':'تحقق من بريدك',
+    'authMagicSub':'تم إرسال الرابط إلى',
+    'authSignOut':'تسجيل الخروج',
+    'authProfile':'ملفي'}
+};
+
+function t(k){return (L[lang]||L.en)[k]||L.en[k]||k;}
+
+function checkWCBanner(){
+  var banner=document.getElementById('wcBanner');
+  if(!banner)return;
+  var now=new Date();
+  var start=new Date('2026-06-11');
+  var end=new Date('2026-07-20');
+  if(now>=start && now<=end){
+    banner.style.display='block';
+    var t1=document.getElementById('wcBannerTitle');
+    var t2=document.getElementById('wcBannerSub');
+    if(t1){ t1.textContent='⚽ ' + t('wcBanner'); t1.style.color='#fde68a'; }
+    if(t2)t2.textContent=t('wcSub');
+  }
+}
+function applyLang(){
+  document.body.style.direction = lang==='ar'?'rtl':'ltr';
+  setText('heroSub',t('copilot'));
+  setText('legWin',t('win'));setText('legLoss',t('loss'));setText('legDraw',t('draw'));
+  setText('badgeFree',t('free'));
+  setText('mPreTitle',t('preName'));setText('mPreSub',t('preSub'));
+  setText('mLiveTitle',t('liveName'));setText('mLiveSub',t('liveSub'));
+  setText('inputLabel',mode==='live'?t('inputLabelLive'):t('inputLabel'));
+  setText('sportFilterLbl',t('filterSport'));
+  setText('tabListLbl',t('tabList'));setText('tabWebLbl',t('tabWeb'));
+  setText('pasteBtnLbl',t('paste'));
+  setText('oddsLbl',t('oddsLbl'));setText('oddsHint',t('oddsHint'));
+  setText('cRotLbl',t('rot'));setText('cInjLbl',t('inj'));setText('cFormLbl',t('form'));setText('cStakeLbl',t('stake'));
+  setText('goBtnLbl',t('analyze'));
+  setText('homeLbl',t('home'));setText('awayLbl',t('away'));
+  setText('compLbl',t('comp'));setText('minLbl',t('min'));
+  setText('htScoreLbl',t('htScore'));setText('liveOddsLbl',t('liveOdds'));setText('liveBtnLbl',t('liveBtn'));
+  setText('roiTitle',t('roiTitle'));setText('roiBtn',t('roiBtn'));
+  setText('navAnalyzeLbl',t('navAnalyze'));setText('navRoiLbl',t('navRoi'));setText('navSettingsLbl',t('navSettings'));
+  // Update lang selector
+  var btn = document.getElementById('langBtn');
+  var flags = {en:'🇺🇸',fr:'🇫🇷',es:'🇪🇸',pt:'🇧🇷',ar:'🇸🇦',it:'🇮🇹',de:'🇩🇪'};
+  var names = {en:'EN',fr:'FR',es:'ES',pt:'PT',ar:'AR',it:'IT',de:'DE'};
+  if(btn) btn.textContent = (flags[lang]||'🌍')+' '+names[lang];
+  document.querySelectorAll('.lang-opt').forEach(function(o){
+    o.classList.toggle('active', o.getAttribute('data-l')===lang);
+  });
+  // Nouveaux éléments traduits
+  var ph = document.getElementById('pasteHolder');
+  if(ph) ph.placeholder = t('pasteHolder');
+  var fsl = document.getElementById('filterSportLabel');
+  if(fsl) fsl.textContent = t('filterSport');
+  // URL fetch
+  var el;
+  el=document.getElementById('urlLabelEl'); if(el) el.textContent=t('urlLabel');
+  el=document.getElementById('urlDividerEl'); if(el) el.textContent=t('urlDivider');
+  el=document.getElementById('fetchBtnLbl'); if(el) el.textContent=t('fetchBtn');
+  // Footer
+  el=document.getElementById('gambleLbl'); if(el) el.textContent=t('gamble');
+  el=document.getElementById('legalLinkLbl'); if(el) el.textContent=t('legalLink');
+  el=document.getElementById('footerDescEl'); if(el) el.innerHTML=t('footerDesc');
+  // Placeholders
+  var pi=document.getElementById('pasteInput'); if(pi) pi.placeholder=t('pasteHolder');
+  var mi=document.getElementById('manualInput'); if(mi) mi.placeholder=t('manualPlaceholder');
+  var lc=document.getElementById('liveCtxInput'); if(lc) lc.placeholder=t('liveContextLabel');
+  el=document.getElementById('oddsHintEl'); if(el) el.textContent=t('oddsHintFull');
+  // Sports grid — rebuild avec nouvelles traductions
+  buildSportGrid();
+  // Settings
+  el=document.getElementById('settingsTitleEl'); if(el) el.textContent=t('settingsTitle');
+  el=document.getElementById('settingsSecDisplayEl'); if(el) el.textContent=t('settingsSectionDisplay');
+  el=document.getElementById('settingsSecAnalysisEl'); if(el) el.textContent=t('settingsSectionAnalysis');
+  el=document.getElementById('settingsSecDataEl'); if(el) el.textContent=t('settingsSectionData');
+  el=document.getElementById('settingsSecLegalEl'); if(el) el.textContent=t('settingsSectionLegal');
+  el=document.getElementById('settingsClock24LabelEl'); if(el) el.textContent=t('settingsClock24Label');
+  el=document.getElementById('settingsClock24SubEl'); if(el) el.textContent=t('settingsClock24Sub');
+  el=document.getElementById('settingsDiagLabelEl'); if(el) el.textContent=t('settingsDiagLabel2');
+  el=document.getElementById('settingsDiagSubEl'); if(el) el.textContent=t('settingsDiagSub');
+  el=document.getElementById('settingsSubBetsLabelEl'); if(el) el.textContent=t('settingsSubBetsLabel');
+  el=document.getElementById('settingsSubBetsSubEl'); if(el) el.textContent=t('settingsSubBetsSub');
+  el=document.getElementById('settingsThreshLabelEl'); if(el) el.textContent=t('settingsThresh');
+  el=document.getElementById('settingsThreshValEl'); if(el) el.textContent=t('settingsThreshVal');
+  el=document.getElementById('settingsClearLabelEl'); if(el) el.textContent=t('settingsClearLabel');
+  el=document.getElementById('settingsClearSubEl'); if(el) el.textContent=t('settingsClearSub');
+  el=document.getElementById('settingsClearRoi'); if(el) el.textContent=t('settingsClearRoi');
+  el=document.getElementById('settingsApiLabelEl'); if(el) el.textContent=t('settingsApiLabel');
+  el=document.getElementById('settingsApiSubEl'); if(el) el.textContent=t('settingsApiSub');
+  el=document.getElementById('settingsCheckApi'); if(el) el.textContent=t('settingsCheckApi');
+  el=document.getElementById('settingsLegalLabelEl'); if(el) el.textContent=t('settingsLegalLabel');
+  el=document.getElementById('settingsGambleEl'); if(el) el.textContent=t('settingsGamble');
+  el=document.getElementById('settingsVersionEl'); if(el) el.textContent=t('settingsVersion');
+  // Coach tip title
+  el=document.getElementById('coachTipTitle'); if(el) el.textContent=t('coachTitle');
+  el=document.getElementById('coachTipSniper'); if(el && el.textContent) el.textContent=t('coachSniper');
+  // ROI Tracker
+  el=document.getElementById('roiTrackerTitle'); if(el) el.textContent=t('roiTrackerTitle');
+  el=document.getElementById('roiTapHint'); if(el) el.textContent=t('roiTapHint');
+  el=document.getElementById('clearHistoryBtn'); if(el) el.textContent=t('clearHistory');
+  // WC Banner sync langue + re-render flux
+  checkWCBanner();
+  if (window.matchPool && window.matchPool.length) renderFluxList();
+  // Auth modal sync langue
+  el=document.getElementById('authSubTitle'); if(el) el.textContent=t('authSignInSub');
+  el=document.getElementById('authSubmitLbl'); if(el) el.textContent=t('authContinueEmail');
+  el=document.getElementById('authDividerTxt'); if(el) el.textContent=t('authOr');
+  el=document.getElementById('authGoogleLbl'); if(el) el.textContent=t('authContinueGoogle');
+  el=document.getElementById('authMagicTitle'); if(el) el.textContent=t('authCheckEmail');
+  el=document.getElementById('authMagicSub'); if(el) el.textContent=t('authMagicSub');
+}
+function setText(id,val){var e=document.getElementById(id);if(e)e.textContent=val;}
+function setLang(l,ev){if(ev)ev.stopPropagation();lang=l;localStorage.setItem('sc_lang',l);closeLangPanel();applyLang();}
+function toggleLang(ev){ev.stopPropagation();var p=document.getElementById('langPanel');p.classList.toggle('open');}
+function closeLangPanel(){document.getElementById('langPanel').classList.remove('open');}
+document.addEventListener('click',function(){closeLangPanel();});
+
+
+// ══════════════════════════════════
+// REAL-TIME CLOCK SYSTEM
+// Injected into every prompt — no hallucination possible
+// ══════════════════════════════════
+function getRealTimeContext() {
+  var now = new Date();
+
+  // Exact timestamp
+  var ts = now.getTime();
+
+  // Full date components
+  var year  = now.getFullYear();
+  var month = now.getMonth() + 1;
+  var day   = now.getDate();
+  var hours = now.getHours();
+  var mins  = now.getMinutes();
+
+  // Timezone
+  var tzOffset = -now.getTimezoneOffset(); // in minutes
+  var tzHours  = Math.floor(Math.abs(tzOffset) / 60);
+  var tzMins   = Math.abs(tzOffset) % 60;
+  var tzSign   = tzOffset >= 0 ? '+' : '-';
+  var tzName   = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown';
+  var tzString = 'UTC' + tzSign + String(tzHours).padStart(2,'0') + ':' + String(tzMins).padStart(2,'0');
+
+  // Human-readable
+  var dateStr = String(day).padStart(2,'0') + '/' + String(month).padStart(2,'0') + '/' + year;
+  var timeStr = String(hours).padStart(2,'0') + ':' + String(mins).padStart(2,'0');
+  var dayName = now.toLocaleDateString('en-US', {weekday:'long'});
+  var monthName = now.toLocaleDateString('en-US', {month:'long'});
+
+  // What time is it in major sport timezones right now
+  var zones = [
+    {name:'Paris/CET',   offset:tzOffset, local:true},
+    {name:'London/GMT',  tz:'Europe/London'},
+    {name:'New York/ET', tz:'America/New_York'},
+    {name:'Los Angeles', tz:'America/Los_Angeles'},
+    {name:'Tokyo/JST',   tz:'Asia/Tokyo'},
+    {name:'Dubai/GST',   tz:'Asia/Dubai'}
+  ];
+  var zoneLines = zones.map(function(z) {
+    try {
+      var t = z.local ? timeStr :
+        now.toLocaleTimeString('en-US', {timeZone: z.tz, hour:'2-digit', minute:'2-digit', hour12:false});
+      return z.name + ': ' + t;
+    } catch(e) { return ''; }
+  }).filter(Boolean).join(' | ');
+
+  // Threshold: a match is "past" if it started more than 2h ago
+  // a match is "upcoming" if it starts within 7 days
+  var nowIso = now.toISOString();
+  var in7days = new Date(ts + 7*24*60*60*1000).toISOString();
+
+  return {
+    timestamp:    ts,
+    dateStr:      dateStr,
+    timeStr:      timeStr,
+    dayName:      dayName,
+    monthName:    monthName,
+    year:         year,
+    tzName:       tzName,
+    tzString:     tzString,
+    zoneLines:    zoneLines,
+    nowIso:       nowIso,
+    in7days:      in7days,
+    fullContext:
+      '━━━ REAL-TIME CONTEXT (injected at query time) ━━━\n' +
+      'Current date    : ' + dayName + ' ' + dateStr + '\n' +
+      'Current time    : ' + timeStr + '\n' +
+      'User timezone   : ' + tzName + ' (' + tzString + ')\n' +
+      'World clocks    : ' + zoneLines + '\n' +
+      'Unix timestamp  : ' + ts + '\n' +
+      '\n' +
+      '━━━ TEMPORAL RULES — MANDATORY ━━━\n' +
+      'RULE 1: Today is ' + dateStr + ' at ' + timeStr + ' (' + tzName + '). This is FACT, not estimation.\n' +
+      'RULE 2: Any match with a confirmed date BEFORE ' + dateStr + ' is PAST → EXCLUDE IT.\n' +
+      'RULE 3: Any match starting more than 2 hours ago (before ' + String(hours-2<0?hours-2+24:hours-2).padStart(2,'0') + ':' + String(mins).padStart(2,'0') + ') is likely IN PROGRESS or FINISHED.\n' +
+      'RULE 4: NEVER invent a date. NEVER assume a time. If date is unknown, say so explicitly.\n' +
+      'RULE 5: When user provides a URL or text, extract dates from that content exactly as written.\n' +
+      'RULE 6: Convert all times to user local timezone (' + tzName + ') when displaying.\n' +
+      'RULE 7: If a match date cannot be verified as future, flag it with: match_date_uncertain:true\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+  };
+}
+
+// ── INIT ──
+window.matchPool = window.matchPool || [];
+window.selectedMatches = window.selectedMatches || [];
+window._filteredPool = window._filteredPool || [];
+var clockIs24h = localStorage.getItem('sc_clock24') === '1'; // global scope
+// ── CLOCK — fonctions globales ──────────────────────────────
+function formatClock(date, use24h) {
+  var h = date.getHours();
+  var m = date.getMinutes();
+  var mStr = String(m).padStart(2,'0');
+  if(use24h) {
+    return String(h).padStart(2,'0') + ':' + mStr;
+  } else {
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12 = h % 12;
+    if(h12 === 0) h12 = 12;
+    return h12 + ':' + mStr + ' ' + ampm;
+  }
+}
+
+function updateClock() {
+  var now = new Date();
+  var el  = document.getElementById('hdrClock');
+  var fmt = document.getElementById('clockFmt');
+  if(el) el.textContent = formatClock(now, clockIs24h);
+  if(fmt) fmt.textContent = clockIs24h ? '24H' : '';
+}
+
+function toggleClockFormat() {
+  clockIs24h = !clockIs24h;
+  localStorage.setItem('sc_clock24', clockIs24h ? 'true' : 'false');
+  var pill = document.querySelector('.live-pill');
+  if(pill) {
+    pill.style.background = 'rgba(239,68,68,.3)';
+    setTimeout(function(){ pill.style.background = ''; }, 200);
+  }
+  updateClock();
+}
+
+// ══════════════════════════════════════════
+// AUTH — Supabase
+// ══════════════════════════════════════════
+var SUPABASE_URL = 'https://exezkqkyulzeslducsxi.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_LFbDRqlxiZ8bSLbfgQkaRA_06wGrtL3';
+var _sb = null;
+window._currentUser = null;
+
+function getSB() {
+  if (!_sb && window.supabase) {
+    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+  return _sb;
+}
+
+function initAuth() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.onAuthStateChange(function(event, session) {
+    if (session && session.user) {
+      window._currentUser = session.user;
+      fetchAndApplyProfile(session.user);
+    } else {
+      window._currentUser = null;
+      updateAuthUI(null);
+    }
+  });
+  sb.auth.getSession().then(function(res) {
+    if (res.data && res.data.session) {
+      window._currentUser = res.data.session.user;
+      fetchAndApplyProfile(res.data.session.user);
+    }
+  });
+}
+
+function fetchAndApplyProfile(user) {
+  var sb = getSB();
+  if (!sb) return;
+  sb.from('profiles').select('*').eq('id', user.id).single()
+  .then(function(res) {
+    if (res.data) {
+      window._userProfile = res.data;
+      updateAuthUI(user, res.data);
+      if (res.data.language) { lang = res.data.language; applyLang(); }
+    } else {
+      updateAuthUI(user, null);
+    }
+  });
+}
+
+function updateAuthUI(user, profile) {
+  var btn = document.getElementById('authBtn');
+  var avatar = document.getElementById('authAvatar');
+  var name = document.getElementById('authName');
+  if (!btn) return;
+  if (user) {
+    btn.onclick = function(){ openSheet('profileModal'); loadProfileModal(user, profile); };
+    if (avatar) avatar.textContent = getAvatarEmoji(profile && profile.avatar_id);
+    if (name) name.textContent = (profile && profile.username) || user.email.split('@')[0];
+  } else {
+    btn.onclick = function(){ openSheet('authModal'); };
+    if (avatar) avatar.textContent = '👤';
+    if (name) name.textContent = '';
+  }
+}
+
+function getAvatarEmoji(id) {
+  var map = {coach_01:'⚡',coach_02:'🎯',coach_03:'🏆',coach_04:'📊',coach_05:'🔥'};
+  return map[id] || '⚡';
+}
+
+function handleMagicLink() {
+  var email = document.getElementById('authEmail').value.trim();
+  if (!email || !email.includes('@')) return;
+  var sb = getSB();
+  if (!sb) return;
+  document.getElementById('authSubmitLbl').textContent = 'Sending...';
+  sb.auth.signInWithOtp({
+    email: email,
+    options: { emailRedirectTo: window.location.origin }
+  }).then(function(res) {
+    if (res.error) {
+      alert('Error: ' + res.error.message);
+      document.getElementById('authSubmitLbl').textContent = 'Continue with email';
+      return;
+    }
+    document.getElementById('authFormSection').style.display = 'none';
+    document.getElementById('authMagicSent').style.display = 'block';
+    document.getElementById('authSentEmail').textContent = email;
+  });
+}
+
+function handleGoogleAuth() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin }
+  });
+}
+
+function handleSignOut() {
+  var sb = getSB();
+  if (!sb) return;
+  sb.auth.signOut().then(function() {
+    window._currentUser = null;
+    window._userProfile = null;
+    closeSheet('profileModal');
+    updateAuthUI(null);
+  });
+}
+
+function loadProfileModal(user, profile) {
+  var sb = getSB();
+  document.getElementById('profileAvatarDisplay').textContent = getAvatarEmoji(profile && profile.avatar_id);
+  document.getElementById('profileNameDisplay').textContent = (profile && profile.username) || user.email.split('@')[0];
+  document.getElementById('profileEmailDisplay').textContent = user.email;
+  // Charger stats
+  if (sb && user) {
+    sb.from('stats').select('*').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profileWins').textContent = res.data.wins || 0;
+        document.getElementById('profileLosses').textContent = res.data.losses || 0;
+        document.getElementById('profileROI').textContent = (res.data.roi || 0) + '%';
+      }
+    });
+    sb.from('bankroll').select('*').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profileBankroll').textContent =
+          res.data.current_bankroll + ' ' + (res.data.currency || 'EUR');
+      }
+    });
+    sb.from('subscriptions').select('plan').eq('user_id', user.id).single()
+    .then(function(res) {
+      if (res.data) {
+        document.getElementById('profilePlanDisplay').textContent = (res.data.plan || 'free').toUpperCase();
+      }
+    });
+  }
+}
+
+function selectAvatar(id) {
+  var sb = getSB();
+  if (!sb || !window._currentUser) return;
+  sb.from('profiles').update({avatar_id: id}).eq('id', window._currentUser.id)
+  .then(function() {
+    document.getElementById('profileAvatarDisplay').textContent = getAvatarEmoji(id);
+    document.getElementById('authAvatar').textContent = getAvatarEmoji(id);
+    document.querySelectorAll('.avatar-opt').forEach(function(b){ b.classList.remove('selected'); });
+    event.target.classList.add('selected');
+  });
+}
+
+// ── WATCHER : active goBtn quand contenu détecté ──────
+function updateGoBtn() {
+  var btn = document.getElementById('goBtn');
+  if (!btn) return;
+  if (activeTab === 'flux') {
+    btn.style.display = 'none';
+    return;
+  }
+  btn.style.display = 'flex';
+  var hasContent = false;
+  if (activeTab === 'manual') {
+    var mi = document.getElementById('manualInput');
+    hasContent = mi && mi.value.trim().length > 3;
+  } else if (activeTab === 'paste') {
+    var pi = document.getElementById('pasteInput');
+    var ui = document.getElementById('urlInput');
+    hasContent = (pi && pi.value.trim().length > 3) || (ui && ui.value.trim().length > 5);
+  }
+  btn.classList.toggle('active', hasContent);
+}
+
+// ── /analyze-match — Moteur engine.js côté backend ──────────────
+// Utilisé pour les matchs du flux TODAY (données structurées disponibles)
+async function callAnalyzeMatch(matches, oddsVal) {
+  if (!matches || !matches.length) return null;
+
+  // Utiliser le premier match comme référence principale
+  const m = matches[0];
+  const sport = m.sportId === 'wc' ? 'football' : (m.sportId || 'football');
+
+  const apiData = {
+    sport: sport,
+    home: m.home,
+    away: m.away,
+    competition: m.competition || '',
+    date: m.dateUTC || new Date().toISOString(),
+    isDerbyOrRivalry: false,
+    isMinorLeague: false,
+    homeRank: null,
+    awayRank: null,
+    environment: {
+      travelTimeHours: 0,
+      weatherCondition: 'clear',
+      temperatureCelsius: 20,
+      baseballWindDirection: 'none',
+      homeLastMatchHoursAgo: null,
+      awayLastMatchHoursAgo: null,
+    },
+    context: { homeCrisis: false, awayCrisis: false,
+               homeNewCoachThisWeek: false, awayNewCoachThisWeek: false },
+    homeAbsences: {}, awayAbsences: {},
+    homeSubDepth: {}, awaySubDepth: {},
+    sportSpecific: {},
+    homeTitleRace: false, homeRelegation: false,
+    awayTitleRace: false, awayRelegation: false,
+    homeWinStreak: 0, awayWinStreak: 0,
+    advancedMetrics: {},
+    h2hSameVenue: false, h2hHomeWinRate: null,
+    userLang: lang || 'fr',
+  };
+
+  // Si plusieurs matchs cochés, les ajouter en contexte
+  if (matches.length > 1) {
+    apiData._additionalMatches = matches.slice(1).map(function(x) {
+      return x.home + ' vs ' + x.away + ' — ' + (x.competition || '');
+    });
+  }
+
+  try {
+    var ctrl = new AbortController();
+    setTimeout(function(){ ctrl.abort(); }, 30000);
+    var resp = await fetch(BACKEND + '/analyze-match', {
+      method: 'POST',
+      signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiData: apiData, odds: oddsVal || null })
+    });
+    if (!resp.ok) return null;
+    var data = await resp.json();
+    return data.success ? data : null;
+  } catch(e) {
+    console.warn('[callAnalyzeMatch] error:', e.message);
+    return null;
+  }
+}
+
+window.onload = function(){
+  // S'assurer que les modals sont fermés au chargement
+  var sm = document.getElementById('settingsModa');
+  if(sm) sm.classList.remove('open');
+  var _mi=document.getElementById('manualInput');
+  if(_mi) _mi.addEventListener('input',function(){
+    var v=this.value.trim();
+    var cb=document.getElementById('clearBtn');
+    if(cb)cb.style.display=v.length>0?'block':'none';
+    // Auto-détection URL → basculer vers WEB PAGE
+    if(v.startsWith('http://') || v.startsWith('https://')){
+      var urlInput=document.getElementById('urlInput');
+      if(urlInput){ urlInput.value=v; }
+      this.value='';
+      if(cb)cb.style.display='none';
+      // Switcher vers l'onglet WEB PAGE
+      switchTab('paste');
+      var st=document.getElementById('urlStatus');
+      if(st){ st.className='url-status ok'; st.textContent='✅ URL detected — tap FETCH to load'; }
+    }
+  });
+  // Listener sur le champ unique urlInput
+  var _ui=document.getElementById('urlInput');
+  if(_ui) _ui.addEventListener('input',function(){
+    var v=this.value.trim();
+    var fetchBtn=document.getElementById('urlFetchBtn');
+    var clearBtn=document.getElementById('clearBtnPaste');
+    var st=document.getElementById('urlStatus');
+    if(v.length>0){
+      if(clearBtn) clearBtn.style.display='block';
+    } else {
+      if(clearBtn) clearBtn.style.display='none';
+      if(fetchBtn) fetchBtn.style.display='none';
+      if(st) st.textContent='';
+      return;
+    }
+    var isUrl=v.startsWith('http://') || v.startsWith('https://');
+    if(isUrl){
+      if(fetchBtn) fetchBtn.style.display='none'; // FETCH intégré dans ANALYSER v9.0
+      if(st){ st.className='url-status ok'; st.textContent='🔗 URL détectée — clique ⚡ ANALYSER';}
+    } else {
+      if(fetchBtn) fetchBtn.style.display='none';
+      if(st) st.textContent='';
+    }
+  });
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
+  }
+  try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
+  try { applyLang(); } catch(e){ console.error('applyLang:', e); }
+  try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
+  try { updateGoBtn(); } catch(e){}
+  setTimeout(function(){
+    try { loadFluxMatches(); } catch(e){ console.error('loadFluxMatches:', e); }
+  }, 200);
+  try { updateClock(); } catch(e){}
+  setInterval(function(){ try { updateClock(); } catch(e){} }, 10000);
+};
+
+// ── SPORT GRID ──
+function buildSportGrid(){
+  var g = document.getElementById('sportGrid');
+  if (!g) return;
+  g.innerHTML = '';
+  SPORTS.forEach(function(s){
+    var on = activeSports.indexOf(s.id) > -1 || 
+             (activeSports.indexOf('all') > -1 && s.id === 'all');
+    var el = document.createElement('div');
+    el.className = 'sc' + (on ? ' sc-on' : '');
+    el.id = 'sc-'+s.id;
+    el.style.borderColor = on ? s.c : 'var(--b1)';
+    el.style.color       = on ? s.c : 'var(--t2)';
+    el.style.background  = on ? s.b : 'transparent';
+    el.style.fontWeight  = on ? '700' : '400';
+    var ico = document.createElement('div');
+    ico.className = 'sc-ico';
+    ico.style.background  = on ? s.b : 'transparent';
+    ico.style.border      = '1px solid ' + s.c + (on ? 'aa' : '44');
+    ico.style.boxShadow   = on ? '0 0 6px '+s.c+'55' : 'none';
+    ico.textContent = s.e;
+    el.appendChild(ico);
+    var lbl = document.createElement('span');
+    lbl.textContent = s.lk ? t(s.lk) : s.l;
+    el.appendChild(lbl);
+    el.addEventListener('touchend', (function(id){return function(e){e.preventDefault();toggleSport(id);};})(s.id));
+    el.addEventListener('click',    (function(id){return function(){toggleSport(id);};})(s.id));
+    g.appendChild(el);
+  });
+}
+
+function toggleSport(id){
+  // Mode exclusif : WC isole uniquement les matchs Coupe du Monde
+  var sportObj = SPORTS.filter(function(s){ return s.id===id; })[0];
+  if (sportObj && sportObj.exclusive) {
+    // Si WC déjà actif seul → revenir à "All"
+    if (activeSports.length===1 && activeSports[0]==='wc') {
+      activeSports = ['all'];
+    } else {
+      activeSports = ['wc'];
+    }
+  } else if (id==='all') {
+    activeSports = ['all'];
+  } else {
+    // Retirer 'all' et 'wc' exclusif si présents
+    activeSports = activeSports.filter(function(s){ return s!=='all' && s!=='wc'; });
+    var si = activeSports.indexOf(id);
+    if (si > -1) {
+      activeSports.splice(si, 1);
+      if (!activeSports.length) activeSports = ['all'];
+    } else {
+      activeSports.push(id);
+    }
+  }
+  buildSportGrid();
+  // NE PAS vider selectedMatches
+  if (activeTab==='flux') renderFluxList();
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mPre').classList.toggle('active',m==='pre');
+  document.getElementById('mLive').classList.toggle('active',m==='live');
+  document.getElementById('preMode').style.display=m==='pre'?'block':'none';
+  document.getElementById('liveMode').style.display=m==='live'?'block':'none';
+  setText('inputLabel',m==='live'?t('inputLabelLive'):t('inputLabel'));
+}
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('tabManual').classList.toggle('on',tab==='manual');
+  document.getElementById('tabPaste').classList.toggle('on',tab==='paste');
+  document.getElementById('tabFlux').classList.toggle('on',tab==='flux');
+  document.getElementById('panelManual').classList.toggle('on',tab==='manual');
+  document.getElementById('panelPaste').classList.toggle('on',tab==='paste');
+  document.getElementById('panelFlux').classList.toggle('on',tab==='flux');
+  if(tab==='flux'){
+    if(!window.matchPool.length) loadFluxMatches();
+    checkWCBanner();
+  }
+  // Bouton analyser flux visible seulement sur TODAY
+  updateFluxBtn();
+  updateGoBtn();
+}
+function toggleChip(k){
+  chips[k]=!chips[k];
+  document.getElementById('c-'+k).classList.toggle('on',chips[k]);
+}
+function navTo(p){
+  ['analyze','roi','settings'].forEach(function(x){
+    document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('on',x===p);
+  });
+}
+
+// ── PASTE ──
+function pasteClip(){
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(t){
+      if(t&&t.length>5){document.getElementById('pasteInput').value=t;showMsg('✓ '+t.length.toLocaleString()+' chars','ok');}
+      else showMsg('⚠ Clipboard empty','warn');
+    }).catch(function(){showMsg('⚠ Use Ctrl+V','warn');});
+  }else showMsg('⚠ Use Ctrl+V','warn');
+}
+function showMsg(m,type){var e=document.getElementById('pmsg');e.textContent=m;e.className='pmsg '+type;e.style.display='block';setTimeout(function(){e.style.display='none';},4000);}
+
+// ── BACKEND ──
+function callBackend(prompt){
+  return fetch(BACKEND+'/analyze',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})}).then(function(r){
+    if(!r.ok)return r.json().catch(function(){return{};}).then(function(e){throw new Error(e.error||'Server error '+r.status);});
+    return r.json();
+  }).then(function(d){
+    if(!d.result)throw new Error('Empty response');
+    window._lastDbIds = d.db_ids || [];  // Stocker les IDs Neon;
+    // Stocker le meta pour les timings
+    window._lastMeta = d.meta || null;
+    return d.result;
+  });
+}
+
+// ── PROMPT ──
+function normalizeTeamName(s) {
+  // Fuzzy normalization : casse, accents, connecteurs, espaces
+  return s
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // supprime accents
+    .replace(/\b(fc|cf|sc|ac|as|us|rc|og|if|bk|fk|sk|nk|rcd|afc|fca)\b/gi, '') // préfixes clubs
+    .replace(/[&+]/g, 'and')
+    .replace(/[^a-z0-9 ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function fuzzyMatchScore(a, b) {
+  var na = normalizeTeamName(a), nb = normalizeTeamName(b);
+  if (na === nb) return 1.0;
+  if (na.includes(nb) || nb.includes(na)) return 0.9;
+  // Distance de Levenshtein simplifiée
+  var la = na.length, lb = nb.length;
+  if (Math.abs(la - lb) > 6) return 0;
+  var dp = Array.from({length:la+1}, function(_,i){ return Array.from({length:lb+1}, function(_,j){ return i===0?j:j===0?i:0; }); });
+  for (var i=1;i<=la;i++) for (var j=1;j<=lb;j++)
+    dp[i][j] = na[i-1]===nb[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  var dist = dp[la][lb];
+  var maxLen = Math.max(la, lb);
+  return maxLen > 0 ? 1 - dist/maxLen : 1;
+}
+
+function parseRawText(raw) {
+  // Parser copier-coller : extrait les matchs depuis texte brut
+  var lines = raw.split(/\n/).map(function(l){ return l.trim(); }).filter(Boolean);
+  var matches = [];
+  var vsPattern = /^(.{2,35})\s+(?:vs?\.?|contre|–|-)\s+(.{2,35})$/i;
+  var timePattern = /\b(\d{1,2}[h:]\d{2}|\d{1,2}\s*[AaPp][Mm])\b/;
+  lines.forEach(function(line) {
+    var clean = line.replace(/[\u2013\u2014]/g, '-').replace(/\s+/g,' ');
+    var m = clean.match(vsPattern);
+    if (m) {
+      var time = '';
+      var nextIdx = lines.indexOf(line) + 1;
+      if (nextIdx < lines.length) {
+        var tm = lines[nextIdx].match(timePattern);
+        if (tm) time = tm[0];
+      }
+      matches.push(m[1].trim() + ' vs ' + m[2].trim() + (time ? ' - ' + time : ''));
+    }
+  });
+  return matches.length ? matches.join('\n') : raw;
+}
+
+function buildPrompt(content,isPage){
+  content = parseRawText(content);
+  var odds = document.getElementById('oddsInput').value.trim();
+  var sf = activeSports.indexOf('all')>-1 ? 'All sports' :
+    activeSports.map(function(id){
+      var s=SPORTS.filter(function(s){return s.id===id;})[0];
+      return s?(s.lk?t(s.lk):s.l):id;
+    }).join(', ');
+  var chips_str = [
+    chips.rot?'Rotations C1/C3':'',chips.inj?'Injuries':'',
+    chips.form?'Form L5':'',chips.h2h?'H2H':'',chips.stake?'Stakes':'',
+  ].filter(Boolean).join(', ');
+  var uLang = lang==='fr'?'French':lang==='es'?'Spanish':lang==='pt'?'Portuguese':lang==='ar'?'Arabic':lang==='it'?'Italian':lang==='de'?'German':'English';
+
+  return [
+    'SUPERCOACH v9.0 | Language:'+uLang+' | Sports:'+sf+(odds?' | Odds:'+odds:''),
+    'You are a deterministic sports analytics engine. Current year: 2026.',
+    chips_str?'Active: '+chips_str:'',
+    '',
+    'PIPELINE — apply per match in strict order:',
+    '1. BASE SCORE: Raw strength 0-100 each team. Initial%=HomeScore/(Home+Away)*100',
+    '2. PILIER 1 HOME: +5% home baseline. Away travel>4h: +2% extra.',
+    '3. PILIER 2 INJURIES: GK out -10%, Top scorer out -8%, Captain out -5%. Stack all.',
+    '4. PILIER 3 MOTIVATION: Relegation +15%, Title +10%. Derby=reset 50/50 THEN injuries.',
+    '5. FORM+H2H: 3+ wins row +5%. H2H same surface only.',
+    '',
+    'BANKROLL: VE%=(Conf/100-1/odds)*100. Units=(VE/(odds-1))*10 capped 0-5.',
+    'Recommend ONLY conf>=70% AND value_edge>0.',
+    '',
+    'SPORTS: Football(draw OK), MLB/NPB/KBO(pitcher ERA #1,NRFI), Basketball(B2B-15%),',
+    'Tennis(H2H same surface MANDATORY), NHL, Rugby, MMA. Any league worldwide.',
+    '',
+    'CRITICAL:',
+    '- Analyze ALL matches in input. Do NOT stop at 3.',
+    '- MAX 2 bullet points per justification.',
+    '- All text in '+uLang+' (justification, summary, sub_bets).',
+    '- Unknown league/team: use your knowledge, do not return NOT_FOUND.',
+    '- Only date_confirmed:false if match is truly impossible.',
+    '',
+    '{"matches":[{"rank":1,"sport":"Football","sport_id":"foot","home":"A","away":"B",',
+    '"competition":"League","match_date":"DD/MM/YYYY","match_time":"HH:MM","date_confirmed":true,',
+    '"result":"WIN_HOME","confidence":75,"odds_given":1.85,"value_edge_pct":2.1,',
+    '"value":"light","value_text":"75% vs 74.1% implied","units":1,',
+    '"rotation_alert":false,"rotation_text":"",',
+    '"justification":"• step1: 55%+5%=60%. • Pilier3: relegation +15% → 75%.",',
+    '"sub_bets":["Over 2.5 goals","Both teams score"]}],',
+    '"summary":"Global strategy in '+uLang+'","roi_potential":"Est. ROI: +X%"}',
+    'sport_id: foot|basket|tennis|rugby|mma|boxing|hockey|handball|volley|f1|baseball|nfl|other',
+    '',
+    'INPUT:',
+    content
+  ].filter(Boolean).join('\n');
+}
+
+function buildLivePrompt(){
+  var h    = document.getElementById('homeTeam').value || '?';
+  var a    = document.getElementById('awayTeam').value || '?';
+  var sh   = document.getElementById('scoreH').value || '0';
+  var sa   = document.getElementById('scoreA').value || '0';
+  var comp = document.getElementById('liveComp').value || '';
+  var min  = document.getElementById('liveMin').value || '45';
+  var ctx  = document.getElementById('liveCtx').value || '';
+  var odds = document.getElementById('liveOdds').value || '';
+
+  return (
+    'You are SUPERCOACH, elite sports analyst.\n'+
+    '━━━ LIVE MATCH — HALF TIME ━━━\n'+
+    'Match: '+h+' vs '+a+(comp?' | '+comp:'')+' | Minute: '+min+'\n'+
+    'Half-time score: '+h+' '+sh+' — '+sa+' '+a+'\n'+
+    (odds?'2nd half odds for '+h+': '+odds+'\n':'')+
+    (ctx?'\nAdditional context:\n'+ctx+'\n':'')+
+    '\n'+
+    '━━━ YOUR MISSION ━━━\n'+
+    'Use your complete knowledge of this match, these teams, and this competition.\n'+
+    'Combine your knowledge with the half-time score and context provided.\n'+
+    'Identify the best 2nd half betting opportunities.\n\n'+
+    'Half-time analysis rules:\n'+
+    '• Current score is the dominant factor — adjust from your pre-match knowledge\n'+
+    '• 2-goal lead = dominant team confidence +15%\n'+
+    '• Red card = affected team -20%\n'+
+    '• 0-0 at HT = draw probability increases +10%\n'+
+    '• Comeback specialists: factor team identity\n\n'+
+    'RESPONSE: Pure JSON only. Zero backticks.\n'+
+    '{"live":{\n'+
+    '  "match":"'+h+' vs '+a+'",\n'+
+    '  "score_ht":"'+sh+'-'+sa+'",\n'+
+    '  "minute":"'+min+'",\n'+
+    '  "final_prediction":"WIN_HOME",\n'+
+    '  "confidence_updated":72,\n'+
+    '  "confidence_initial":58,\n'+
+    '  "delta":"+14%",\n'+
+    '  "key_events":"Key factors from HT score + context",\n'+
+    '  "bets":[{"market":"Market name","rec":"strong","confidence":72,"units":3,"reason":"Specific reason"}],\n'+
+    '  "summary":"One sentence insight."\n'+
+    '}}'
+  );
+}
+// ── PARSER ──
+function tryP(s){try{return JSON.parse(s);}catch(e){return null;}}
+function fixT(s){
+  var f=s.replace(/,\s*$/,'');
+  var q=(f.match(/"/g)||[]).length;if(q%2!==0)f+='"';
+  var ob=(f.match(/\{/g)||[]).length-(f.match(/\}/g)||[]).length;
+  var oa=(f.match(/\[/g)||[]).length-(f.match(/\]/g)||[]).length;
+  for(var i=0;i<ob;i++)f+='}';for(var i=0;i<oa;i++)f+=']';
+  return tryP(f);
+}
 function parse(raw){
   if(!raw||!raw.trim())return null;
 
