@@ -1,0 +1,56 @@
+{
+  "id": "foot_wc_003",
+  "apiData": {
+    "sport": "football",
+    "home": "Argentina",
+    "away": "Albania",
+    "competition": "FIFA World Cup 2026 - Group Stage",
+    "date": "2026-06-12T23:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 68,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 22,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.4,
+        "homeUnderperforming": false,
+        "awayFor": 0.4,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.85,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.22,
+    "DRAW": 6.5,
+    "AWAY_WIN": 14.0
+  }
+}
