@@ -1,0 +1,56 @@
+{
+  "id": "foot_wc_004",
+  "apiData": {
+    "sport": "football",
+    "home": "Spain",
+    "away": "Colombia",
+    "competition": "FIFA World Cup 2026 - Group Stage",
+    "date": "2026-06-13T20:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 14,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 21,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 5,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.1,
+        "homeUnderperforming": false,
+        "awayFor": 1.2,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.6,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.75,
+    "DRAW": 3.6,
+    "AWAY_WIN": 4.8
+  }
+}
