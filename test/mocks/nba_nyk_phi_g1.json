@@ -1,0 +1,56 @@
+{
+  "id": "nba_nyk_phi_g1",
+  "apiData": {
+    "sport": "basketball",
+    "home": "New York Knicks",
+    "away": "Philadelphia 76ers",
+    "competition": "NBA Playoffs 2026 - Round 1",
+    "date": "2026-04-21T19:30:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 4,
+    "awayRank": 5,
+    "environment": {
+      "travelTimeHours": 1,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 16,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 72,
+      "awayLastMatchHoursAgo": 72
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": true,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": true
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 3.8,
+        "away": -0.5
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "AWAY_WIN": 2.5
+  }
+}
