@@ -1,0 +1,57 @@
+{
+  "id": "nhl_col_dal_g3",
+  "apiData": {
+    "sport": "hockey",
+    "home": "Colorado Avalanche",
+    "away": "Dallas Stars",
+    "competition": "NHL Playoffs 2026 - Round 1",
+    "date": "2026-04-25T21:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 5,
+    "environment": {
+      "travelTimeHours": 4,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 12,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeStartingGoalieOut": false,
+      "awayStartingGoalieOut": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "corsi": {
+        "homePct": 51.0,
+        "awayPct": 52.5
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.45,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.1,
+    "DRAW": 4.8,
+    "AWAY_WIN": 1.95
+  }
+}
