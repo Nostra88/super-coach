@@ -1,0 +1,58 @@
+{
+  "id": "tennis_rg_001",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Carlos Alcaraz",
+    "away": "Jannik Sinner",
+    "competition": "Roland Garros 2026 - Finale",
+    "date": "2026-06-08T14:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 24,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 6,
+    "awayWinStreak": 4,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 82,
+        "awayWinPct": 71,
+        "h2hHomeWins": 4,
+        "h2hTotal": 7
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.6,
+    "AWAY_WIN": 2.3
+  }
+}
