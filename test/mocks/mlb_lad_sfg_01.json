@@ -1,0 +1,60 @@
+{
+  "id": "mlb_lad_sfg_01",
+  "apiData": {
+    "sport": "baseball",
+    "home": "Los Angeles Dodgers",
+    "away": "San Francisco Giants",
+    "competition": "MLB 2026 - Regular Season",
+    "date": "2026-06-03T22:10:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 8,
+    "environment": {
+      "travelTimeHours": 1,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 20,
+      "baseballWindDirection": "in",
+      "homeLastMatchHoursAgo": 24,
+      "awayLastMatchHoursAgo": 24
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homePitcherIsAce": true,
+      "awayPitcherIsAce": false,
+      "homePitcherIsBullpen": false,
+      "awayPitcherIsBullpen": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": true,
+    "homeWinStreak": 6,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "war_fip": {
+        "homeWar": 5.1,
+        "homeFip": 2.98,
+        "awayWar": 1.9,
+        "awayFip": 4.2
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.68,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.4,
+    "AWAY_WIN": 3.0
+  }
+}
