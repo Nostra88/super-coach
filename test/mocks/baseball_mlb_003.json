@@ -1,0 +1,60 @@
+{
+  "id": "baseball_mlb_003",
+  "apiData": {
+    "sport": "baseball",
+    "home": "Chicago Cubs",
+    "away": "St. Louis Cardinals",
+    "competition": "MLB Regular Season 2026",
+    "date": "2026-05-20T01:20:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 6,
+    "awayRank": 8,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "heavy rain",
+      "temperatureCelsius": 11,
+      "baseballWindDirection": "in",
+      "homeLastMatchHoursAgo": 22,
+      "awayLastMatchHoursAgo": 22
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homePitcherIsAce": false,
+      "awayPitcherIsAce": false,
+      "homePitcherIsBullpen": false,
+      "awayPitcherIsBullpen": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 1,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "war_fip": {
+        "homeWar": 2.8,
+        "homeFip": 3.85,
+        "awayWar": 3.1,
+        "awayFip": 3.6
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.48,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.1,
+    "AWAY_WIN": 1.78
+  }
+}
