@@ -1,0 +1,56 @@
+{
+  "id": "nba_den_lac_g3",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Denver Nuggets",
+    "away": "LA Clippers",
+    "competition": "NBA Playoffs 2026 - Round 1",
+    "date": "2026-04-20T21:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 6,
+    "environment": {
+      "travelTimeHours": 4,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 15,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 20,
+      "awayLastMatchHoursAgo": 72
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 5.2,
+        "away": 2.1
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.6,
+    "AWAY_WIN": 2.4
+  }
+}
