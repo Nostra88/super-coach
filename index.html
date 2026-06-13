@@ -1913,9 +1913,10 @@ async function analyzeFlux() {
     for (var i = 0; i < pool.length; i++) {
       if (String(pool[i].id) === String(id)) {
         var m = pool[i];
-        lines.push(m.home + ' vs ' + m.away
-          + (m.competition ? ' — ' + m.competition : '')
-          + (m.time ? ' — ' + m.time : ''));
+        var line = m.home + ' vs ' + m.away;
+        if (m.competition) line += ' — ' + m.competition;
+        if (m.time) line += ' — ' + m.time;
+        lines.push(line);
         break;
       }
     }
@@ -1940,8 +1941,8 @@ async function analyzeFlux() {
   showOut(thinkingHTML(false));
   startThinkingAnimation(false);
 
-  callBackend(buildPrompt(lines.join('
-'), false)).then(function(raw) {
+  var matchText = lines.join('\n');
+  callBackend(buildPrompt(matchText, false)).then(function(raw) {
     var p = parse(raw);
     if (p && p.matches && p.matches.length > 0) {
       p.matches = normM(p.matches);
