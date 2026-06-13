@@ -22,6 +22,10 @@ const GEMINI_KEY    = process.env.GEMINI_KEY    || '';
 const ODDS_API_KEY  = process.env.ODDS_API_KEY  || '';
 const APISPORTS_KEY = process.env.APISPORTS_KEY || '';
 
+// ── MOTEUR QUANTITATIF ──────────────────────────────────────────
+const { GEMINI_SYSTEM_PROMPT, buildPrompt: buildEnginePrompt, computeKellyAndValueEdge } = require('./engine.js');
+
+
 // ── SUPABASE ADMIN CLIENT ──────────────────────────────
 const SUPABASE_URL  = process.env.SUPABASE_URL  || 'https://exezkqkyulzeslducsxi.supabase.co';
 const SUPABASE_KEY  = process.env.SUPABASE_SERVICE_KEY || '';
@@ -834,6 +838,127 @@ app.get('/user/me', async (req, res) => {
     const data = await r.json();
     res.json({ success: true, user: data[0] || null });
   } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── /analyze-match — Moteur engine.js complet ──────────────────
+// Reçoit apiData structuré, enrichit avec API-Football, appelle Gemini
+app.post('/analyze-match', async (req, res) => {
+  const timeout = setTimeout(() => {
+    if (!res.headersSent) res.status(503).json({ error: 'Timeout' });
+  }, 120000);
+
+  try {
+    const { apiData, odds } = req.body;
+    if (!apiData || !apiData.home || !apiData.away) {
+      clearTimeout(timeout);
+      return res.status(400).json({ error: 'apiData manquant (home, away requis)' });
+    }
+
+    // ── Enrichissement automatique API-Football ──
+    if (APISPORTS_KEY && apiData.sport === 'football') {
+      try {
+        const today = new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' });
+        const fixturesUrl = `https://v3.football.api-sports.io/fixtures?date=${today}&timezone=Europe/Paris`;
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 6000);
+        const fRes = await fetch(fixturesUrl, {
+          signal: ctrl.signal,
+          headers: { 'x-apisports-key': APISPORTS_KEY }
+        });
+        const fData = await fRes.json();
+        const fixtures = fData.response || [];
+
+        // Trouver le match correspondant par fuzzy matching des noms
+        const normalize = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const match = fixtures.find(f => {
+          const h = normalize(f.teams?.home?.name || '');
+          const a = normalize(f.teams?.away?.name || '');
+          const qh = normalize(apiData.home);
+          const qa = normalize(apiData.away);
+          return (h.includes(qh) || qh.includes(h)) && (a.includes(qa) || qa.includes(a));
+        });
+
+        if (match) {
+          // Injecter classement
+          if (match.league?.standings) {
+            apiData.homeRank = match.league.standings?.[0]?.rank || null;
+            apiData.awayRank = match.league.standings?.[1]?.rank || null;
+          }
+          // Injecter xG si disponibles
+          if (match.statistics) {
+            apiData.advancedMetrics = apiData.advancedMetrics || {};
+            apiData.advancedMetrics.xG = {
+              homeFor: match.statistics?.[0]?.statistics?.find(s => s.type === 'expected_goals')?.value || null,
+              awayFor: match.statistics?.[1]?.statistics?.find(s => s.type === 'expected_goals')?.value || null,
+            };
+          }
+          console.log(`[/analyze-match] Match enrichi: ${apiData.home} vs ${apiData.away}`);
+        }
+      } catch(e) {
+        console.warn('[/analyze-match] Enrichissement API-Football skippé:', e.message);
+      }
+    }
+
+    // ── Appel Gemini via engine.js ──
+    const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+    const userPrompt = buildEnginePrompt(apiData);
+    let geminiResult = null;
+
+    for (const model of models) {
+      try {
+        const ctrl = new AbortController();
+        setTimeout(() => ctrl.abort(), 25000);
+        const gRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
+          {
+            method: 'POST',
+            signal: ctrl.signal,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: GEMINI_SYSTEM_PROMPT }] },
+              contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+              generationConfig: { temperature: 0.0, responseMimeType: 'application/json' },
+            }),
+          }
+        );
+        if (!gRes.ok) continue;
+        const gData = await gRes.json();
+        const raw = gData?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!raw) continue;
+        geminiResult = JSON.parse(raw);
+        console.log(`[/analyze-match] ${model} ✅ conf=${geminiResult.confidence}%`);
+        break;
+      } catch(e) {
+        console.warn(`[/analyze-match] ${model} error:`, e.message);
+      }
+    }
+
+    if (!geminiResult) throw new Error('Gemini indisponible');
+
+    // ── Normalisation probabilités ──
+    const fp = geminiResult.final_probability;
+    const sport = (apiData.sport || 'football').toLowerCase();
+    if (['basketball', 'tennis', 'baseball'].includes(sport)) fp.draw = 0;
+    const total = (fp.home_win || 0) + (fp.draw || 0) + (fp.away_win || 0);
+    if (Math.abs(total - 1.0) > 0.005) {
+      fp.home_win /= total; fp.draw /= total; fp.away_win /= total;
+    }
+    ['home_win','draw','away_win'].forEach(k => {
+      fp[k] = Math.round(Math.min(0.95, Math.max(0, fp[k])) * 10000) / 10000;
+    });
+    if (apiData.isMinorLeague) geminiResult.confidence = Math.min(65, geminiResult.confidence);
+
+    // ── Kelly & Value Edge ──
+    const kelly = odds ? computeKellyAndValueEdge(geminiResult, parseFloat(odds)) : null;
+
+    clearTimeout(timeout);
+    res.json({ success: true, result: geminiResult, kelly });
+
+  } catch(e) {
+    clearTimeout(timeout);
+    console.error('[/analyze-match]', e.message);
     res.status(500).json({ error: e.message });
   }
 });
