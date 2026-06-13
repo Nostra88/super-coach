@@ -1,0 +1,58 @@
+{
+  "id": "tennis_ao_001",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Jannik Sinner",
+    "away": "Daniil Medvedev",
+    "competition": "Australian Open 2026 - Final",
+    "date": "2026-01-26T09:30:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 4,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "extreme heat",
+      "temperatureCelsius": 38,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 7,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "hard",
+        "homeWinPct": 79,
+        "awayWinPct": 72,
+        "h2hHomeWins": 5,
+        "h2hTotal": 8
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.5,
+    "AWAY_WIN": 2.6
+  }
+}
