@@ -518,11 +518,11 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .auth-btn:active{opacity:.7;}
 #authName{max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-.auth-sheet{padding:32px 24px;}
-.auth-logo{font-size:48px;text-align:center;margin-bottom:8px;}
+.auth-sheet{padding:20px 20px 16px;}
+.auth-logo{font-size:36px;text-align:center;margin-bottom:4px;}
 .auth-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;
   text-align:center;color:var(--green);margin-bottom:4px;}
-.auth-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:24px;}
+.auth-sub{font-size:12px;color:var(--t2);text-align:center;margin-bottom:14px;}
 .auth-input{width:100%;padding:14px 16px;background:var(--s2);border:1px solid var(--b1);
   border-radius:10px;color:var(--t1);font-size:15px;margin-bottom:12px;
   box-sizing:border-box;-webkit-appearance:none;}
@@ -530,7 +530,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .auth-submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--green),var(--green2));
   border:none;border-radius:10px;color:#fff;font-family:'Bebas Neue',sans-serif;
   font-size:18px;letter-spacing:2px;cursor:pointer;margin-bottom:16px;}
-.auth-divider{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.auth-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1);}
 .auth-divider span{color:var(--t2);font-size:12px;}
 .google-btn{width:100%;padding:14px;background:var(--s2);border:1px solid var(--b1);
@@ -2071,7 +2071,8 @@ var L = {
     'authCheckEmail':'Check your email',
     'authMagicSub':'We sent a magic link to',
     'authSignOut':'Sign out',
-    'authProfile':'My Profile'},
+    'authProfile':'My Profile',
+    'langChangeNote':'New language applies to the next analysis'},
   fr:{
     copilot:'⚡ Ton copilote IA sportif',
     sportAll:'Tous',sportFoot:'Football',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2143,7 +2144,8 @@ var L = {
     'authCheckEmail':'Vérifie ta boîte mail',
     'authMagicSub':'Lien magique envoyé à',
     'authSignOut':'Déconnexion',
-    'authProfile':'Mon Profil'},
+    'authProfile':'Mon Profil',
+    'langChangeNote':'La nouvelle langue s'applique à la prochaine analyse'},
   es:{
     copilot:'⚡ Tu copiloto IA deportivo',
     sportAll:'Todos',sportFoot:'Futbol',sportBasket:'Baloncesto',sportTennis:'Tenis',
@@ -2209,7 +2211,8 @@ var L = {
     'authCheckEmail':'Revisa tu correo',
     'authMagicSub':'Enlace mágico enviado a',
     'authSignOut':'Cerrar sesión',
-    'authProfile':'Mi Perfil'},
+    'authProfile':'Mi Perfil',
+    'langChangeNote':'El nuevo idioma se aplica al próximo análisis'},
   pt:{
     copilot:'⚡ Seu copiloto IA esportivo',
     sportAll:'Todos',sportFoot:'Futebol',sportBasket:'Basquete',sportTennis:'Tennis',
@@ -2275,7 +2278,8 @@ var L = {
     'authCheckEmail':'Verifique seu email',
     'authMagicSub':'Link mágico enviado para',
     'authSignOut':'Sair',
-    'authProfile':'Meu Perfil'},
+    'authProfile':'Meu Perfil',
+    'langChangeNote':'O novo idioma aplica-se à próxima análise'},
   it:{
     copilot:'⚡ Il tuo copilota sportivo IA',
     sportAll:'Tutti',sportFoot:'Calcio',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2341,7 +2345,8 @@ var L = {
     'authCheckEmail':'Controlla la tua email',
     'authMagicSub':'Link magico inviato a',
     'authSignOut':'Esci',
-    'authProfile':'Il mio Profilo'},
+    'authProfile':'Il mio Profilo',
+    'langChangeNote':'La nuova lingua si applica alla prossima analisi'},
   de:{
     copilot:'⚡ Dein KI-Sport-Copilot',
     sportAll:'Alle',sportFoot:'Fussball',sportBasket:'Basketball',sportTennis:'Tennis',
@@ -2408,7 +2413,8 @@ var L = {
     'authCheckEmail':'Überprüfe deine Email',
     'authMagicSub':'Magic Link gesendet an',
     'authSignOut':'Abmelden',
-    'authProfile':'Mein Profil'},
+    'authProfile':'Mein Profil',
+    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse'},
   ar:{
     copilot:'⚡ مساعدك الرياضي الذكي',
     sportAll:'الكل',sportFoot:'كرة القدم',sportBasket:'كرة السلة',sportTennis:'التنس',
@@ -2474,7 +2480,8 @@ var L = {
     'authCheckEmail':'تحقق من بريدك',
     'authMagicSub':'تم إرسال الرابط إلى',
     'authSignOut':'تسجيل الخروج',
-    'authProfile':'ملفي'}
+    'authProfile':'ملفي',
+    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي'}
 };
 
 function t(k){return (L[lang]||L.en)[k]||L.en[k]||k;}
@@ -2574,6 +2581,19 @@ function applyLang(){
   // WC Banner sync langue + re-render flux
   checkWCBanner();
   if (window.matchPool && window.matchPool.length) renderFluxList();
+  // Si résultats affichés → avertir que la langue ne s'applique qu'aux nouvelles analyses
+  var out = document.getElementById('output');
+  if (out && out.innerHTML && out.innerHTML.length > 100) {
+    var warn = document.getElementById('langChangeWarn');
+    if (!warn) {
+      warn = document.createElement('div');
+      warn.id = 'langChangeWarn';
+      warn.style.cssText = 'background:rgba(234,179,8,.15);border:1px solid rgba(234,179,8,.3);border-radius:8px;padding:8px 12px;font-size:11px;color:#eab308;margin-bottom:8px;text-align:center;';
+      warn.textContent = t('langChangeNote') || 'New language applies to next analysis';
+      out.insertBefore(warn, out.firstChild);
+      setTimeout(function(){ if(warn.parentNode) warn.parentNode.removeChild(warn); }, 4000);
+    }
+  }
   // Auth modal sync langue
   el=document.getElementById('authSubTitle'); if(el) el.textContent=t('authSignInSub');
   el=document.getElementById('authSubmitLbl'); if(el) el.textContent=t('authContinueEmail');
@@ -3198,6 +3218,7 @@ function buildPrompt(content,isPage){
 
   return [
     'SUPERCOACH v9.0 | Language:'+uLang+' | Sports:'+sf+(odds?' | Odds:'+odds:''),
+    'MANDATORY: Write ALL analysis text (justification, summary, sub_bets, all_output) EXCLUSIVELY in '+uLang+'. No English unless uLang is English.',
     'You are a deterministic sports analytics engine. Current year: 2026.',
     chips_str?'Active: '+chips_str:'',
     '',
@@ -3217,7 +3238,7 @@ function buildPrompt(content,isPage){
     'CRITICAL:',
     '- Analyze ALL matches in input. Do NOT stop at 3.',
     '- MAX 2 bullet points per justification.',
-    '- All text in '+uLang+' (justification, summary, sub_bets).',
+    '- MANDATORY: Every single word of justification, summary, sub_bets, coach_tip MUST be in '+uLang+'. Zero English words if language is not English.',
     '- Unknown league/team: use your knowledge, do not return NOT_FOUND.',
     '- Only date_confirmed:false if match is truly impossible.',
     '',
