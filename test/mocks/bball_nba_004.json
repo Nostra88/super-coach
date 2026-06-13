@@ -1,0 +1,56 @@
+{
+  "id": "bball_nba_004",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Miami Heat",
+    "away": "Cleveland Cavaliers",
+    "competition": "NBA Regular Season 2025-26",
+    "date": "2026-02-14T01:30:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 8,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 22,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 22,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": true,
+      "awayFranchisePlayerOut": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 0,
+    "awayWinStreak": 5,
+    "advancedMetrics": {
+      "netRating": {
+        "home": -3.2,
+        "away": 9.1
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 3.2,
+    "AWAY_WIN": 1.35
+  }
+}
