@@ -1,0 +1,58 @@
+{
+  "id": "rg2026_swiatek_gauff_sf",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Iga Swiatek",
+    "away": "Coco Gauff",
+    "competition": "Roland Garros 2026 Women - Semi-Final",
+    "date": "2026-06-05T11:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 3,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 22,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 7,
+    "awayWinStreak": 4,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 88,
+        "awayWinPct": 62,
+        "h2hHomeWins": 8,
+        "h2hTotal": 10
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.3,
+    "AWAY_WIN": 3.5
+  }
+}
