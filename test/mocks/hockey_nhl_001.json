@@ -1,0 +1,57 @@
+{
+  "id": "hockey_nhl_001",
+  "apiData": {
+    "sport": "hockey",
+    "home": "Florida Panthers",
+    "away": "Edmonton Oilers",
+    "competition": "NHL Stanley Cup Finals 2025 Game 7",
+    "date": "2025-06-24T00:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 22,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeStartingGoalieOut": false,
+      "awayStartingGoalieOut": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 1,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "corsi": {
+        "homePct": 51.2,
+        "awayPct": 52.8
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.5,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.95,
+    "DRAW": 4.5,
+    "AWAY_WIN": 2.1
+  }
+}
