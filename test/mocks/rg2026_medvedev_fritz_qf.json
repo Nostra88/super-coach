@@ -1,0 +1,58 @@
+{
+  "id": "rg2026_medvedev_fritz_qf",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Daniil Medvedev",
+    "away": "Taylor Fritz",
+    "competition": "Roland Garros 2026 - Quarter-Final",
+    "date": "2026-06-04T13:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 5,
+    "awayRank": 8,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "heavy rain",
+      "temperatureCelsius": 17,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 58,
+        "awayWinPct": 51,
+        "h2hHomeWins": 3,
+        "h2hTotal": 5
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.7,
+    "AWAY_WIN": 2.15
+  }
+}
