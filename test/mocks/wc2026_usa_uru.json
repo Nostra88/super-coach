@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_usa_uru",
+  "apiData": {
+    "sport": "football",
+    "home": "USA",
+    "away": "Uruguay",
+    "competition": "World Cup 2026 Group C",
+    "date": "2026-06-12T22:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 11,
+    "awayRank": 18,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 25,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.6,
+        "homeUnderperforming": false,
+        "awayFor": 1.4,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.45,
+    "userLang": "en"
+  },
+  "actual_outcome": "DRAW",
+  "historical_odds": {
+    "HOME_WIN": 2.4,
+    "DRAW": 3.1,
+    "AWAY_WIN": 2.9
+  }
+}
