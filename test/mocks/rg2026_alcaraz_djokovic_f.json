@@ -1,0 +1,58 @@
+{
+  "id": "rg2026_alcaraz_djokovic_f",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Carlos Alcaraz",
+    "away": "Novak Djokovic",
+    "competition": "Roland Garros 2026 - Final",
+    "date": "2026-06-08T14:00:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 4,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 21,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 6,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 80,
+        "awayWinPct": 74,
+        "h2hHomeWins": 5,
+        "h2hTotal": 9
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "es"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.62,
+    "AWAY_WIN": 2.3
+  }
+}
