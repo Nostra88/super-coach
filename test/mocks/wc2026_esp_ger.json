@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_esp_ger",
+  "apiData": {
+    "sport": "football",
+    "home": "Spain",
+    "away": "Germany",
+    "competition": "World Cup 2026 Group F",
+    "date": "2026-06-16T19:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 6,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 24,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.2,
+        "homeUnderperforming": false,
+        "awayFor": 1.8,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.48,
+    "userLang": "es"
+  },
+  "actual_outcome": "DRAW",
+  "historical_odds": {
+    "HOME_WIN": 2.2,
+    "DRAW": 3.3,
+    "AWAY_WIN": 3.1
+  }
+}
