@@ -1,0 +1,60 @@
+{
+  "id": "foot_derby_001",
+  "apiData": {
+    "sport": "football",
+    "home": "Real Madrid",
+    "away": "Barcelona",
+    "competition": "La Liga 2025-26",
+    "date": "2026-04-26T20:00:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 20,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 96,
+      "awayLastMatchHoursAgo": 96
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {
+      "topScorer": true
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {
+      "topScorer": false
+    },
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.8,
+        "homeUnderperforming": false,
+        "awayFor": 1.4,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.52,
+    "userLang": "es"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.2,
+    "DRAW": 3.3,
+    "AWAY_WIN": 3.1
+  }
+}
