@@ -1,0 +1,60 @@
+{
+  "id": "mlb_atl_nyy_01",
+  "apiData": {
+    "sport": "baseball",
+    "home": "Atlanta Braves",
+    "away": "New York Yankees",
+    "competition": "MLB 2026 - Regular Season",
+    "date": "2026-06-08T19:20:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 2,
+      "weatherCondition": "heavy rain",
+      "temperatureCelsius": 28,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 24,
+      "awayLastMatchHoursAgo": 24
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homePitcherIsAce": false,
+      "awayPitcherIsAce": true,
+      "homePitcherIsBullpen": true,
+      "awayPitcherIsBullpen": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 1,
+    "awayWinStreak": 4,
+    "advancedMetrics": {
+      "war_fip": {
+        "homeWar": 2.1,
+        "homeFip": 4.9,
+        "awayWar": 4.8,
+        "awayFip": 3.05
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.6,
+    "AWAY_WIN": 1.55
+  }
+}
