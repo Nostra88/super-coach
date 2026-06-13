@@ -1,0 +1,58 @@
+{
+  "id": "rg2026_ruud_paul_r16",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Casper Ruud",
+    "away": "Tommy Paul",
+    "competition": "Roland Garros 2026 - Round of 16",
+    "date": "2026-06-02T10:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 7,
+    "awayRank": 11,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 24,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 76,
+        "awayWinPct": 48,
+        "h2hHomeWins": 4,
+        "h2hTotal": 5
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.45,
+    "AWAY_WIN": 2.75
+  }
+}
