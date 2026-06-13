@@ -1,0 +1,56 @@
+{
+  "id": "foot_ucl_001",
+  "apiData": {
+    "sport": "football",
+    "home": "PSG",
+    "away": "Arsenal",
+    "competition": "Champions League Final 2026",
+    "date": "2026-05-31T20:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 19,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 168,
+      "awayLastMatchHoursAgo": 168
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 6,
+    "awayWinStreak": 5,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.0,
+        "homeUnderperforming": false,
+        "awayFor": 1.7,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.5,
+    "userLang": "fr"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.1,
+    "DRAW": 3.4,
+    "AWAY_WIN": 3.2
+  }
+}
