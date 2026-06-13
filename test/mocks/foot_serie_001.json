@@ -1,0 +1,56 @@
+{
+  "id": "foot_serie_001",
+  "apiData": {
+    "sport": "football",
+    "home": "Inter Milan",
+    "away": "AC Milan",
+    "competition": "Serie A 2025-26",
+    "date": "2026-04-05T20:45:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 4,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 16,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 120,
+      "awayLastMatchHoursAgo": 120
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": true,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 5,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.2,
+        "homeUnderperforming": false,
+        "awayFor": 0.8,
+        "awayUnderperforming": true
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.58,
+    "userLang": "it"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.8,
+    "DRAW": 3.5,
+    "AWAY_WIN": 4.2
+  }
+}
