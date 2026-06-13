@@ -1900,7 +1900,7 @@ function updateCoachTip() {
   }
 }
 
-function analyzeFlux() {
+async function analyzeFlux() {
   var sel = window.selectedMatches || [];
   if (!sel.length) {
     showOut('<div class="err-box">' + t('errNoMatches') + '</div>');
@@ -3054,13 +3054,15 @@ window.onload = function(){
   if('serviceWorker' in navigator){
     navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
   }
-  buildSportGrid();
-  applyLang();
-  checkWCBanner();
-  // Charger les matchs du jour immédiatement (onglet TODAY par défaut)
-  setTimeout(function(){ loadFluxMatches(); }, 200);
-  updateClock();
-  setInterval(updateClock, 10000);
+  try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
+  try { applyLang(); } catch(e){ console.error('applyLang:', e); }
+  try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
+  try { updateGoBtn(); } catch(e){}
+  setTimeout(function(){
+    try { loadFluxMatches(); } catch(e){ console.error('loadFluxMatches:', e); }
+  }, 200);
+  try { updateClock(); } catch(e){}
+  setInterval(function(){ try { updateClock(); } catch(e){} }, 10000);
 };
 
 // ── SPORT GRID ──
