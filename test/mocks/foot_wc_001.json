@@ -1,0 +1,56 @@
+{
+  "id": "foot_wc_001",
+  "apiData": {
+    "sport": "football",
+    "home": "USA",
+    "away": "Panama",
+    "competition": "FIFA World Cup 2026 - Group Stage",
+    "date": "2026-06-12T20:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 11,
+    "awayRank": 86,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 24,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.8,
+        "homeUnderperforming": false,
+        "awayFor": 0.7,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.7,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.45,
+    "DRAW": 4.2,
+    "AWAY_WIN": 7.5
+  }
+}
