@@ -1,0 +1,57 @@
+{
+  "id": "nhl_edm_van_g1",
+  "apiData": {
+    "sport": "hockey",
+    "home": "Edmonton Oilers",
+    "away": "Vancouver Canucks",
+    "competition": "NHL Playoffs 2026 - Round 1",
+    "date": "2026-04-22T20:00:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 4,
+    "environment": {
+      "travelTimeHours": 1,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 8,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 72,
+      "awayLastMatchHoursAgo": 72
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeStartingGoalieOut": false,
+      "awayStartingGoalieOut": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "corsi": {
+        "homePct": 53.2,
+        "awayPct": 48.1
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.58,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.75,
+    "DRAW": 4.5,
+    "AWAY_WIN": 2.2
+  }
+}
