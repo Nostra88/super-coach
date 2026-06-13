@@ -1,0 +1,60 @@
+{
+  "id": "baseball_mlb_002",
+  "apiData": {
+    "sport": "baseball",
+    "home": "Atlanta Braves",
+    "away": "Philadelphia Phillies",
+    "competition": "MLB NLCS 2025 - Game 5",
+    "date": "2025-10-18T00:08:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 3,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 16,
+      "baseballWindDirection": "out",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homePitcherIsAce": true,
+      "awayPitcherIsAce": false,
+      "homePitcherIsBullpen": false,
+      "awayPitcherIsBullpen": true
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "war_fip": {
+        "homeWar": 4.8,
+        "homeFip": 2.95,
+        "awayWar": 2.1,
+        "awayFip": 4.8
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.6,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "AWAY_WIN": 2.5
+  }
+}
