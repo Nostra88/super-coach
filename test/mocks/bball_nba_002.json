@@ -1,0 +1,56 @@
+{
+  "id": "bball_nba_002",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Boston Celtics",
+    "away": "Oklahoma City Thunder",
+    "competition": "NBA Finals 2025-26 Game 2",
+    "date": "2026-06-08T02:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 20,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 72,
+      "awayLastMatchHoursAgo": 72
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 1,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 6.5,
+        "away": 8.2
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.9,
+    "AWAY_WIN": 1.9
+  }
+}
