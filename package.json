@@ -4,7 +4,10 @@
   "description": "SUPERCOACH Backend",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest --verbose",
+    "test:cov": "jest --coverage",
+    "backtest": "node test/backtest.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -13,5 +16,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
   }
 }
