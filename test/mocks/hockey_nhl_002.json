@@ -1,0 +1,57 @@
+{
+  "id": "hockey_nhl_002",
+  "apiData": {
+    "sport": "hockey",
+    "home": "Toronto Maple Leafs",
+    "away": "Boston Bruins",
+    "competition": "NHL Playoffs 2026 - Round 1",
+    "date": "2026-04-22T00:00:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 8,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 96,
+      "awayLastMatchHoursAgo": 96
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeStartingGoalieOut": true,
+      "awayStartingGoalieOut": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "corsi": {
+        "homePct": 47.5,
+        "awayPct": 54.2
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.4,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.6,
+    "DRAW": 4.2,
+    "AWAY_WIN": 1.65
+  }
+}
