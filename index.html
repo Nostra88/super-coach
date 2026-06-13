@@ -1907,7 +1907,6 @@ async function analyzeFlux() {
     return;
   }
 
-  // Construire les lignes depuis matchPool
   var lines = [];
   var pool = window.matchPool || [];
   sel.forEach(function(id) {
@@ -1922,7 +1921,6 @@ async function analyzeFlux() {
     }
   });
 
-  // Fallback DOM si matchPool vide
   if (!lines.length) {
     document.querySelectorAll('.flux-item.selected').forEach(function(el) {
       var teams = el.querySelectorAll('.flux-team');
@@ -1942,55 +1940,8 @@ async function analyzeFlux() {
   showOut(thinkingHTML(false));
   startThinkingAnimation(false);
 
-  // Tenter engine.js (/analyze-match) si 1 seul match avec données complètes
-  var enrichedMatches = pool.filter(function(m){
-    return sel.indexOf(String(m.id)) > -1;
-  });
-  var oddsVal = document.getElementById('oddsInput') ? document.getElementById('oddsInput').value.trim() : '';
-  var useEngine = enrichedMatches.length === 1 && !!enrichedMatches[0].dateUTC;
-
-  var rawPromise;
-  if (useEngine) {
-    rawPromise = callAnalyzeMatch(enrichedMatches, oddsVal).then(function(engineResult) {
-      if (!engineResult || !engineResult.result) return null;
-      var r = engineResult.result;
-      var fp = r.final_probability;
-      var maxProb = Math.max(fp.home_win, fp.draw || 0, fp.away_win);
-      var outcome = fp.home_win >= fp.away_win ? 'WIN_HOME' : 'WIN_AWAY';
-      if ((fp.draw || 0) > fp.home_win && (fp.draw || 0) > fp.away_win) outcome = 'DRAW';
-      var pick = {
-        rank: 1,
-        sport: enrichedMatches[0].sportId || 'foot',
-        sport_id: enrichedMatches[0].sportId || 'foot',
-        home: r.home_team || enrichedMatches[0].home,
-        away: r.away_team || enrichedMatches[0].away,
-        competition: enrichedMatches[0].competition || '',
-        match_date: null,
-        match_time: enrichedMatches[0].time || '',
-        result: outcome,
-        confidence: r.confidence || Math.round(maxProb * 100),
-        odds_given: parseFloat(oddsVal) || null,
-        value_edge_pct: engineResult.kelly ? engineResult.kelly.valueEdgePct : 0,
-        value: engineResult.kelly && engineResult.kelly.valueEdgePct > 0 ? 'value' : 'neutral',
-        value_text: engineResult.kelly ? engineResult.kelly.recommendation : '',
-        units: engineResult.kelly ? engineResult.kelly.kellyUnits : 2,
-        rotation_alert: false, rotation_text: '',
-        justification: r.analysis_summary || '',
-        sub_bets: [], date_uncertain: false,
-        steps_log: r.steps_log || null,
-      };
-      return JSON.stringify({ matches: [pick], summary: r.analysis_summary || '', roi_potential: '' });
-    }).catch(function() { return null; }).then(function(engineRaw) {
-      // Fallback sur /analyze si engine.js échoue
-      return engineRaw || callBackend(buildPrompt(lines.join('
-'), false));
-    });
-  } else {
-    rawPromise = callBackend(buildPrompt(lines.join('
-'), false));
-  }
-
-  rawPromise.then(function(raw) {
+  callBackend(buildPrompt(lines.join('
+'), false)).then(function(raw) {
     var p = parse(raw);
     if (p && p.matches && p.matches.length > 0) {
       p.matches = normM(p.matches);
@@ -1998,7 +1949,7 @@ async function analyzeFlux() {
       showOut(renderResults(p));
       setTimeout(function(){
         var out = document.getElementById('output');
-        if (out) out.scrollIntoView({behavior: 'smooth'});
+        if (out) out.scrollIntoView({behavior:'smooth'});
       }, 300);
     } else {
       var fb = extractFallbackMatches(raw);
