@@ -1,0 +1,58 @@
+{
+  "id": "tennis_wimb_001",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Novak Djokovic",
+    "away": "Carlos Alcaraz",
+    "competition": "Wimbledon 2025 - Final",
+    "date": "2025-07-13T14:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 21,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 5,
+    "awayWinStreak": 6,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "grass",
+        "homeWinPct": 85,
+        "awayWinPct": 78,
+        "h2hHomeWins": 2,
+        "h2hTotal": 5
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.9,
+    "AWAY_WIN": 1.9
+  }
+}
