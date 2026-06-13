@@ -1943,7 +1943,57 @@ function analyzeFlux() {
   showOut(thinkingHTML(false));
   startThinkingAnimation(false);
 
-  callBackend(buildPrompt(lines.join('\n'), false)).then(function(raw) {
+  // Tenter /analyze-match (engine.js) en priorité
+  var pool = window.matchPool || [];
+  var enrichedMatches = pool.filter(function(m){
+    return ids.indexOf(String(m.id)) > -1;
+  });
+
+  var oddsVal = document.getElementById('oddsInput') ? document.getElementById('oddsInput').value.trim() : '';
+
+  // Si 1 seul match → utiliser /analyze-match pour enrichissement auto
+  var useEngine = enrichedMatches.length === 1 && enrichedMatches[0].dateUTC;
+
+  var analysisPromise = useEngine
+    ? callAnalyzeMatch(enrichedMatches, oddsVal).then(function(engineResult) {
+        if (engineResult && engineResult.result) {
+          // Convertir le format engine.js vers le format renderResults attendu
+          var r = engineResult.result;
+          var fp = r.final_probability;
+          var maxProb = Math.max(fp.home_win, fp.draw || 0, fp.away_win);
+          var result = fp.home_win >= fp.away_win ? 'WIN_HOME' : 'WIN_AWAY';
+          if (fp.draw > fp.home_win && fp.draw > fp.away_win) result = 'DRAW';
+          var pick = {
+            rank: 1, sport: enrichedMatches[0].sportId || 'foot',
+            sport_id: enrichedMatches[0].sportId || 'foot',
+            home: r.home_team || enrichedMatches[0].home,
+            away: r.away_team || enrichedMatches[0].away,
+            competition: enrichedMatches[0].competition || '',
+            match_date: null, match_time: enrichedMatches[0].time || '',
+            result: result,
+            confidence: r.confidence || Math.round(maxProb * 100),
+            odds_given: parseFloat(oddsVal) || null,
+            value_edge_pct: engineResult.kelly ? engineResult.kelly.valueEdgePct : 0,
+            value: engineResult.kelly && engineResult.kelly.valueEdgePct > 0 ? 'value' : 'neutral',
+            value_text: engineResult.kelly ? engineResult.kelly.recommendation : '',
+            units: engineResult.kelly ? engineResult.kelly.kellyUnits : 2,
+            rotation_alert: false, rotation_text: '',
+            justification: r.analysis_summary || '',
+            sub_bets: [], date_uncertain: false,
+            steps_log: r.steps_log || null,
+          };
+          return JSON.stringify({ matches: [pick], summary: r.analysis_summary || '', roi_potential: '' });
+        }
+        return null;
+      }).catch(function(){ return null; })
+    : Promise.resolve(null);
+
+  analysisPromise.then(function(engineRaw) {
+    var finalPromise = engineRaw
+      ? Promise.resolve(engineRaw)
+      : callBackend(buildPrompt(lines.join('\n'), false));
+
+    finalPromise.then(function(raw) {
     var p = parse(raw);
     if (p && p.matches && p.matches.length > 0) {
       p.matches = normM(p.matches);
@@ -2889,6 +2939,71 @@ function updateGoBtn() {
     hasContent = (pi && pi.value.trim().length > 3) || (ui && ui.value.trim().length > 5);
   }
   btn.classList.toggle('active', hasContent);
+}
+
+// ── /analyze-match — Moteur engine.js côté backend ──────────────
+// Utilisé pour les matchs du flux TODAY (données structurées disponibles)
+async function callAnalyzeMatch(matches, oddsVal) {
+  if (!matches || !matches.length) return null;
+
+  // Utiliser le premier match comme référence principale
+  const m = matches[0];
+  const sport = m.sportId === 'wc' ? 'football' : (m.sportId || 'football');
+
+  const apiData = {
+    sport: sport,
+    home: m.home,
+    away: m.away,
+    competition: m.competition || '',
+    date: m.dateUTC || new Date().toISOString(),
+    isDerbyOrRivalry: false,
+    isMinorLeague: false,
+    homeRank: null,
+    awayRank: null,
+    environment: {
+      travelTimeHours: 0,
+      weatherCondition: 'clear',
+      temperatureCelsius: 20,
+      baseballWindDirection: 'none',
+      homeLastMatchHoursAgo: null,
+      awayLastMatchHoursAgo: null,
+    },
+    context: { homeCrisis: false, awayCrisis: false,
+               homeNewCoachThisWeek: false, awayNewCoachThisWeek: false },
+    homeAbsences: {}, awayAbsences: {},
+    homeSubDepth: {}, awaySubDepth: {},
+    sportSpecific: {},
+    homeTitleRace: false, homeRelegation: false,
+    awayTitleRace: false, awayRelegation: false,
+    homeWinStreak: 0, awayWinStreak: 0,
+    advancedMetrics: {},
+    h2hSameVenue: false, h2hHomeWinRate: null,
+    userLang: lang || 'fr',
+  };
+
+  // Si plusieurs matchs cochés, les ajouter en contexte
+  if (matches.length > 1) {
+    apiData._additionalMatches = matches.slice(1).map(function(x) {
+      return x.home + ' vs ' + x.away + ' — ' + (x.competition || '');
+    });
+  }
+
+  try {
+    var ctrl = new AbortController();
+    setTimeout(function(){ ctrl.abort(); }, 30000);
+    var resp = await fetch(BACKEND + '/analyze-match', {
+      method: 'POST',
+      signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiData: apiData, odds: oddsVal || null })
+    });
+    if (!resp.ok) return null;
+    var data = await resp.json();
+    return data.success ? data : null;
+  } catch(e) {
+    console.warn('[callAnalyzeMatch] error:', e.message);
+    return null;
+  }
 }
 
 window.onload = function(){
