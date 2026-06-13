@@ -1,0 +1,58 @@
+{
+  "id": "tennis_rg_002",
+  "apiData": {
+    "sport": "tennis",
+    "home": "Aryna Sabalenka",
+    "away": "Iga Swiatek",
+    "competition": "Roland Garros 2026 - Women Final",
+    "date": "2026-06-07T15:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 22,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "playerAbsent": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 5,
+    "awayWinStreak": 3,
+    "advancedMetrics": {
+      "tennisSurface": {
+        "surface": "clay",
+        "homeWinPct": 71,
+        "awayWinPct": 88,
+        "h2hHomeWins": 3,
+        "h2hTotal": 8
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.1,
+    "AWAY_WIN": 1.72
+  }
+}
