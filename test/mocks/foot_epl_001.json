@@ -1,0 +1,56 @@
+{
+  "id": "foot_epl_001",
+  "apiData": {
+    "sport": "football",
+    "home": "Manchester City",
+    "away": "Liverpool",
+    "competition": "Premier League 2025-26",
+    "date": "2026-03-15T16:30:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 1,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "heavy rain",
+      "temperatureCelsius": 9,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 72,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 6,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.7,
+        "homeUnderperforming": false,
+        "awayFor": 2.1,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": true,
+    "h2hHomeWinRate": 0.48,
+    "userLang": "en"
+  },
+  "actual_outcome": "DRAW",
+  "historical_odds": {
+    "HOME_WIN": 2.4,
+    "DRAW": 3.2,
+    "AWAY_WIN": 2.9
+  }
+}
