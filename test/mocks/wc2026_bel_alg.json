@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_bel_alg",
+  "apiData": {
+    "sport": "football",
+    "home": "Belgium",
+    "away": "Algeria",
+    "competition": "World Cup 2026 Group B",
+    "date": "2026-06-13T22:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 9,
+    "awayRank": 35,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 25,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": true,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.9,
+        "homeUnderperforming": false,
+        "awayFor": 1.2,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.6,
+    "userLang": "fr"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "DRAW": 4.0,
+    "AWAY_WIN": 6.0
+  }
+}
