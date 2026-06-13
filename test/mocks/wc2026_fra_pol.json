@@ -1,0 +1,66 @@
+{
+  "id": "wc2026_fra_pol",
+  "apiData": {
+    "sport": "football",
+    "home": "France",
+    "away": "Poland",
+    "competition": "World Cup 2026 Group D",
+    "date": "2026-06-14T19:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 22,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 26,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": true,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {
+      "topScorer": false
+    },
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.5,
+        "homeUnderperforming": false,
+        "awayFor": 0.8,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.7,
+    "userLang": "fr"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.4,
+    "DRAW": 4.5,
+    "AWAY_WIN": 7.5
+  }
+}
