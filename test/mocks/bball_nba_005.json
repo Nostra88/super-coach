@@ -1,0 +1,56 @@
+{
+  "id": "bball_nba_005",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Golden State Warriors",
+    "away": "LA Lakers",
+    "competition": "NBA Regular Season 2025-26",
+    "date": "2026-01-18T04:00:00Z",
+    "isDerbyOrRivalry": true,
+    "isMinorLeague": false,
+    "homeRank": 4,
+    "awayRank": 7,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 17,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 96,
+      "awayLastMatchHoursAgo": 23
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": false
+    },
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 4.1,
+        "away": 1.8
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.72,
+    "AWAY_WIN": 2.1
+  }
+}
