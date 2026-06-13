@@ -1,0 +1,60 @@
+{
+  "id": "foot_wc_005",
+  "apiData": {
+    "sport": "football",
+    "home": "France",
+    "away": "Mexico",
+    "competition": "FIFA World Cup 2026 - Group Stage",
+    "date": "2026-06-12T17:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 3,
+    "awayRank": 16,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 23,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "captain": true
+    },
+    "awayAbsences": {},
+    "homeSubDepth": {
+      "captain": true
+    },
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 1.9,
+        "homeUnderperforming": false,
+        "awayFor": 0.9,
+        "awayUnderperforming": true
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.72,
+    "userLang": "fr"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.55,
+    "DRAW": 4.0,
+    "AWAY_WIN": 5.5
+  }
+}
