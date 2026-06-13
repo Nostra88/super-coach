@@ -1,0 +1,56 @@
+{
+  "id": "nba_bos_mia_g2",
+  "apiData": {
+    "sport": "basketball",
+    "home": "Boston Celtics",
+    "away": "Miami Heat",
+    "competition": "NBA Playoffs 2026 - Round 1",
+    "date": "2026-04-22T20:30:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 2,
+    "awayRank": 7,
+    "environment": {
+      "travelTimeHours": 2,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 18,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homeFranchisePlayerOut": false,
+      "awayFranchisePlayerOut": true
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 4,
+    "awayWinStreak": 0,
+    "advancedMetrics": {
+      "netRating": {
+        "home": 6.8,
+        "away": -1.5
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.28,
+    "AWAY_WIN": 3.8
+  }
+}
