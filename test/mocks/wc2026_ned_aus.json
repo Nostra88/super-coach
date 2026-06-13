@@ -1,0 +1,66 @@
+{
+  "id": "wc2026_ned_aus",
+  "apiData": {
+    "sport": "football",
+    "home": "Netherlands",
+    "away": "Australia",
+    "competition": "World Cup 2026 Group A",
+    "date": "2026-06-12T16:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 8,
+    "awayRank": 25,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 21,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": true,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {
+      "topScorer": false
+    },
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 1,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.0,
+        "homeUnderperforming": false,
+        "awayFor": 0.8,
+        "awayUnderperforming": true
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.7,
+    "userLang": "en"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.45,
+    "DRAW": 4.8,
+    "AWAY_WIN": 7.0
+  }
+}
