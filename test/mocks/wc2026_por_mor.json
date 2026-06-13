@@ -1,0 +1,64 @@
+{
+  "id": "wc2026_por_mor",
+  "apiData": {
+    "sport": "football",
+    "home": "Portugal",
+    "away": "Morocco",
+    "competition": "World Cup 2026 Group G",
+    "date": "2026-06-17T22:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 7,
+    "awayRank": 14,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 27,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 144,
+      "awayLastMatchHoursAgo": 144
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "awayAbsences": {
+      "goalkeeper": false,
+      "topScorer": false,
+      "captain": false
+    },
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {},
+    "homeTitleRace": false,
+    "homeRelegation": false,
+    "awayTitleRace": false,
+    "awayRelegation": false,
+    "homeWinStreak": 3,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "xG": {
+        "homeFor": 2.0,
+        "homeUnderperforming": false,
+        "awayFor": 1.1,
+        "awayUnderperforming": false
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": 0.6,
+    "userLang": "pt"
+  },
+  "actual_outcome": "HOME_WIN",
+  "historical_odds": {
+    "HOME_WIN": 1.65,
+    "DRAW": 3.8,
+    "AWAY_WIN": 5.5
+  }
+}
