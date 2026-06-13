@@ -1,0 +1,60 @@
+{
+  "id": "baseball_mlb_001",
+  "apiData": {
+    "sport": "baseball",
+    "home": "New York Yankees",
+    "away": "LA Dodgers",
+    "competition": "MLB World Series 2025 - Game 7",
+    "date": "2025-11-05T01:00:00Z",
+    "isDerbyOrRivalry": false,
+    "isMinorLeague": false,
+    "homeRank": 1,
+    "awayRank": 2,
+    "environment": {
+      "travelTimeHours": 0,
+      "weatherCondition": "clear",
+      "temperatureCelsius": 14,
+      "baseballWindDirection": "none",
+      "homeLastMatchHoursAgo": 48,
+      "awayLastMatchHoursAgo": 48
+    },
+    "context": {
+      "homeCrisis": false,
+      "awayCrisis": false,
+      "homeNewCoachThisWeek": false,
+      "awayNewCoachThisWeek": false
+    },
+    "homeAbsences": {},
+    "awayAbsences": {},
+    "homeSubDepth": {},
+    "awaySubDepth": {},
+    "sportSpecific": {
+      "homePitcherIsAce": true,
+      "awayPitcherIsAce": true,
+      "homePitcherIsBullpen": false,
+      "awayPitcherIsBullpen": false
+    },
+    "homeTitleRace": true,
+    "homeRelegation": false,
+    "awayTitleRace": true,
+    "awayRelegation": false,
+    "homeWinStreak": 2,
+    "awayWinStreak": 2,
+    "advancedMetrics": {
+      "war_fip": {
+        "homeWar": 5.2,
+        "homeFip": 3.1,
+        "awayWar": 6.1,
+        "awayFip": 2.85
+      }
+    },
+    "h2hSameVenue": false,
+    "h2hHomeWinRate": null,
+    "userLang": "en"
+  },
+  "actual_outcome": "AWAY_WIN",
+  "historical_odds": {
+    "HOME_WIN": 2.05,
+    "AWAY_WIN": 1.82
+  }
+}
