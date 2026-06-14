@@ -975,7 +975,9 @@ app.post('/run-backtest', async (req, res) => {
   }
 
   const { sport: sportFilter, limit = 52, dryRun = false } = req.body || {};
-  const geminiKey = dryRun ? null : (GEMINI_KEY || '');
+  // Utiliser GEMINI_KEY directement depuis process.env (déjà chargée dans server.js)
+  const geminiKey = dryRun ? null : GEMINI_KEY;
+  console.log('[/run-backtest] dryRun='+dryRun+' geminiKey='+(geminiKey ? 'SET('+geminiKey.length+'chars)' : 'EMPTY'));
 
   // Timeout global : 52 matchs × 1.5s pause + 22s Gemini max = ~4 min max
   const GLOBAL_TIMEOUT = 5 * 60 * 1000;
