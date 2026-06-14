@@ -1056,6 +1056,12 @@ app.post('/run-backtest', async (req, res) => {
       },
       bySport: report.bySport,
       timestamp: report.timestamp,
+      diagnostic: {
+        geminiErrors:    report.results.filter(function(r){ return r.error; }).length,
+        geminiNullPreds: report.results.filter(function(r){ return !r.geminiPred && !r.error; }).length,
+        sampleErrors:    report.results.filter(function(r){ return r.error; }).slice(0,3).map(function(r){ return {id: r.id, error: r.error}; }),
+        sampleResults:   report.results.slice(0,5).map(function(r){ return {id: r.id, geminiPred: r.geminiPred, actual: r.actual, error: r.error}; }),
+      },
     });
 
   } catch(e) {
