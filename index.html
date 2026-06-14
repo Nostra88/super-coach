@@ -3024,6 +3024,7 @@ var _btDryRun = true;
 
 function setBtMode(dry) {
   _btDryRun = dry;
+  console.log('[BT] mode set to:', dry ? 'DRY-RUN' : 'REEL', '| _btDryRun=', _btDryRun);
   document.getElementById('btDryBtn').classList.toggle('active', dry);
   document.getElementById('btRealBtn').classList.toggle('active', !dry);
   var sport  = document.getElementById('btSportSel').value;
@@ -3056,14 +3057,16 @@ function launchBacktest() {
     bar.style.width = pct + '%';
   }, _btDryRun ? 300 : 3000);
 
+  var btPayload = {
+    secret:  'supercoach-backtest-2026',
+    dryRun:  _btDryRun,
+    sport:   sport || undefined,
+  };
+  console.log('[BT] Sending payload:', JSON.stringify(btPayload));
   fetch(BACKEND + '/run-backtest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      secret:  'supercoach-backtest-2026',
-      dryRun:  _btDryRun,
-      sport:   sport || undefined,
-    })
+    body: JSON.stringify(btPayload)
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
