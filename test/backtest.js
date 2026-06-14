@@ -88,12 +88,13 @@ function kellyTheo(fp, actual, odds) {
 
 // ── MOTEUR PRINCIPAL DE BACKTESTING ──────────────────────────────
 async function runBacktest({ mocks, geminiKey, onProgress }) {
-  const results   = [];
-  const bySport   = {};
-  let geminiOK    = 0;
-  let bookOK      = 0;
-  let kellyProfit = 0;
-  let kellyBets   = 0;
+  const results      = [];
+  const bySport      = {};
+  let geminiOK       = 0;   // matchs bien prédits
+  let geminiAnswered = 0;   // matchs où Gemini a répondu (bon ou mauvais)
+  let bookOK         = 0;
+  let kellyProfit    = 0;
+  let kellyBets      = 0;
 
   for (let i = 0; i < mocks.length; i++) {
     const mock = mocks[i];
@@ -135,7 +136,10 @@ async function runBacktest({ mocks, geminiKey, onProgress }) {
     }
 
     const geminiCorrect = geminiPred === actual_outcome;
-    if (geminiPred && geminiCorrect) { geminiOK++; bySport[sport].geminiOK++; }
+    if (geminiPred) {
+      geminiAnswered++;
+      if (geminiCorrect) { geminiOK++; bySport[sport].geminiOK++; }
+    }
 
     // Kelly théorique
     if (fp && confidence >= 60 && !error) {
@@ -160,7 +164,10 @@ async function runBacktest({ mocks, geminiKey, onProgress }) {
 
   // ── Calcul des taux finaux ─────────────────────────────────────
   const total   = mocks.length;
-  const geminiAcc = geminiOK > 0 ? Math.round(geminiOK / total * 1000) / 10 : null;
+  // geminiAcc : basé sur matchs répondus (geminiAnswered), pas seulement corrects
+  // Permet de distinguer "0% de précision" de "n'a pas répondu"
+  const geminiAcc = geminiAnswered > 0 ? Math.round(geminiOK / geminiAnswered * 1000) / 10 : null;
+  const geminiCoverage = total > 0 ? Math.round(geminiAnswered / total * 1000) / 10 : 0;
   const bookAcc   = Math.round(bookOK / total * 1000) / 10;
   const edge      = geminiAcc !== null ? Math.round((geminiAcc - bookAcc) * 10) / 10 : null;
 
@@ -177,7 +184,7 @@ async function runBacktest({ mocks, geminiKey, onProgress }) {
   return {
     timestamp:    new Date().toISOString(),
     total,
-    gemini:  { correct: geminiOK, accuracy: geminiAcc },
+    gemini:  { correct: geminiOK, answered: geminiAnswered, coverage: geminiCoverage, accuracy: geminiAcc },
     bookmaker: { correct: bookOK, accuracy: bookAcc },
     edge,
     kelly:   { bets: kellyBets, profit: Math.round(kellyProfit * 100) / 100 },
