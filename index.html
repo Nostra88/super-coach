@@ -3109,7 +3109,7 @@ function renderBtResults(data, container) {
   html += btStat(s.gemini.accuracy !== null ? s.gemini.accuracy + '%' : 'N/A', 'Gemini Accuracy', s.gemini.accuracy >= s.bookmaker.accuracy ? 'pos' : 'neg');
   html += btStat(s.bookmaker.accuracy + '%', 'Baseline Bookmakers', '');
   html += btStat(s.edge !== null ? (s.edge > 0 ? '+' : '') + s.edge + '%' : 'N/A', 'Edge vs Baseline', s.edge > 0 ? 'pos' : 'neg');
-  html += btStat(s.kelly.profit >= 0 ? '+' + s.kelly.profit : s.kelly.profit, 'Kelly Profit (u)', s.kelly.profit >= 0 ? 'pos' : 'neg');
+  html += btStat((s.gemini.coverage || 0) + '%', 'Gemini Coverage', s.gemini.coverage >= 80 ? 'pos' : 'neg');
   html += '</div>';
 
   // Par sport
