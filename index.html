@@ -3141,6 +3141,21 @@ function renderBtResults(data, container) {
   html += '</tbody></table>';
   html += '<div style="font-size:10px;color:var(--t2);text-align:center;margin-top:8px;">' + (data.timestamp || '') + '</div>';
 
+  // Diagnostic brut
+  if (data.diagnostic) {
+    html += '<div style="margin-top:10px;padding:8px;background:var(--s2);border-radius:8px;font-size:10px;color:var(--t2);font-family:monospace;">';
+    html += 'dryRun=' + data.summary.dryRun + ' | ';
+    html += 'answered=' + (data.gemini ? data.gemini.answered : '?') + ' | ';
+    html += 'errors=' + data.diagnostic.geminiErrors + ' | ';
+    html += 'nullPreds=' + data.diagnostic.geminiNullPreds;
+    if (data.diagnostic.sampleErrors && data.diagnostic.sampleErrors.length) {
+      html += '<br>Err: ' + data.diagnostic.sampleErrors[0].error;
+    }
+    if (data.diagnostic.sampleResults && data.diagnostic.sampleResults.length) {
+      html += '<br>Sample: ' + JSON.stringify(data.diagnostic.sampleResults[0]);
+    }
+    html += '</div>';
+  }
   container.innerHTML = html;
 }
 
