@@ -974,13 +974,13 @@ app.post('/run-backtest', async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized. Provide correct secret.' });
   }
 
-  const { sport: sportFilter, limit = 52, dryRun = false } = req.body || {};
+  const { sport: sportFilter, limit = 20, dryRun = false } = req.body || {};
   // Utiliser GEMINI_KEY directement depuis process.env (déjà chargée dans server.js)
   const geminiKey = dryRun ? null : GEMINI_KEY;
   console.log('[/run-backtest] dryRun='+dryRun+' geminiKey='+(geminiKey ? 'SET('+geminiKey.length+'chars)' : 'EMPTY'));
 
   // Timeout global : 52 matchs × 1.5s pause + 22s Gemini max = ~4 min max
-  const GLOBAL_TIMEOUT = 5 * 60 * 1000;
+  const GLOBAL_TIMEOUT = 10 * 60 * 1000; // 10min pour 20 matchs x 6s
   const timer = setTimeout(() => {
     if (!res.headersSent) res.status(503).json({ error: 'Backtest timeout (5min max)' });
   }, GLOBAL_TIMEOUT);
