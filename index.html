@@ -3024,9 +3024,18 @@ var _btDryRun = true;
 
 function setBtMode(dry) {
   _btDryRun = dry;
-  console.log('[BT] mode set to:', dry ? 'DRY-RUN' : 'REEL', '| _btDryRun=', _btDryRun);
-  document.getElementById('btDryBtn').classList.toggle('active', dry);
-  document.getElementById('btRealBtn').classList.toggle('active', !dry);
+  var dryBtn  = document.getElementById('btDryBtn');
+  var realBtn = document.getElementById('btRealBtn');
+  if (dry) {
+    dryBtn.classList.add('active');
+    realBtn.classList.remove('active');
+  } else {
+    dryBtn.classList.remove('active');
+    realBtn.classList.add('active');
+  }
+  // Stocker dans data-attribute pour lecture fiable iOS
+  var launchBtn = document.getElementById('btLaunchBtn');
+  if (launchBtn) launchBtn.setAttribute('data-dryrun', dry ? '1' : '0');
   var sport  = document.getElementById('btSportSel').value;
   var counts = {'':'52', football:'20', basketball:'10', tennis:'10', hockey:'6', baseball:'6'};
   var n = parseInt(counts[sport] || 52);
@@ -3042,8 +3051,8 @@ function launchBacktest() {
   var txt    = document.getElementById('btProgressTxt');
   var res    = document.getElementById('btResults');
   var sport  = document.getElementById('btSportSel').value;
-  // Lire directement depuis le DOM — plus fiable sur iOS que variable globale
-  var isDry  = document.getElementById('btDryBtn').classList.contains('active');
+  // Lire depuis data-attribute stocké par setBtMode
+  var isDry = document.getElementById('btLaunchBtn').getAttribute('data-dryrun') !== '0';
 
   btn.disabled = true;
   prog.style.display = 'block';
@@ -3057,7 +3066,7 @@ function launchBacktest() {
   var interval = setInterval(function() {
     pct = Math.min(90, pct + (isDry ? 20 : 1));
     bar.style.width = pct + '%';
-  }, _btDryRun ? 300 : 3000);
+  }, isDry ? 300 : 3000);
 
   var btPayload = {
     secret:  'supercoach-backtest-2026',
@@ -3188,6 +3197,9 @@ window.onload = function(){
     navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
   }
   try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
+  // Init backtest mode
+  var btLaunch = document.getElementById('btLaunchBtn');
+  if (btLaunch) btLaunch.setAttribute('data-dryrun', '1');
   try { applyLang(); } catch(e){ console.error('applyLang:', e); }
   try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
   try { updateGoBtn(); } catch(e){}
