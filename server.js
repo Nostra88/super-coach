@@ -24,6 +24,7 @@ const APISPORTS_KEY = process.env.APISPORTS_KEY || '';
 
 // ── MOTEUR QUANTITATIF ──────────────────────────────────────────
 const { GEMINI_SYSTEM_PROMPT, buildPrompt: buildEnginePrompt, computeKellyAndValueEdge } = require('./engine.js');
+const { runBacktest } = require('./test/backtest.js');
 
 
 // ── SUPABASE ADMIN CLIENT ──────────────────────────────
@@ -960,6 +961,107 @@ app.post('/analyze-match', async (req, res) => {
     clearTimeout(timeout);
     console.error('[/analyze-match]', e.message);
     res.status(500).json({ error: e.message });
+  }
+});
+
+// ── /run-backtest — Backtesting Gemini vs Baseline ─────────────────
+// Sécurisé par clé secrète : POST avec { "secret": "BACKTEST_SECRET" }
+// Optionnel : { "sport": "football", "limit": 20, "dryRun": false }
+app.post('/run-backtest', async (req, res) => {
+  // Sécurité : clé secrète pour ne pas exposer publiquement
+  const secret = process.env.BACKTEST_SECRET || 'supercoach-backtest-2026';
+  if (req.body?.secret !== secret) {
+    return res.status(401).json({ error: 'Unauthorized. Provide correct secret.' });
+  }
+
+  const { sport: sportFilter, limit = 52, dryRun = false } = req.body || {};
+  const geminiKey = dryRun ? null : (GEMINI_KEY || '');
+
+  // Timeout global : 52 matchs × 1.5s pause + 22s Gemini max = ~4 min max
+  const GLOBAL_TIMEOUT = 5 * 60 * 1000;
+  const timer = setTimeout(() => {
+    if (!res.headersSent) res.status(503).json({ error: 'Backtest timeout (5min max)' });
+  }, GLOBAL_TIMEOUT);
+
+  try {
+    // Charger les mocks depuis GitHub (sans dépendance au filesystem Render)
+    const MOCKS_URL = 'https://api.github.com/repos/Nostra88/super-coach/contents/test/mocks';
+    const ghHeaders = { 'User-Agent': 'SUPERCOACH-Backtest' };
+    if (process.env.GITHUB_TOKEN) ghHeaders['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+
+    const listRes  = await fetch(MOCKS_URL, { headers: ghHeaders });
+    if (!listRes.ok) throw new Error(`GitHub API ${listRes.status}`);
+    const fileList = await listRes.json();
+
+    let mocks = [];
+    for (const file of fileList) {
+      if (!file.name.endsWith('.json')) continue;
+      try {
+        const fr = await fetch(file.download_url);
+        const mock = await fr.json();
+        if (sportFilter && mock.apiData?.sport !== sportFilter) continue;
+        mocks.push(mock);
+        if (mocks.length >= limit) break;
+      } catch(e) { /* skip mock invalide */ }
+    }
+
+    if (!mocks.length) {
+      clearTimeout(timer);
+      return res.status(404).json({ error: 'Aucun mock trouvé', sport: sportFilter || 'all' });
+    }
+
+    console.log(`[/run-backtest] ${mocks.length} mocks | sport=${sportFilter||'all'} | dryRun=${dryRun}`);
+
+    // Suivi progression en temps réel (logs Render)
+    const progress = [];
+    const onProgress = ({ i, total, id, geminiPred, actual_outcome, geminiCorrect }) => {
+      const log = `[${i}/${total}] ${id} → ${geminiPred||'skip'} (réel: ${actual_outcome}) ${geminiCorrect ? '✅' : geminiPred ? '❌' : ''}`;
+      console.log(`[BT] ${log}`);
+      progress.push(log);
+    };
+
+    const report = await runBacktest({ mocks, geminiKey, onProgress });
+    report.progress = progress;
+
+    clearTimeout(timer);
+
+    // Réponse JSON structurée
+    res.json({
+      success: true,
+      summary: {
+        total:        report.total,
+        dryRun,
+        sportFilter:  sportFilter || 'all',
+        gemini: {
+          correct:   report.gemini.correct,
+          accuracy:  report.gemini.accuracy,
+        },
+        bookmaker: {
+          correct:  report.bookmaker.correct,
+          accuracy: report.bookmaker.accuracy,
+        },
+        edge:     report.edge,
+        verdict:  report.edge === null        ? 'DRY-RUN — Gemini non appelé' :
+                  report.edge > 2             ? '🏆 SUPERCOACH BATS LES BOOKMAKERS' :
+                  report.edge >= 0            ? '✅ À LA HAUTEUR DU MARCHÉ' :
+                  report.edge > -5            ? '⚠️ EN DESSOUS DE LA BASELINE' :
+                                                '❌ MOTEUR À RECALIBRER',
+        kelly: {
+          bets:   report.kelly.bets,
+          profit: report.kelly.profit,
+          roi:    report.kelly.bets > 0
+                  ? Math.round(report.kelly.profit / report.kelly.bets * 100) / 100
+                  : 0,
+        },
+      },
+      bySport: report.bySport,
+      timestamp: report.timestamp,
+    });
+
+  } catch(e) {
+    clearTimeout(timer);
+    console.error('[/run-backtest]', e.message);
+    if (!res.headersSent) res.status(500).json({ error: e.message });
   }
 });
 
