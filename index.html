@@ -3037,11 +3037,11 @@ function setBtMode(dry) {
   var launchBtn = document.getElementById('btLaunchBtn');
   if (launchBtn) launchBtn.setAttribute('data-dryrun', dry ? '1' : '0');
   var sport  = document.getElementById('btSportSel').value;
-  var counts = {'':'52', football:'20', basketball:'10', tennis:'10', hockey:'6', baseball:'6'};
+  var counts = {'':'20', football:'20', basketball:'10', tennis:'10', hockey:'6', baseball:'6'};
   var n = parseInt(counts[sport] || 52);
   document.getElementById('btEstTime').textContent = dry
     ? '~3 secondes (dry-run)'
-    : '~' + Math.ceil(n * 1.8 / 60) + ' minutes (Gemini x' + n + ')';
+    : '~' + Math.ceil(n * 7 / 60) + ' minutes (Gemini x' + n + ' @ 6s/appel)';
 }
 
 function launchBacktest() {
@@ -4571,7 +4571,7 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
           <div class="bt-header"><div class="bt-icon">&#x1F9EA;</div><div><div class="bt-title">BACKTEST ENGINE</div><div class="bt-sub">Gemini vs Baseline Bookmakers</div></div></div>
           <div class="bt-options">
             <div class="bt-opt-row"><span class="bt-opt-lbl">Mode</span><div class="bt-toggle"><button id="btDryBtn" class="active" onclick="setBtMode(true)">Dry-run</button><button id="btRealBtn" onclick="setBtMode(false)">Reel</button></div></div>
-            <div class="bt-opt-row"><span class="bt-opt-lbl">Sport</span><select id="btSportSel" style="background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:4px 8px;color:var(--t1);font-size:12px;"><option value="">Tous (52)</option><option value="football">Football (20)</option><option value="basketball">Basketball (10)</option><option value="tennis">Tennis (10)</option><option value="hockey">Hockey (6)</option><option value="baseball">Baseball (6)</option></select></div>
+            <div class="bt-opt-row"><span class="bt-opt-lbl">Sport</span><select id="btSportSel" style="background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:4px 8px;color:var(--t1);font-size:12px;"><option value="">Tous (20 max)</option><option value="football">Football (20)</option><option value="basketball">Basketball (10)</option><option value="tennis">Tennis (10)</option><option value="hockey">Hockey (6)</option><option value="baseball">Baseball (6)</option></select></div>
             <div class="bt-opt-row"><span class="bt-opt-lbl">Duree</span><span class="bt-opt-val" id="btEstTime">~3 sec</span></div>
           </div>
           <button class="bt-launch-btn" id="btLaunchBtn" onclick="launchBacktest()">&#x26A1; LANCER LE BACKTEST</button>
