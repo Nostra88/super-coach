@@ -509,6 +509,50 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .nav-btn.on .nav-icon{transform:scale(1.1);filter:drop-shadow(0 0 6px rgba(200,146,42,.5))}
 
 
+
+/* ── BACKTEST MODAL ── */
+.bt-sheet{padding:20px;}
+.bt-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.bt-icon{font-size:28px;}
+.bt-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--green);}
+.bt-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.bt-options{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.bt-opt-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--s2);border-radius:10px;padding:10px 14px;}
+.bt-opt-lbl{font-size:13px;color:var(--t1);}
+.bt-opt-val{font-size:12px;color:var(--t2);font-family:'JetBrains Mono',monospace;}
+.bt-toggle{display:flex;gap:6px;}
+.bt-toggle button{padding:4px 10px;border-radius:6px;border:1px solid var(--b1);
+  background:transparent;color:var(--t2);font-size:11px;cursor:pointer;}
+.bt-toggle button.active{background:var(--green);border-color:var(--green);color:#fff;}
+.bt-launch-btn{width:100%;padding:14px;border:none;border-radius:10px;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;
+  cursor:pointer;transition:opacity .2s;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}
+.bt-launch-btn:disabled{opacity:0.4;}
+.bt-progress{margin-top:14px;display:none;}
+.bt-progress-bar-wrap{background:var(--s2);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px;}
+.bt-progress-bar{height:100%;background:var(--green);transition:width .3s;width:0%;}
+.bt-progress-txt{font-size:11px;color:var(--t2);text-align:center;}
+.bt-results{margin-top:14px;display:none;}
+.bt-verdict{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;
+  text-align:center;padding:12px;border-radius:10px;margin-bottom:12px;}
+.bt-verdict.win{background:rgba(45,138,85,.2);color:var(--green);}
+.bt-verdict.neutral{background:rgba(99,102,241,.2);color:#818cf8;}
+.bt-verdict.warn{background:rgba(234,179,8,.2);color:#eab308;}
+.bt-verdict.fail{background:rgba(239,68,68,.2);color:#ef4444;}
+.bt-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.bt-stat{background:var(--s2);border-radius:10px;padding:10px;text-align:center;}
+.bt-stat-val{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--green);}
+.bt-stat-val.neg{color:#ef4444;}
+.bt-stat-val.pos{color:var(--green);}
+.bt-stat-lbl{font-size:10px;color:var(--t2);margin-top:2px;}
+.bt-sport-table{width:100%;border-collapse:collapse;font-size:12px;}
+.bt-sport-table th{color:var(--t2);font-weight:600;padding:4px 6px;text-align:left;border-bottom:1px solid var(--b1);}
+.bt-sport-table td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.04);}
+.bt-sport-table .edge-pos{color:var(--green);}
+.bt-sport-table .edge-neg{color:#ef4444;}
+
 /* ── AUTH ── */
 .hdr-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .auth-btn{background:rgba(45,138,85,.15);border:1px solid rgba(45,138,85,.3);
@@ -1272,6 +1316,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
     </div>
     <div class="hdr-actions">
       <button class="roi-btn" id="roiBtn" onclick="openROI()">📊</button>
+      <button class="roi-btn" id="btBtn" onclick="openSheet('backtestModal')" title="Backtest">🧪</button>
       <button class="auth-btn" id="authBtn" onclick="openSheet('authModal')">👤</button>
     </div>
   </div>
@@ -2972,6 +3017,122 @@ async function callAnalyzeMatch(matches, oddsVal) {
     console.warn('[callAnalyzeMatch] error:', e.message);
     return null;
   }
+}
+
+// ── BACKTEST UI ──────────────────────────────────────────────────
+var _btDryRun = true;
+
+function setBtMode(dry) {
+  _btDryRun = dry;
+  document.getElementById('btDryBtn').classList.toggle('active', dry);
+  document.getElementById('btRealBtn').classList.toggle('active', !dry);
+  var sport  = document.getElementById('btSportSel').value;
+  var counts = {'':'52', football:'20', basketball:'10', tennis:'10', hockey:'6', baseball:'6'};
+  var n = parseInt(counts[sport] || 52);
+  document.getElementById('btEstTime').textContent = dry
+    ? '~3 secondes (dry-run)'
+    : '~' + Math.ceil(n * 1.8 / 60) + ' minutes (Gemini x' + n + ')';
+}
+
+function launchBacktest() {
+  var btn    = document.getElementById('btLaunchBtn');
+  var prog   = document.getElementById('btProgress');
+  var bar    = document.getElementById('btProgressBar');
+  var txt    = document.getElementById('btProgressTxt');
+  var res    = document.getElementById('btResults');
+  var sport  = document.getElementById('btSportSel').value;
+
+  btn.disabled = true;
+  prog.style.display = 'block';
+  res.style.display  = 'none';
+  res.innerHTML      = '';
+  bar.style.width    = '5%';
+  txt.textContent    = _btDryRun ? 'Dry-run en cours...' : 'Backtest Gemini en cours...';
+
+  // Simuler progression pendant l'attente
+  var pct = 5;
+  var interval = setInterval(function() {
+    pct = Math.min(90, pct + (_btDryRun ? 20 : 1));
+    bar.style.width = pct + '%';
+  }, _btDryRun ? 300 : 3000);
+
+  fetch(BACKEND + '/run-backtest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      secret:  'supercoach-backtest-2026',
+      dryRun:  _btDryRun,
+      sport:   sport || undefined,
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    clearInterval(interval);
+    bar.style.width = '100%';
+    txt.textContent = 'Terminé !';
+    setTimeout(function() {
+      prog.style.display = 'none';
+      renderBtResults(data, res);
+      res.style.display = 'block';
+    }, 500);
+  })
+  .catch(function(e) {
+    clearInterval(interval);
+    prog.style.display = 'none';
+    res.innerHTML = '<div class="err-box">❌ ' + esc(e.message) + '</div>';
+    res.style.display = 'block';
+  })
+  .finally(function() {
+    btn.disabled = false;
+  });
+}
+
+function renderBtResults(data, container) {
+  if (!data.success) {
+    container.innerHTML = '<div class="err-box">❌ ' + esc(data.error || 'Erreur inconnue') + '</div>';
+    return;
+  }
+  var s = data.summary;
+  var verdictClass = s.edge === null ? 'neutral' :
+                     s.edge > 2     ? 'win' :
+                     s.edge >= 0    ? 'neutral' :
+                     s.edge > -5    ? 'warn' : 'fail';
+
+  var html = '<div class="bt-verdict ' + verdictClass + '">' + (s.verdict || '') + '</div>';
+
+  // Stats globales
+  html += '<div class="bt-stat-grid">';
+  html += btStat(s.gemini.accuracy !== null ? s.gemini.accuracy + '%' : 'N/A', 'Gemini Accuracy', s.gemini.accuracy >= s.bookmaker.accuracy ? 'pos' : 'neg');
+  html += btStat(s.bookmaker.accuracy + '%', 'Baseline Bookmakers', '');
+  html += btStat(s.edge !== null ? (s.edge > 0 ? '+' : '') + s.edge + '%' : 'N/A', 'Edge vs Baseline', s.edge > 0 ? 'pos' : 'neg');
+  html += btStat(s.kelly.profit >= 0 ? '+' + s.kelly.profit : s.kelly.profit, 'Kelly Profit (u)', s.kelly.profit >= 0 ? 'pos' : 'neg');
+  html += '</div>';
+
+  // Par sport
+  html += '<table class="bt-sport-table"><thead><tr>';
+  html += '<th>Sport</th><th>Matchs</th><th>Gemini</th><th>Baseline</th><th>Edge</th>';
+  html += '</tr></thead><tbody>';
+  Object.entries(data.bySport || {}).forEach(function(entry) {
+    var sport = entry[0], v = entry[1];
+    var edgeVal = v.edge !== null ? v.edge : null;
+    var edgeTxt = edgeVal !== null ? (edgeVal > 0 ? '+' : '') + edgeVal + '%' : '—';
+    var edgeCls = edgeVal > 0 ? 'edge-pos' : edgeVal < 0 ? 'edge-neg' : '';
+    html += '<tr>';
+    html += '<td>' + sport + '</td>';
+    html += '<td>' + v.total + '</td>';
+    html += '<td>' + (v.geminiAcc !== null ? v.geminiAcc + '%' : '—') + '</td>';
+    html += '<td>' + v.bookAcc + '%</td>';
+    html += '<td class="' + edgeCls + '">' + edgeTxt + '</td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  html += '<div style="font-size:10px;color:var(--t2);text-align:center;margin-top:8px;">' + (data.timestamp || '') + '</div>';
+
+  container.innerHTML = html;
+}
+
+function btStat(val, lbl, cls) {
+  return '<div class="bt-stat"><div class="bt-stat-val ' + cls + '">' + val + '</div><div class="bt-stat-lbl">' + lbl + '</div></div>';
 }
 
 window.onload = function(){
