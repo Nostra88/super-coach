@@ -606,6 +606,30 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   border:1px solid rgba(239,68,68,.3);border-radius:10px;
   color:#ef4444;font-size:15px;cursor:pointer;}
 
+
+/* ── LAB VERDICT BLOCK ── */
+.lab-block{margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);}
+.lab-header{background:rgba(0,0,0,.4);padding:8px 14px;
+  font-family:'Impact','Bebas Neue',sans-serif;font-size:12px;
+  letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+.lab-row{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+.lab-row:last-child{border-bottom:none;}
+.lab-row.green{background:rgba(45,138,85,.18);}
+.lab-row.orange{background:rgba(234,179,8,.12);}
+.lab-row.red{background:rgba(239,68,68,.12);}
+.lab-badge{font-family:'Impact',sans-serif;font-size:13px;
+  letter-spacing:1.5px;min-width:110px;text-transform:uppercase;}
+.lab-badge.green{color:#4ade80;}
+.lab-badge.orange{color:#fbbf24;}
+.lab-badge.red{color:#f87171;}
+.lab-stats{flex:1;font-size:11px;color:rgba(255,255,255,.7);line-height:1.5;}
+.lab-stats strong{color:#fff;font-family:'Impact',sans-serif;font-size:13px;}
+.lab-conf{font-family:'Impact',sans-serif;font-size:18px;text-align:right;min-width:44px;}
+.lab-conf.green{color:#4ade80;}
+.lab-conf.orange{color:#fbbf24;}
+.lab-conf.red{color:#f87171;}
+
 /* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -2117,7 +2141,14 @@ var L = {
     'authMagicSub':'We sent a magic link to',
     'authSignOut':'Sign out',
     'authProfile':'My Profile',
-    'langChangeNote':'New language applies to the next analysis'},
+    'langChangeNote':'New language applies to the next analysis',
+    'labTitle':'LAB VERDICT',
+    'labStrong':'STRONG PICK',
+    'labRisky':'RISK ALERT',
+    'labNeutral':'BALANCED',
+    'labOdds':'Edge vs market',
+    'labUnits':'units',
+    'labConf':'confidence'},
   fr:{
     copilot:'⚡ Ton copilote IA sportif',
     sportAll:'Tous',sportFoot:'Football',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2190,7 +2221,14 @@ var L = {
     'authMagicSub':'Lien magique envoyé à',
     'authSignOut':'Déconnexion',
     'authProfile':'Mon Profil',
-    'langChangeNote':'La nouvelle langue s\u2019applique \u00e0 la prochaine analyse'},
+    'langChangeNote':'La nouvelle langue s\u2019applique \u00e0 la prochaine analyse',
+    'labTitle':'VERDICT LAB',
+    'labStrong':'PICK SOLIDE',
+    'labRisky':'ALERTE RISQUE',
+    'labNeutral':'EQUILIBRE',
+    'labOdds':'Edge vs marche',
+    'labUnits':'unites',
+    'labConf':'confiance'},
   es:{
     copilot:'⚡ Tu copiloto IA deportivo',
     sportAll:'Todos',sportFoot:'Futbol',sportBasket:'Baloncesto',sportTennis:'Tenis',
@@ -2257,7 +2295,14 @@ var L = {
     'authMagicSub':'Enlace mágico enviado a',
     'authSignOut':'Cerrar sesión',
     'authProfile':'Mi Perfil',
-    'langChangeNote':'El nuevo idioma se aplica al próximo análisis'},
+    'langChangeNote':'El nuevo idioma se aplica al próximo análisis',
+    'labTitle':'VEREDICTO LAB',
+    'labStrong':'PICK SOLIDO',
+    'labRisky':'ALERTA RIESGO',
+    'labNeutral':'EQUILIBRADO',
+    'labOdds':'Edge vs mercado',
+    'labUnits':'unidades',
+    'labConf':'confianza'},
   pt:{
     copilot:'⚡ Seu copiloto IA esportivo',
     sportAll:'Todos',sportFoot:'Futebol',sportBasket:'Basquete',sportTennis:'Tennis',
@@ -2324,7 +2369,14 @@ var L = {
     'authMagicSub':'Link mágico enviado para',
     'authSignOut':'Sair',
     'authProfile':'Meu Perfil',
-    'langChangeNote':'O novo idioma aplica-se à próxima análise'},
+    'langChangeNote':'O novo idioma aplica-se à próxima análise',
+    'labTitle':'VEREDICTO LAB',
+    'labStrong':'PICK SOLIDO',
+    'labRisky':'ALERTA RISCO',
+    'labNeutral':'EQUILIBRADO',
+    'labOdds':'Edge vs mercado',
+    'labUnits':'unidades',
+    'labConf':'confianca'},
   it:{
     copilot:'⚡ Il tuo copilota sportivo IA',
     sportAll:'Tutti',sportFoot:'Calcio',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2391,7 +2443,14 @@ var L = {
     'authMagicSub':'Link magico inviato a',
     'authSignOut':'Esci',
     'authProfile':'Il mio Profilo',
-    'langChangeNote':'La nuova lingua si applica alla prossima analisi'},
+    'langChangeNote':'La nuova lingua si applica alla prossima analisi',
+    'labTitle':'VERDETTO LAB',
+    'labStrong':'PICK SOLIDO',
+    'labRisky':'ALLERTA RISCHIO',
+    'labNeutral':'EQUILIBRATO',
+    'labOdds':'Edge vs mercato',
+    'labUnits':'unita',
+    'labConf':'confidenza'},
   de:{
     copilot:'⚡ Dein KI-Sport-Copilot',
     sportAll:'Alle',sportFoot:'Fussball',sportBasket:'Basketball',sportTennis:'Tennis',
@@ -2459,7 +2518,14 @@ var L = {
     'authMagicSub':'Magic Link gesendet an',
     'authSignOut':'Abmelden',
     'authProfile':'Mein Profil',
-    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse'},
+    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse',
+    'labTitle':'LAB URTEIL',
+    'labStrong':'STARKER PICK',
+    'labRisky':'RISIKO ALARM',
+    'labNeutral':'AUSGEWOGEN',
+    'labOdds':'Edge vs Markt',
+    'labUnits':'Einheiten',
+    'labConf':'Konfidenz'},
   ar:{
     copilot:'⚡ مساعدك الرياضي الذكي',
     sportAll:'الكل',sportFoot:'كرة القدم',sportBasket:'كرة السلة',sportTennis:'التنس',
@@ -2526,7 +2592,14 @@ var L = {
     'authMagicSub':'تم إرسال الرابط إلى',
     'authSignOut':'تسجيل الخروج',
     'authProfile':'ملفي',
-    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي'}
+    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي',
+    'labTitle':'حكم المختبر',
+    'labStrong':'اختيار قوي',
+    'labRisky':'تحذير خطر',
+    'labNeutral':'متوازن',
+    'labOdds':'الميزة مقابل السوق',
+    'labUnits':'وحدات',
+    'labConf':'ثقة'}
 };
 
 function t(k){return (L[lang]||L.en)[k]||L.en[k]||k;}
@@ -3150,6 +3223,47 @@ function renderBtResults(data, container) {
 
 function btStat(val, lbl, cls) {
   return '<div class="bt-stat"><div class="bt-stat-val ' + cls + '">' + val + '</div><div class="bt-stat-lbl">' + lbl + '</div></div>';
+}
+
+// ── LAB VERDICT BLOCK ─────────────────────────────────────────
+function renderLabBlock(matches) {
+  if (!matches || !matches.length) return '';
+
+  var rows = matches.map(function(m) {
+    var conf   = m.confidence || 0;
+    var units  = m.units || 0;
+    var result = (m.result || '').toUpperCase();
+    var home   = m.home || '';
+    var away   = m.away || '';
+
+    // Couleur selon confiance
+    var cls = conf >= 80 ? 'green' : conf >= 70 ? 'orange' : 'red';
+    var badge = conf >= 80 ? t('labStrong') : conf >= 70 ? t('labNeutral') : t('labRisky');
+
+    // Issue prédite
+    var pick = result === 'WIN_HOME' ? home :
+               result === 'WIN_AWAY' ? away :
+               result === 'DRAW'     ? 'DRAW' : home;
+
+    // Smart picks
+    var smart = (m.sub_bets && m.sub_bets.length) ? m.sub_bets[0].label || '' : '';
+
+    var statsHtml =
+      '<strong>' + pick.toUpperCase() + '</strong>' +
+      ' · ' + units + ' ' + t('labUnits') +
+      (smart ? '<br>' + smart : '');
+
+    return '<div class="lab-row ' + cls + '">' +
+      '<div class="lab-badge ' + cls + '">' + badge + '</div>' +
+      '<div class="lab-stats">' + statsHtml + '</div>' +
+      '<div class="lab-conf ' + cls + '">' + conf + '%</div>' +
+    '</div>';
+  }).join('');
+
+  return '<div class="lab-block">' +
+    '<div class="lab-header">⚡ ' + t('labTitle') + '</div>' +
+    rows +
+  '</div>';
 }
 
 window.onload = function(){
@@ -4069,7 +4183,8 @@ function renderResults(data){
       (m.justification?'<div class="mc-just">'+esc(m.justification)+'</div>':'')+
       '</div></div></div>';
   }).join('');
-  var synth=data.summary?'<div class="synthesis"><b>// SUPERCOACH</b><br>'+esc(data.summary)+'</div>':'';
+  // LAB VERDICT — remplace le bloc // SUPERCOACH
+  var synth = renderLabBlock(M);
   lastResults = {matches: M, summary: data.summary||''};
   return '<div class="results"><div class="res-hdr"><h2>'+M.length+' MATCH'+(M.length>1?'ES':'')+'</h2><div class="res-meta">⚡ SUPERCOACH<br>✨ Gemini AI</div></div>'+roi+stats+cards+synth+
     '<button class="share-btn" onclick="shareResults()">📤 SHARE ANALYSIS</button>'+
