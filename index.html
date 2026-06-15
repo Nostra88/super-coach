@@ -606,30 +606,6 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   border:1px solid rgba(239,68,68,.3);border-radius:10px;
   color:#ef4444;font-size:15px;cursor:pointer;}
 
-
-/* ── LAB VERDICT BLOCK ── */
-.lab-block{margin-top:16px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);}
-.lab-header{background:rgba(0,0,0,.4);padding:8px 14px;
-  font-family:'Impact','Bebas Neue',sans-serif;font-size:12px;
-  letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;}
-.lab-row{display:flex;align-items:center;gap:10px;padding:10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.04);}
-.lab-row:last-child{border-bottom:none;}
-.lab-row.green{background:rgba(45,138,85,.18);}
-.lab-row.orange{background:rgba(234,179,8,.12);}
-.lab-row.red{background:rgba(239,68,68,.12);}
-.lab-badge{font-family:'Impact',sans-serif;font-size:13px;
-  letter-spacing:1.5px;min-width:110px;text-transform:uppercase;}
-.lab-badge.green{color:#4ade80;}
-.lab-badge.orange{color:#fbbf24;}
-.lab-badge.red{color:#f87171;}
-.lab-stats{flex:1;font-size:11px;color:rgba(255,255,255,.7);line-height:1.5;}
-.lab-stats strong{color:#fff;font-family:'Impact',sans-serif;font-size:13px;}
-.lab-conf{font-family:'Impact',sans-serif;font-size:18px;text-align:right;min-width:44px;}
-.lab-conf.green{color:#4ade80;}
-.lab-conf.orange{color:#fbbf24;}
-.lab-conf.red{color:#f87171;}
-
 /* ── MODALS ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -1978,18 +1954,13 @@ async function analyzeFlux() {
 
   var lines = [];
   var pool = window.matchPool || [];
-  var today = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
   sel.forEach(function(id) {
     for (var i = 0; i < pool.length; i++) {
       if (String(pool[i].id) === String(id)) {
         var m = pool[i];
-        // Ligne enrichie avec toutes les données disponibles
         var line = m.home + ' vs ' + m.away;
-        if (m.competition) line += ' | ' + m.competition;
-        if (m.date) line += ' | ' + m.date;
-        else line += ' | ' + today;
-        if (m.time) line += ' | ' + m.time;
-        if (m.sportId) line += ' | sport:' + m.sportId;
+        if (m.competition) line += ' — ' + m.competition;
+        if (m.time) line += ' — ' + m.time;
         lines.push(line);
         break;
       }
@@ -2146,27 +2117,7 @@ var L = {
     'authMagicSub':'We sent a magic link to',
     'authSignOut':'Sign out',
     'authProfile':'My Profile',
-    'langChangeNote':'New language applies to the next analysis',
-    'labTitle':'LAB VERDICT',
-    'labStrong':'STRONG PICK',
-    'labRisky':'RISK ALERT',
-    'labNeutral':'BALANCED',
-    'labOdds':'Edge vs market',
-    'labUnits':'units',
-    'labConf':'confidence',
-    'btTitle':'BACKTEST ENGINE',
-    'btSub':'Gemini vs Bookmaker Baseline',
-    'btInfo':'20 matches · 5 sports · ~5 min',
-    'btLaunch':'LAUNCH BACKTEST',
-    'btRunning':'Gemini analysis in progress...',
-    'btDone':'Done!',
-    'btGeminiAcc':t('btGeminiAcc'),
-    'btBaseline':'Bookmaker Baseline',
-    'btEdge':t('btEdge'),
-    'btCoverage':t('btCoverage'),
-    'btSport':'Sport',
-    'btMatches':'Matches',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'New language applies to the next analysis'},
   fr:{
     copilot:'⚡ Ton copilote IA sportif',
     sportAll:'Tous',sportFoot:'Football',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2239,27 +2190,7 @@ var L = {
     'authMagicSub':'Lien magique envoyé à',
     'authSignOut':'Déconnexion',
     'authProfile':'Mon Profil',
-    'langChangeNote':'La nouvelle langue s\u2019applique \u00e0 la prochaine analyse',
-    'labTitle':'VERDICT LAB',
-    'labStrong':'PICK SOLIDE',
-    'labRisky':'ALERTE RISQUE',
-    'labNeutral':'EQUILIBRE',
-    'labOdds':'Edge vs marche',
-    'labUnits':'unites',
-    'labConf':'confiance',
-    'btTitle':'MOTEUR BACKTEST',
-    'btSub':'Gemini vs Baseline Bookmakers',
-    'btInfo':'20 matchs · 5 sports · ~5 min',
-    'btLaunch':'LANCER LE BACKTEST',
-    'btRunning':'Analyse Gemini en cours...',
-    'btDone':'Termine !',
-    'btGeminiAcc':'Precision Gemini',
-    'btBaseline':t('btBaseline'),
-    'btEdge':t('btEdge'),
-    'btCoverage':'Couverture Gemini',
-    'btSport':'Sport',
-    'btMatches':'Matchs',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'La nouvelle langue s\u2019applique \u00e0 la prochaine analyse'},
   es:{
     copilot:'⚡ Tu copiloto IA deportivo',
     sportAll:'Todos',sportFoot:'Futbol',sportBasket:'Baloncesto',sportTennis:'Tenis',
@@ -2326,27 +2257,7 @@ var L = {
     'authMagicSub':'Enlace mágico enviado a',
     'authSignOut':'Cerrar sesión',
     'authProfile':'Mi Perfil',
-    'langChangeNote':'El nuevo idioma se aplica al próximo análisis',
-    'labTitle':'VEREDICTO LAB',
-    'labStrong':'PICK SOLIDO',
-    'labRisky':'ALERTA RIESGO',
-    'labNeutral':'EQUILIBRADO',
-    'labOdds':'Edge vs mercado',
-    'labUnits':'unidades',
-    'labConf':'confianza',
-    'btTitle':'MOTOR BACKTEST',
-    'btSub':'Gemini vs Baseline Casas de Apuestas',
-    'btInfo':'20 partidos · 5 deportes · ~5 min',
-    'btLaunch':'INICIAR BACKTEST',
-    'btRunning':'Analisis Gemini en curso...',
-    'btDone':'Completado !',
-    'btGeminiAcc':'Precision Gemini',
-    'btBaseline':'Baseline Casas de Apuestas',
-    'btEdge':t('btEdge'),
-    'btCoverage':'Cobertura Gemini',
-    'btSport':'Deporte',
-    'btMatches':'Partidos',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'El nuevo idioma se aplica al próximo análisis'},
   pt:{
     copilot:'⚡ Seu copiloto IA esportivo',
     sportAll:'Todos',sportFoot:'Futebol',sportBasket:'Basquete',sportTennis:'Tennis',
@@ -2413,27 +2324,7 @@ var L = {
     'authMagicSub':'Link mágico enviado para',
     'authSignOut':'Sair',
     'authProfile':'Meu Perfil',
-    'langChangeNote':'O novo idioma aplica-se à próxima análise',
-    'labTitle':'VEREDICTO LAB',
-    'labStrong':'PICK SOLIDO',
-    'labRisky':'ALERTA RISCO',
-    'labNeutral':'EQUILIBRADO',
-    'labOdds':'Edge vs mercado',
-    'labUnits':'unidades',
-    'labConf':'confianca',
-    'btTitle':'MOTOR BACKTEST',
-    'btSub':'Gemini vs Baseline Casas de Apostas',
-    'btInfo':'20 jogos · 5 desportos · ~5 min',
-    'btLaunch':'INICIAR BACKTEST',
-    'btRunning':'Analise Gemini em curso...',
-    'btDone':'Concluido !',
-    'btGeminiAcc':'Precisao Gemini',
-    'btBaseline':'Baseline Casas de Apostas',
-    'btEdge':t('btEdge'),
-    'btCoverage':'Cobertura Gemini',
-    'btSport':'Desporto',
-    'btMatches':'Jogos',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'O novo idioma aplica-se à próxima análise'},
   it:{
     copilot:'⚡ Il tuo copilota sportivo IA',
     sportAll:'Tutti',sportFoot:'Calcio',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2500,27 +2391,7 @@ var L = {
     'authMagicSub':'Link magico inviato a',
     'authSignOut':'Esci',
     'authProfile':'Il mio Profilo',
-    'langChangeNote':'La nuova lingua si applica alla prossima analisi',
-    'labTitle':'VERDETTO LAB',
-    'labStrong':'PICK SOLIDO',
-    'labRisky':'ALLERTA RISCHIO',
-    'labNeutral':'EQUILIBRATO',
-    'labOdds':'Edge vs mercato',
-    'labUnits':'unita',
-    'labConf':'confidenza',
-    'btTitle':'MOTORE BACKTEST',
-    'btSub':'Gemini vs Baseline Bookmakers',
-    'btInfo':'20 partite · 5 sport · ~5 min',
-    'btLaunch':'AVVIA BACKTEST',
-    'btRunning':'Analisi Gemini in corso...',
-    'btDone':'Completato !',
-    'btGeminiAcc':'Precisione Gemini',
-    'btBaseline':t('btBaseline'),
-    'btEdge':t('btEdge'),
-    'btCoverage':'Copertura Gemini',
-    'btSport':'Sport',
-    'btMatches':'Partite',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'La nuova lingua si applica alla prossima analisi'},
   de:{
     copilot:'⚡ Dein KI-Sport-Copilot',
     sportAll:'Alle',sportFoot:'Fussball',sportBasket:'Basketball',sportTennis:'Tennis',
@@ -2588,27 +2459,7 @@ var L = {
     'authMagicSub':'Magic Link gesendet an',
     'authSignOut':'Abmelden',
     'authProfile':'Mein Profil',
-    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse',
-    'labTitle':'LAB URTEIL',
-    'labStrong':'STARKER PICK',
-    'labRisky':'RISIKO ALARM',
-    'labNeutral':'AUSGEWOGEN',
-    'labOdds':'Edge vs Markt',
-    'labUnits':'Einheiten',
-    'labConf':'Konfidenz',
-    'btTitle':'BACKTEST MOTOR',
-    'btSub':'Gemini vs Buchmacher Baseline',
-    'btInfo':'20 Spiele · 5 Sportarten · ~5 Min',
-    'btLaunch':'BACKTEST STARTEN',
-    'btRunning':'Gemini Analyse lauft...',
-    'btDone':'Fertig !',
-    'btGeminiAcc':'Gemini Genauigkeit',
-    'btBaseline':'Buchmacher Baseline',
-    'btEdge':t('btEdge'),
-    'btCoverage':'Gemini Abdeckung',
-    'btSport':'Sportart',
-    'btMatches':'Spiele',
-    'btEdgeCol':'Edge'},
+    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse'},
   ar:{
     copilot:'⚡ مساعدك الرياضي الذكي',
     sportAll:'الكل',sportFoot:'كرة القدم',sportBasket:'كرة السلة',sportTennis:'التنس',
@@ -2675,27 +2526,7 @@ var L = {
     'authMagicSub':'تم إرسال الرابط إلى',
     'authSignOut':'تسجيل الخروج',
     'authProfile':'ملفي',
-    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي',
-    'labTitle':'حكم المختبر',
-    'labStrong':'اختيار قوي',
-    'labRisky':'تحذير خطر',
-    'labNeutral':'متوازن',
-    'labOdds':'الميزة مقابل السوق',
-    'labUnits':'وحدات',
-    'labConf':'ثقة',
-    'btTitle':'محرك الاختبار',
-    'btSub':'جيميني مقابل خط الأساس للمراهنات',
-    'btInfo':'20 مباراة · 5 رياضات · ~5 دقائق',
-    'btLaunch':'تشغيل الاختبار',
-    'btRunning':'تحليل جيميني جارٍ...',
-    'btDone':'اكتمل !',
-    'btGeminiAcc':'دقة جيميني',
-    'btBaseline':'خط الأساس للمراهنات',
-    'btEdge':'الميزة مقابل الأساس',
-    'btCoverage':'تغطية جيميني',
-    'btSport':'الرياضة',
-    'btMatches':'المباريات',
-    'btEdgeCol':'الميزة'}
+    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي'}
 };
 
 function t(k){return (L[lang]||L.en)[k]||L.en[k]||k;}
@@ -2795,15 +2626,6 @@ function applyLang(){
   // WC Banner sync langue + re-render flux
   checkWCBanner();
   if (window.matchPool && window.matchPool.length) renderFluxList();
-  // Backtest modal i18n
-  var btTitle = document.getElementById('btTitleEl');
-  var btSub   = document.getElementById('btSubEl');
-  var btInfo  = document.getElementById('btInfoEl');
-  var btLaunchLbl = document.getElementById('btLaunchLbl');
-  if (btTitle) btTitle.textContent = t('btTitle');
-  if (btSub)   btSub.textContent   = t('btSub');
-  if (btInfo)  btInfo.textContent  = t('btInfo');
-  if (btLaunchLbl) btLaunchLbl.textContent = t('btLaunch');
   // Si résultats affichés → avertir que la langue ne s'applique qu'aux nouvelles analyses
   var out = document.getElementById('output');
   if (out && out.innerHTML && out.innerHTML.length > 100) {
@@ -3235,7 +3057,7 @@ function launchBacktest(isDry) {
   res.style.display  = 'none';
   res.innerHTML      = '';
   bar.style.width    = '5%';
-  txt.textContent    = isDry ? 'Validation...' : t('btRunning');
+  txt.textContent    = isDry ? 'Validation...' : 'Analyse Gemini en cours (~5 min)...';
 
   var pct = 5;
   var interval = setInterval(function() {
@@ -3282,15 +3104,15 @@ function renderBtResults(data, container) {
 
   // Stats globales
   html += '<div class="bt-stat-grid">';
-  html += btStat(s.gemini.accuracy !== null ? s.gemini.accuracy + '%' : 'N/A', t('btGeminiAcc'), s.gemini.accuracy >= s.bookmaker.accuracy ? 'pos' : 'neg');
-  html += btStat(s.bookmaker.accuracy + '%', t('btBaseline'), '');
-  html += btStat(s.edge !== null ? (s.edge > 0 ? '+' : '') + s.edge + '%' : 'N/A', t('btEdge'), s.edge > 0 ? 'pos' : 'neg');
-  html += btStat((s.gemini.coverage || 0) + '%', t('btCoverage'), s.gemini.coverage >= 80 ? 'pos' : 'neg');
+  html += btStat(s.gemini.accuracy !== null ? s.gemini.accuracy + '%' : 'N/A', 'Gemini Accuracy', s.gemini.accuracy >= s.bookmaker.accuracy ? 'pos' : 'neg');
+  html += btStat(s.bookmaker.accuracy + '%', 'Baseline Bookmakers', '');
+  html += btStat(s.edge !== null ? (s.edge > 0 ? '+' : '') + s.edge + '%' : 'N/A', 'Edge vs Baseline', s.edge > 0 ? 'pos' : 'neg');
+  html += btStat((s.gemini.coverage || 0) + '%', 'Gemini Coverage', s.gemini.coverage >= 80 ? 'pos' : 'neg');
   html += '</div>';
 
   // Par sport
   html += '<table class="bt-sport-table"><thead><tr>';
-  html += '<th>'+t('btSport')+'</th><th>'+t('btMatches')+'</th><th>Gemini</th><th>Baseline</th><th>'+t('btEdgeCol')+'</th>';
+  html += '<th>Sport</th><th>Matchs</th><th>Gemini</th><th>Baseline</th><th>Edge</th>';
   html += '</tr></thead><tbody>';
   Object.entries(data.bySport || {}).forEach(function(entry) {
     var sport = entry[0], v = entry[1];
@@ -3328,47 +3150,6 @@ function renderBtResults(data, container) {
 
 function btStat(val, lbl, cls) {
   return '<div class="bt-stat"><div class="bt-stat-val ' + cls + '">' + val + '</div><div class="bt-stat-lbl">' + lbl + '</div></div>';
-}
-
-// ── LAB VERDICT BLOCK ─────────────────────────────────────────
-function renderLabBlock(matches) {
-  if (!matches || !matches.length) return '';
-
-  var rows = matches.map(function(m) {
-    var conf   = m.confidence || 0;
-    var units  = m.units || 0;
-    var result = (m.result || '').toUpperCase();
-    var home   = m.home || '';
-    var away   = m.away || '';
-
-    // Couleur selon confiance
-    var cls = conf >= 75 ? 'green' : conf >= 65 ? 'orange' : 'red';
-    var badge = conf >= 75 ? t('labStrong') : conf >= 65 ? t('labNeutral') : t('labRisky');
-
-    // Issue prédite
-    var pick = result === 'WIN_HOME' ? home :
-               result === 'WIN_AWAY' ? away :
-               result === 'DRAW'     ? 'DRAW' : home;
-
-    // Smart picks
-    var smart = (m.sub_bets && m.sub_bets.length) ? (m.sub_bets[0].label || '') : (m.justification || m.reasoning || '');
-
-    var statsHtml =
-      '<strong>' + pick.toUpperCase() + '</strong>' +
-      ' · ' + units + ' ' + t('labUnits') +
-      (smart ? '<br>' + smart : '');
-
-    return '<div class="lab-row ' + cls + '">' +
-      '<div class="lab-badge ' + cls + '">' + badge + '</div>' +
-      '<div class="lab-stats">' + statsHtml + '</div>' +
-      '<div class="lab-conf ' + cls + '">' + conf + '%</div>' +
-    '</div>';
-  }).join('');
-
-  return '<div class="lab-block">' +
-    '<div class="lab-header">⚡ ' + t('labTitle') + '</div>' +
-    rows +
-  '</div>';
 }
 
 window.onload = function(){
@@ -3420,10 +3201,12 @@ window.onload = function(){
     navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
   }
   try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
+  // Init backtest mode — 'yes' = dry-run par defaut
+  var btLaunch = document.getElementById('btLaunchBtn');
+  if (btLaunch) btLaunch.setAttribute('data-dryrun', 'yes');
   try { applyLang(); } catch(e){ console.error('applyLang:', e); }
   try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
   try { updateGoBtn(); } catch(e){}
-  try { initAuth(); } catch(e){ console.error('initAuth:', e); }
   setTimeout(function(){
     try { loadFluxMatches(); } catch(e){ console.error('loadFluxMatches:', e); }
   }, 200);
@@ -3634,8 +3417,6 @@ function buildPrompt(content,isPage){
     'Tennis(H2H same surface MANDATORY), NHL, Rugby, MMA. Any league worldwide.',
     '',
     'CRITICAL:',
-    '- Analyze ONLY the exact matches listed in INPUT below. Do NOT invent, replace or add matches.',
-    '- Use the exact team names, competition and date from INPUT. Never substitute with other matches.',
     '- Analyze ALL matches in input. Do NOT stop at 3.',
     '- MAX 2 bullet points per justification.',
     '- MANDATORY: Every single word of justification, summary, sub_bets, coach_tip MUST be in '+uLang+'. Zero English words if language is not English.',
@@ -4177,7 +3958,7 @@ function renderVB(m){
   var veIco  = ve>=3?'💎':ve>=1?'✨':'⚖️';
 
   // ── Parser justification en piliers ──
-  var just = m.justification || m.reasoning || '';
+  var just = m.justification||'';
   // Détecter les bullets (• ou - au début)
   var bullets = just.split(/\n|•|·/).map(function(s){return s.trim();}).filter(Boolean);
 
@@ -4288,8 +4069,7 @@ function renderResults(data){
       (m.justification?'<div class="mc-just">'+esc(m.justification)+'</div>':'')+
       '</div></div></div>';
   }).join('');
-  // LAB VERDICT — remplace le bloc // SUPERCOACH
-  var synth = renderLabBlock(M);
+  var synth=data.summary?'<div class="synthesis"><b>// SUPERCOACH</b><br>'+esc(data.summary)+'</div>':'';
   lastResults = {matches: M, summary: data.summary||''};
   return '<div class="results"><div class="res-hdr"><h2>'+M.length+' MATCH'+(M.length>1?'ES':'')+'</h2><div class="res-meta">⚡ SUPERCOACH<br>✨ Gemini AI</div></div>'+roi+stats+cards+synth+
     '<button class="share-btn" onclick="shareResults()">📤 SHARE ANALYSIS</button>'+
@@ -4779,9 +4559,9 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
           <button class="sheet-close" onclick="closeSheet('backtestModal')">&#x2715;</button>
           <div class="bt-header"><div class="bt-icon">&#x1F9EA;</div><div><div class="bt-title">BACKTEST ENGINE</div><div class="bt-sub">Gemini vs Baseline Bookmakers</div></div></div>
           <div class="bt-opt-row" style="background:var(--s2);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
-            <span style="font-size:12px;color:var(--t2);" id="btInfoEl">20 matchs · 5 sports · ~5 minutes</span>
+            <span style="font-size:12px;color:var(--t2);">20 matchs · 5 sports · ~5 minutes</span>
           </div>
-          <button class="bt-launch-btn" id="btLaunchBtn" onclick="launchBacktest(false)">&#x26A1; <span id="btLaunchLbl">LANCER LE BACKTEST</span></button>
+          <button class="bt-launch-btn" id="btLaunchBtn" onclick="launchBacktest(false)">&#x26A1; LANCER LE BACKTEST</button>
           <div class="bt-progress" id="btProgress"><div class="bt-progress-bar-wrap"><div class="bt-progress-bar" id="btProgressBar"></div></div><div class="bt-progress-txt" id="btProgressTxt">Chargement...</div></div>
           <div class="bt-results" id="btResults"></div>
         </div>
