@@ -3420,12 +3420,10 @@ window.onload = function(){
     navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
   }
   try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
-  // Init backtest mode — 'yes' = dry-run par defaut
-  var btLaunch = document.getElementById('btLaunchBtn');
-  if (btLaunch) btLaunch.setAttribute('data-dryrun', 'yes');
   try { applyLang(); } catch(e){ console.error('applyLang:', e); }
   try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
   try { updateGoBtn(); } catch(e){}
+  try { initAuth(); } catch(e){ console.error('initAuth:', e); }
   setTimeout(function(){
     try { loadFluxMatches(); } catch(e){ console.error('loadFluxMatches:', e); }
   }, 200);
