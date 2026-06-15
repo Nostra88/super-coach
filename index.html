@@ -3246,7 +3246,7 @@ function renderLabBlock(matches) {
                result === 'DRAW'     ? 'DRAW' : home;
 
     // Smart picks
-    var smart = (m.sub_bets && m.sub_bets.length) ? m.sub_bets[0].label || '' : '';
+    var smart = (m.sub_bets && m.sub_bets.length) ? (m.sub_bets[0].label || '') : (m.justification || m.reasoning || '');
 
     var statsHtml =
       '<strong>' + pick.toUpperCase() + '</strong>' +
@@ -4072,7 +4072,7 @@ function renderVB(m){
   var veIco  = ve>=3?'💎':ve>=1?'✨':'⚖️';
 
   // ── Parser justification en piliers ──
-  var just = m.justification||'';
+  var just = m.justification || m.reasoning || '';
   // Détecter les bullets (• ou - au début)
   var bullets = just.split(/\n|•|·/).map(function(s){return s.trim();}).filter(Boolean);
 
