@@ -1043,7 +1043,7 @@ app.post('/run-backtest', async (req, res) => {
           accuracy: report.bookmaker.accuracy,
         },
         edge:     report.edge,
-        verdict:  report.edge === null        ? 'DRY-RUN — Gemini non appelé' :
+        verdict:  dryRun ? 'TEST STRUCTURE OK' : report.edge === null ? 'GEMINI N A PAS REPONDU' :
                   report.edge > 2             ? '🏆 SUPERCOACH BATS LES BOOKMAKERS' :
                   report.edge >= 0            ? '✅ À LA HAUTEUR DU MARCHÉ' :
                   report.edge > -5            ? '⚠️ EN DESSOUS DE LA BASELINE' :
