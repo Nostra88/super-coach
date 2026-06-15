@@ -4569,9 +4569,9 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
           <div class="bt-options">
             <div class="bt-opt-row"><span class="bt-opt-lbl">Mode</span><div class="bt-toggle"><button id="btDryBtn" class="active" onclick="setBtMode(true)">Dry-run</button><button id="btRealBtn" onclick="setBtMode(false)">Reel</button></div></div>
             <div class="bt-opt-row"><span class="bt-opt-lbl">Sport</span><select id="btSportSel" style="background:var(--s1);border:1px solid var(--b1);border-radius:6px;padding:4px 8px;color:var(--t1);font-size:12px;"><option value="">Tous (20 max)</option><option value="football">Football (20)</option><option value="basketball">Basketball (10)</option><option value="tennis">Tennis (10)</option><option value="hockey">Hockey (6)</option><option value="baseball">Baseball (6)</option></select></div>
-            <div class="bt-opt-row"><span class="bt-opt-lbl">Duree</span><span class="bt-opt-val" id="btEstTime">~3 sec</span></div>
           </div>
-          <button class="bt-launch-btn" id="btLaunchBtn" onclick="launchBacktest()">&#x26A1; LANCER LE BACKTEST</button>
+          <button class="bt-launch-btn" onclick="launchBacktest(true)" style="opacity:0.6;margin-bottom:8px;">Structure seule (~3 sec)</button>
+          <button class="bt-launch-btn" id="btLaunchBtn" onclick="launchBacktest(false)">&#x26A1; LANCER GEMINI (~5 min)</button>
           <div class="bt-progress" id="btProgress"><div class="bt-progress-bar-wrap"><div class="bt-progress-bar" id="btProgressBar"></div></div><div class="bt-progress-txt" id="btProgressTxt">Chargement...</div></div>
           <div class="bt-results" id="btResults"></div>
         </div>
