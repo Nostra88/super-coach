@@ -1978,13 +1978,18 @@ async function analyzeFlux() {
 
   var lines = [];
   var pool = window.matchPool || [];
+  var today = new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
   sel.forEach(function(id) {
     for (var i = 0; i < pool.length; i++) {
       if (String(pool[i].id) === String(id)) {
         var m = pool[i];
+        // Ligne enrichie avec toutes les données disponibles
         var line = m.home + ' vs ' + m.away;
-        if (m.competition) line += ' — ' + m.competition;
-        if (m.time) line += ' — ' + m.time;
+        if (m.competition) line += ' | ' + m.competition;
+        if (m.date) line += ' | ' + m.date;
+        else line += ' | ' + today;
+        if (m.time) line += ' | ' + m.time;
+        if (m.sportId) line += ' | sport:' + m.sportId;
         lines.push(line);
         break;
       }
@@ -3237,8 +3242,8 @@ function renderLabBlock(matches) {
     var away   = m.away || '';
 
     // Couleur selon confiance
-    var cls = conf >= 80 ? 'green' : conf >= 70 ? 'orange' : 'red';
-    var badge = conf >= 80 ? t('labStrong') : conf >= 70 ? t('labNeutral') : t('labRisky');
+    var cls = conf >= 75 ? 'green' : conf >= 65 ? 'orange' : 'red';
+    var badge = conf >= 75 ? t('labStrong') : conf >= 65 ? t('labNeutral') : t('labRisky');
 
     // Issue prédite
     var pick = result === 'WIN_HOME' ? home :
@@ -3531,6 +3536,8 @@ function buildPrompt(content,isPage){
     'Tennis(H2H same surface MANDATORY), NHL, Rugby, MMA. Any league worldwide.',
     '',
     'CRITICAL:',
+    '- Analyze ONLY the exact matches listed in INPUT below. Do NOT invent, replace or add matches.',
+    '- Use the exact team names, competition and date from INPUT. Never substitute with other matches.',
     '- Analyze ALL matches in input. Do NOT stop at 3.',
     '- MAX 2 bullet points per justification.',
     '- MANDATORY: Every single word of justification, summary, sub_bets, coach_tip MUST be in '+uLang+'. Zero English words if language is not English.',
