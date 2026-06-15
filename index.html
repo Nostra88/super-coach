@@ -3033,9 +3033,9 @@ function setBtMode(dry) {
     dryBtn.classList.remove('active');
     realBtn.classList.add('active');
   }
-  // Stocker dans data-attribute pour lecture fiable iOS
+  // Stocker dans data-attribute ET variable globale
   var launchBtn = document.getElementById('btLaunchBtn');
-  if (launchBtn) launchBtn.setAttribute('data-dryrun', dry ? '1' : '0');
+  if (launchBtn) launchBtn.setAttribute('data-dryrun', dry ? 'yes' : 'no');
   var sport  = document.getElementById('btSportSel').value;
   var counts = {'':'20', football:'20', basketball:'10', tennis:'10', hockey:'6', baseball:'6'};
   var n = parseInt(counts[sport] || 52);
@@ -3051,8 +3051,10 @@ function launchBacktest() {
   var txt    = document.getElementById('btProgressTxt');
   var res    = document.getElementById('btResults');
   var sport  = document.getElementById('btSportSel').value;
-  // Lire depuis data-attribute stocké par setBtMode
-  var isDry = document.getElementById('btLaunchBtn').getAttribute('data-dryrun') !== '0';
+  // Lire depuis data-attribute — 'no' = mode réel
+  var attr = document.getElementById('btLaunchBtn').getAttribute('data-dryrun');
+  // Si attr est null (non initialisé) → lire _btDryRun
+  var isDry = (attr === null) ? _btDryRun : (attr !== 'no');
 
   btn.disabled = true;
   prog.style.display = 'block';
@@ -3212,9 +3214,9 @@ window.onload = function(){
     navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});
   }
   try { buildSportGrid(); } catch(e){ console.error('buildSportGrid:', e); }
-  // Init backtest mode
+  // Init backtest mode — 'yes' = dry-run par defaut
   var btLaunch = document.getElementById('btLaunchBtn');
-  if (btLaunch) btLaunch.setAttribute('data-dryrun', '1');
+  if (btLaunch) btLaunch.setAttribute('data-dryrun', 'yes');
   try { applyLang(); } catch(e){ console.error('applyLang:', e); }
   try { checkWCBanner(); } catch(e){ console.error('checkWCBanner:', e); }
   try { updateGoBtn(); } catch(e){}
