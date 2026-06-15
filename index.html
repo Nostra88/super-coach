@@ -4183,7 +4183,8 @@ function renderResults(data){
       (m.justification?'<div class="mc-just">'+esc(m.justification)+'</div>':'')+
       '</div></div></div>';
   }).join('');
-  var synth=data.summary?'<div class="synthesis"><b>// SUPERCOACH</b><br>'+esc(data.summary)+'</div>':'';
+  // LAB VERDICT — remplace le bloc // SUPERCOACH
+  var synth = renderLabBlock(M);
   lastResults = {matches: M, summary: data.summary||''};
   return '<div class="results"><div class="res-hdr"><h2>'+M.length+' MATCH'+(M.length>1?'ES':'')+'</h2><div class="res-meta">⚡ SUPERCOACH<br>✨ Gemini AI</div></div>'+roi+stats+cards+synth+
     '<button class="share-btn" onclick="shareResults()">📤 SHARE ANALYSIS</button>'+
