@@ -61,14 +61,24 @@ function bookmakerFavorite(odds) {
 }
 
 // ── Normaliser les probabilités (cap 0.05/0.95, somme=1) ─────────
-function normalizeFP(fp, sport) {
-  const twoWay = ['basketball', 'tennis', 'baseball'].includes(sport);
+function normalizeFP(result, sport) {
+  // Support nouveau format JSON (home_win à la racine) ET ancien (final_probability)
+  var fp;
+  if (result && result.home_win !== undefined) {
+    fp = { home_win: result.home_win, draw: result.draw || 0, away_win: result.away_win || 0 };
+  } else if (result && result.final_probability) {
+    fp = result.final_probability;
+  } else {
+    return null;
+  }
+
+  var twoWay = ['basketball', 'tennis', 'baseball'].includes(sport);
   if (twoWay) fp.draw = 0;
-  ['home_win', 'draw', 'away_win'].forEach(k => {
+  ['home_win', 'draw', 'away_win'].forEach(function(k) {
     fp[k] = Math.min(0.95, Math.max(0, Number(fp[k]) || 0));
   });
   if (twoWay) fp.draw = 0;
-  const total = fp.home_win + fp.draw + fp.away_win;
+  var total = fp.home_win + fp.draw + fp.away_win;
   if (total > 0) { fp.home_win /= total; fp.draw /= total; fp.away_win /= total; }
   return fp;
 }
@@ -128,7 +138,8 @@ async function runBacktest({ mocks, geminiKey, onProgress }) {
     try {
       const { model: m, result } = await callGeminiSingle(apiData, geminiKey);
       model      = m;
-      fp         = normalizeFP(result.final_probability, sport);
+      fp         = normalizeFP(result, sport);
+      if (!fp) throw new Error('normalizeFP returned null');
       geminiPred = predictedOutcome(fp);
       confidence = result.confidence || Math.round(Math.max(fp.home_win, fp.draw||0, fp.away_win) * 100);
     } catch(e) {
