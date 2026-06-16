@@ -1073,7 +1073,27 @@ app.post('/run-backtest', async (req, res) => {
   }
 });
 
-// ── /test-tennis — Diagnostic couverture tennis APIs ──────────────
+// ── /test-tennis — Diagnostic APIs tennis ────────────────────────
+app.get('/test-tennis', async (req, res) => {
+  const today = new Date().toISOString().split('T')[0];
+  const R = {};
+  const BH = {
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
+    'Accept': 'application/json',
+    'Referer': 'https://www.sofascore.com/',
+    'Origin': 'https://www.sofascore.com',
+  };
+  try {
+    const r1 = await fetch('https://api.sofascore.com/api/v1/sport/tennis/scheduled-events/'+today, { headers: BH });
+    const d1 = await r1.json();
+    const ev = d1.events || [];
+    R.sofascore = { status: r1.status, total: ev.length,
+      sample: ev.slice(0,5).map(function(e){ return { home: (e.homeTeam||{}).name||'', away: (e.awayTeam||{}).name||'', tour: ((e.tournament||{}).name||'') }; })
+    };
+  } catch(e) { R.sofascore = { error: e.message }; }
+  res.json({ date: today, R });
+});
+
 app.get('/test-tennis', async (req, res) => {
   const today = new Date().toISOString().split('T')[0];
   const results = {};
