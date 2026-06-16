@@ -1073,6 +1073,64 @@ app.post('/run-backtest', async (req, res) => {
   }
 });
 
+// ── /test-tennis — Diagnostic couverture tennis APIs ──────────────
+app.get('/test-tennis', async (req, res) => {
+  const today = new Date().toISOString().split('T')[0];
+  const results = {};
+
+  // Test 1 : API-Sports tennis (clé existante)
+  try {
+    const r1 = await fetch(`https://v1.tennis.api-sports.io/games?date=${today}`, {
+      headers: { 'x-apisports-key': APISPORTS_KEY }
+    });
+    const d1 = await r1.json();
+    results.apiSports = {
+      status: r1.status,
+      results: d1.results || 0,
+      sample: (d1.response || []).slice(0,3).map(g => ({
+        home: g.players?.home?.name || '',
+        away: g.players?.away?.name || '',
+        tournament: g.tournament?.name || '',
+        date: g.date || ''
+      }))
+    };
+  } catch(e) { results.apiSports = { error: e.message }; }
+
+  // Test 2 : ESPN tennis
+  try {
+    const r2 = await fetch('https://site.api.espn.com/apis/site/v2/sports/tennis/scoreboard');
+    const d2 = await r2.json();
+    results.espn = {
+      status: r2.status,
+      events: (d2.events || []).length,
+      sample: (d2.events || []).slice(0,3).map(e => ({
+        name: e.name || '',
+        date: e.date || ''
+      }))
+    };
+  } catch(e) { results.espn = { error: e.message }; }
+
+  // Test 3 : SofaScore (non authentifié)
+  try {
+    const r3 = await fetch(`https://api.sofascore.com/api/v1/sport/tennis/scheduled-events/${today}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
+    const d3 = await r3.json();
+    const events = d3.events || [];
+    results.sofascore = {
+      status: r3.status,
+      events: events.length,
+      sample: events.slice(0,3).map(e => ({
+        home: e.homeTeam?.name || '',
+        away: e.awayTeam?.name || '',
+        tournament: e.tournament?.name || ''
+      }))
+    };
+  } catch(e) { results.sofascore = { error: e.message }; }
+
+  res.json({ date: today, results });
+});
+
 app.get('/fixtures', async (req, res) => {
   // Date du jour Paris
   const now = new Date();
