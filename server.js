@@ -1073,6 +1073,75 @@ app.post('/run-backtest', async (req, res) => {
   }
 });
 
+
+// ── FBREF WC SCRAPER ──────────────────────────────────────────────
+const FBREF_CACHE = {};
+
+async function fetchFBrefWC() {
+  const cacheKey = 'fbref_wc';
+  const cached = FBREF_CACHE[cacheKey];
+  if (cached && Date.now() - cached.ts < 3600000) return cached.data;
+
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 10000);
+    const resp = await fetch('https://fbref.com/en/comps/1/World-Cup-Stats', {
+      signal: ctrl.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'en-US,en;q=0.5',
+      }
+    });
+    if (!resp.ok) throw new Error('FBref HTTP ' + resp.status);
+    const html = await resp.text();
+
+    const teams = [];
+    const rows = html.match(/<tr[^>]*data-row[^>]*>([\s\S]*?)<\/tr>/g) || [];
+    rows.forEach(function(row) {
+      const nameM = row.match(/data-stat="team"[^>]*><a[^>]*>([^<]+)<\/a>/);
+      if (!nameM) return;
+      const name = nameM[1].trim();
+      const get = function(stat) {
+        const m = row.match(new RegExp('data-stat="' + stat + '"[^>]*>([0-9.]+)'));
+        return m ? parseFloat(m[1]) : null;
+      };
+      teams.push({
+        name: name,
+        mp:  get('games'),
+        w:   get('wins'),
+        d:   get('ties'),
+        l:   get('losses'),
+        gf:  get('goals'),
+        ga:  get('goals_against'),
+        xg:  get('xg'),
+        xga: get('xga'),
+      });
+    });
+
+    const data = { teams, fetchedAt: new Date().toISOString() };
+    FBREF_CACHE[cacheKey] = { data, ts: Date.now() };
+    console.log('[FBref] ' + teams.length + ' equipes WC');
+    return data;
+  } catch(e) {
+    console.warn('[FBref] Erreur:', e.message);
+    return null;
+  }
+}
+
+function getFBrefTeam(name, data) {
+  if (!data || !data.teams) return null;
+  const n = function(s) { return (s||'').toLowerCase().replace(/[^a-z]/g,''); };
+  const t = n(name);
+  return data.teams.find(function(x) { return n(x.name).includes(t) || t.includes(n(x.name)); }) || null;
+}
+
+app.get('/fbref-wc', async (req, res) => {
+  const data = await fetchFBrefWC();
+  if (!data) return res.status(503).json({ error: 'FBref indisponible' });
+  res.json(data);
+});
+
 // ── /test-tennis — Diagnostic APIs tennis ────────────────────────
 app.get('/test-tennis', async (req, res) => {
   const today = new Date().toISOString().split('T')[0];
