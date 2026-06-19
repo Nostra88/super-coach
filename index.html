@@ -3041,7 +3041,7 @@ function setBtMode(dry) {
   var n = parseInt(counts[sport] || 52);
   document.getElementById('btEstTime').textContent = dry
     ? '~3 secondes (dry-run)'
-    : '~' + Math.ceil(n * 13 / 60) + ' minutes (Gemini x' + n + ' @ 12s/appel)';
+    : '~' + Math.ceil(n * 5 / 60) + ' minutes (Gemini x' + n + ' @ 4s/appel)';
 }
 
 function launchBacktest(isDry) {
