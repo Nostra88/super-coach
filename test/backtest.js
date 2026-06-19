@@ -143,11 +143,27 @@ async function runBacktest({ mocks, geminiKey, onProgress }) {
       geminiPred = predictedOutcome(fp);
       confidence = result.confidence || Math.round(Math.max(fp.home_win, fp.draw||0, fp.away_win) * 100);
     } catch(e) {
-      error = e.message;
+      // Sur quota épuisé : attendre 30s et réessayer une fois
+      if (e.message && e.message.includes('indisponible')) {
+        console.warn('[BT] Quota épuisé, pause 30s...');
+        await new Promise(function(r){ setTimeout(r, 30000); });
+        try {
+          const retry = await callGeminiSingle(apiData, geminiKey);
+          model = retry.model;
+          fp = normalizeFP(retry.result, sport);
+          geminiPred = predictedOutcome(fp);
+          confidence = retry.result.confidence || 0;
+          error = null;
+        } catch(e2) {
+          error = e2.message;
+        }
+      } else {
+        error = e.message;
+      }
     }
 
     const geminiCorrect = geminiPred === actual_outcome;
-    if (geminiPred) {
+    if (geminiPred && !error) {
       geminiAnswered++;
       if (geminiCorrect) { geminiOK++; bySport[sport].geminiOK++; }
     }
