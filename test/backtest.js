@@ -9,7 +9,7 @@ const path = require('path');
 const { buildPrompt, GEMINI_SYSTEM_PROMPT, computeKellyAndValueEdge } = require('../engine.js');
 
 const MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
-const SLEEP_MS = 12000; // 5 req/min → quota Gemini safe
+const SLEEP_MS = 4000;  // 15 req/min → quota Gemini standard
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
