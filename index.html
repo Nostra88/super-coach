@@ -3417,6 +3417,8 @@ function buildPrompt(content,isPage){
     'Tennis(H2H same surface MANDATORY), NHL, Rugby, MMA. Any league worldwide.',
     '',
     'CRITICAL:',
+    '- CRITICAL: Analyze ONLY the EXACT matches listed in INPUT below. Do NOT invent, add or substitute any match.',
+    '- Use the EXACT team names from INPUT. Never replace with other teams or competitions.',
     '- Analyze ALL matches in input. Do NOT stop at 3.',
     '- MAX 2 bullet points per justification.',
     '- MANDATORY: Every single word of justification, summary, sub_bets, coach_tip MUST be in '+uLang+'. Zero English words if language is not English.',
