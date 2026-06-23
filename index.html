@@ -3380,6 +3380,11 @@ function parseRawText(raw) {
       matches.push(m[1].trim() + ' vs ' + m[2].trim() + (time ? ' - ' + time : ''));
     }
   });
+  // Si aucun match "vs" détecté mais contenu présent → retourner tel quel
+  // Gemini va interpréter comme recherche libre
+  if (!matches.length && raw.trim().length > 0) {
+    return raw.trim();
+  }
   return matches.length ? matches.join('\n') : raw;
 }
 
@@ -3435,8 +3440,10 @@ function buildPrompt(content,isPage){
     '"summary":"Global strategy in '+uLang+'","roi_potential":"Est. ROI: +X%"}',
     'sport_id: foot|basket|tennis|rugby|mma|boxing|hockey|handball|volley|f1|baseball|nfl|other',
     '',
-    'INPUT:',
-    content
+    'INPUT (analyze ONLY what is listed here, nothing else):',
+    content,
+    '',
+    'IMPORTANT: If INPUT contains only one team name or partial info, ask yourself what upcoming match involves this team and analyze THAT specific match. Do NOT invent random Premier League or Ligue 1 matches. Use only real scheduled matches for 2026.'
   ].filter(Boolean).join('\n');
 }
 
