@@ -4023,6 +4023,44 @@ function renderVB(m){
   '</div>';
 }
 
+function renderMarketBadge(market, confidence) {
+  if (!market) return '';
+  var homeProb = market.homeProb || 0;
+  var awayProb = market.awayProb || 0;
+  var edge = confidence ? (confidence - homeProb) : null;
+  var edgeStr = edge !== null
+    ? ' <span style="color:' + (edge >= 0 ? '#00E676' : '#FF2D55') + ';font-weight:700">' +
+      (edge >= 0 ? '+' : '') + Math.round(edge) + '% SUPERCOACH vs MARKET</span>'
+    : '';
+  var syncStr = '';
+  if (market.syncedAt) {
+    var mins = Math.round((Date.now() - new Date(market.syncedAt).getTime()) / 60000);
+    syncStr = ' · <span style="color:#64748b;font-size:9px">synced ' + mins + 'min ago</span>';
+  }
+  return '<div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);' +
+    'border-radius:8px;padding:10px 14px;margin:8px 0;font-family:JetBrains Mono,monospace;font-size:11px">' +
+    '<div style="color:#8b5cf6;font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">' +
+    esc(market.source) + syncStr + '</div>' +
+    '<div style="display:flex;gap:16px;align-items:center">' +
+    '<div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#e2e8f0">' + homeProb + '%</div>' +
+    '<div style="font-size:9px;color:#64748b;text-transform:uppercase">Market YES</div></div>' +
+    '<div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#e2e8f0">' + awayProb + '%</div>' +
+    '<div style="font-size:9px;color:#64748b;text-transform:uppercase">Market NO</div></div>' +
+    (edgeStr ? '<div style="font-size:11px">' + edgeStr + '</div>' : '') +
+    '</div>' +
+    (market.volume > 0 ? '<div style="color:#64748b;font-size:9px;margin-top:4px">Vol: $' + Math.round(market.volume).toLocaleString() + '</div>' : '') +
+    '</div>';
+}
+
+function renderDataRichness(stars) {
+  if (!stars) return '';
+  var s = '';
+  for (var i = 1; i <= 5; i++) {
+    s += '<span style="color:' + (i <= stars ? '#FFB800' : '#1e2530') + '">★</span>';
+  }
+  return '<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:#64748b;margin:4px 0">DATA ' + s + '</div>';
+}
+
 function renderResults(data){
   var M=data.matches||[];
 
@@ -4073,7 +4111,7 @@ function renderResults(data){
       '<div class="mc-units">'+renderUnits(m.units)+'</div>'+
       renderSubBets(m.sub_bets)+
       '<div class="mc-hint"><span>'+t('tapDetails')+'</span><span class="hint-arr">▼</span></div>'+
-      '<div class="mc-det"><div class="mc-det-inner">'+renderVB(m)+
+      '<div class="mc-det"><div class="mc-det-inner">'+renderVB(m)+renderMarketBadge(m._market||null, m.confidence)+renderDataRichness(m._dataRichness||null)+
       (m.rotation_alert&&m.rotation_text?'<div class="mc-rot-alert">⚠ '+esc(m.rotation_text)+'</div>':'')+
       (m.justification?'<div class="mc-just">'+esc(m.justification)+'</div>':'')+
       '</div></div></div>';
