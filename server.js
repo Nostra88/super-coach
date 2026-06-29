@@ -408,6 +408,22 @@ function getRealTimeBlock() {
 // ─────────────────────────────────────────────────────────────
 // CONTENEUR DE VÉRITÉ v4
 // ─────────────────────────────────────────────────────────────
+function findMarketConsensus(home, away) {
+  const norm = s => (s||'').toLowerCase().replace(/[^a-z]/g, '');
+  const h = norm(home), a = norm(away);
+  let best = null, bestScore = 0;
+  for (const m of Object.values(MARKET_CONSENSUS)) {
+    const q = norm(m.question);
+    let score = 0;
+    if (h.length >= 3 && q.includes(h.slice(0, 5))) score += 2;
+    if (a.length >= 3 && q.includes(a.slice(0, 5))) score += 2;
+    if (h.length >= 6 && q.includes(h)) score += 1;
+    if (a.length >= 6 && q.includes(a)) score += 1;
+    if (score >= 3 && score > bestScore) { best = m; bestScore = score; }
+  }
+  return best;
+}
+
 function buildContainer(entities, validation, espnLines, prompt) {
   const v = validation || { status:'ENRICHMENT_ONLY', entities: [] };
   let b = '\n━━━ VALIDATED DATA ━━━\n';
