@@ -195,53 +195,62 @@ const MARKET_CONSENSUS = {}; // { key: { question, homeProb, awayProb, source, s
 async function fetchPolymarketWC() {
   try {
     const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), 10000);
-    const resp = await fetch(
-      'https://clob.polymarket.com/markets?active=true&closed=false&tag_slug=fifa-world-cup-2026&limit=100',
-      { signal: ctrl.signal, headers: { 'Accept': 'application/json' } }
-    );
+    setTimeout(() => ctrl.abort(), 12000);
+    // Gamma API = REST publique Polymarket (pas le CLOB qui requiert auth)
+    const url = 'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&tag_id=12';
+    const resp = await fetch(url, {
+      signal: ctrl.signal,
+      headers: { 'Accept': 'application/json', 'User-Agent': 'SUPERCOACH/9.0' }
+    });
     if (!resp.ok) throw new Error('Polymarket HTTP ' + resp.status);
-    const data = await resp.json();
-    const markets = data.data || data.markets || (Array.isArray(data) ? data : []);
+    const markets = await resp.json(); // tableau direct
     let count = 0;
-    for (const m of markets) {
-      const q = (m.question || m.title || '').toLowerCase();
-      const tokens = m.tokens || m.outcomes || [];
-      const yes = tokens.find(t => (t.outcome||t.name||'').toLowerCase() === 'yes');
-      const no  = tokens.find(t => (t.outcome||t.name||'').toLowerCase() === 'no');
-      if (!yes) continue;
-      const key = 'pm_' + (m.market_slug || m.slug || m.id || count);
+    for (const m of (Array.isArray(markets) ? markets : [])) {
+      const q = (m.question || '').toLowerCase();
+      // Marchés binaires sport uniquement
+      if (!m.outcomes || m.outcomes.length < 2) continue;
+      const yes = m.outcomes.find(o => o.toLowerCase() === 'yes') !== undefined;
+      if (!yes && !q.includes(' win') && !q.includes(' vs ') && !q.includes(' beat ')) continue;
+      const outcomsArr = m.outcomePrices || [];
+      const homeP = parseFloat(outcomsArr[0] || m.bestBid || 0.5);
+      const awayP = parseFloat(outcomsArr[1] || (1 - homeP));
+      const key = 'pm_' + (m.slug || m.id || count);
       MARKET_CONSENSUS[key] = {
-        question:  m.question || m.title || '',
-        homeProb:  parseFloat(yes.price || yes.probability || 0),
-        awayProb:  parseFloat(no ? (no.price || no.probability || 0) : 0),
-        drawProb:  0,
-        source:    'Polymarket',
-        syncedAt:  new Date().toISOString(),
-        volume:    parseFloat(m.volume || m.volume_num_min || 0),
+        question: m.question || '',
+        homeProb: homeP,
+        awayProb: awayP,
+        drawProb: 0,
+        source:   'Polymarket',
+        syncedAt: new Date().toISOString(),
+        volume:   parseFloat(m.volume || 0),
       };
       count++;
     }
-    console.log('[MARKETS] Polymarket WC:', count, 'markets');
+    console.log('[MARKETS] Polymarket:', count, 'markets loaded');
     return count;
-  } catch(e) { console.warn('[MARKETS] Polymarket:', e.message); return 0; }
+  } catch(e) {
+    console.warn('[MARKETS] Polymarket error:', e.message);
+    return 0;
+  }
 }
 
 async function fetchManifoldSports() {
   try {
     const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), 10000);
+    setTimeout(() => ctrl.abort(), 12000);
+    // Manifold API publique — pas de restriction IP normalement
     const resp = await fetch(
-      'https://api.manifold.markets/v0/markets?limit=100&topic=sports&sort=liquidity',
-      { signal: ctrl.signal, headers: { 'Accept': 'application/json' } }
+      'https://api.manifold.markets/v0/markets?limit=100&sort=liquidity&filter=open',
+      { signal: ctrl.signal, headers: { 'Accept': 'application/json', 'User-Agent': 'SUPERCOACH/9.0' } }
     );
     if (!resp.ok) throw new Error('Manifold HTTP ' + resp.status);
     const markets = await resp.json();
     let count = 0;
-    for (const m of markets) {
+    for (const m of (Array.isArray(markets) ? markets : [])) {
       if (m.outcomeType !== 'BINARY') continue;
       const q = (m.question || '').toLowerCase();
-      if (!q.includes('win') && !q.includes('vs') && !q.includes('beat')) continue;
+      if (!q.includes('win') && !q.includes('vs') && !q.includes('beat') &&
+          !q.includes('champion') && !q.includes('qualify')) continue;
       const key = 'mf_' + m.slug;
       MARKET_CONSENSUS[key] = {
         question: m.question || '',
@@ -254,33 +263,24 @@ async function fetchManifoldSports() {
       };
       count++;
     }
-    console.log('[MARKETS] Manifold sports:', count, 'markets');
+    console.log('[MARKETS] Manifold:', count, 'markets loaded');
     return count;
-  } catch(e) { console.warn('[MARKETS] Manifold:', e.message); return 0; }
+  } catch(e) {
+    console.warn('[MARKETS] Manifold error:', e.message);
+    return 0;
+  }
 }
 
 async function refreshMarketConsensus() {
   const t0 = Date.now();
-  await Promise.allSettled([fetchPolymarketWC(), fetchManifoldSports()]);
+  const results = await Promise.allSettled([fetchPolymarketWC(), fetchManifoldSports()]);
   const total = Object.keys(MARKET_CONSENSUS).length;
-  console.log('[MARKETS] Synced — ' + total + ' markets (' + (Date.now()-t0) + 'ms)');
+  const ms = Date.now() - t0;
+  console.log(`[MARKETS] Refresh complete — ${total} markets in cache (${ms}ms)`);
+  results.forEach((r,i) => {
+    if (r.status === 'rejected') console.warn(`[MARKETS] Source ${i} failed:`, r.reason);
+  });
   return total;
-}
-
-function findMarketConsensus(home, away) {
-  const norm = s => (s||'').toLowerCase().replace(/[^a-z]/g, '');
-  const h = norm(home), a = norm(away);
-  let best = null, bestScore = 0;
-  for (const m of Object.values(MARKET_CONSENSUS)) {
-    const q = norm(m.question);
-    let score = 0;
-    if (h.length >= 3 && q.includes(h.slice(0, 5))) score += 2;
-    if (a.length >= 3 && q.includes(a.slice(0, 5))) score += 2;
-    if (h.length >= 6 && q.includes(h)) score += 1;
-    if (a.length >= 6 && q.includes(a)) score += 1;
-    if (score >= 3 && score > bestScore) { best = m; bestScore = score; }
-  }
-  return best;
 }
 
 // Boot: refresh 5s apres demarrage, puis toutes les heures
