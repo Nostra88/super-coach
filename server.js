@@ -193,45 +193,60 @@ function cacheSet(k,d) { CACHE[k]={data:d,ts:Date.now()}; }
 const MARKET_CONSENSUS = {}; // { key: { question, homeProb, awayProb, source, syncedAt, volume } }
 
 async function fetchPolymarketWC() {
-  try {
-    const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), 12000);
-    // Gamma API = REST publique Polymarket (pas le CLOB qui requiert auth)
-    const url = 'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&tag_id=12';
-    const resp = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { 'Accept': 'application/json', 'User-Agent': 'SUPERCOACH/9.0' }
-    });
-    if (!resp.ok) throw new Error('Polymarket HTTP ' + resp.status);
-    const markets = await resp.json(); // tableau direct
-    let count = 0;
-    for (const m of (Array.isArray(markets) ? markets : [])) {
-      const q = (m.question || '').toLowerCase();
-      // Marchés binaires sport uniquement
-      if (!m.outcomes || m.outcomes.length < 2) continue;
-      const yes = m.outcomes.find(o => o.toLowerCase() === 'yes') !== undefined;
-      if (!yes && !q.includes(' win') && !q.includes(' vs ') && !q.includes(' beat ')) continue;
-      const outcomsArr = m.outcomePrices || [];
-      const homeP = parseFloat(outcomsArr[0] || m.bestBid || 0.5);
-      const awayP = parseFloat(outcomsArr[1] || (1 - homeP));
-      const key = 'pm_' + (m.slug || m.id || count);
-      MARKET_CONSENSUS[key] = {
-        question: m.question || '',
-        homeProb: homeP,
-        awayProb: awayP,
-        drawProb: 0,
-        source:   'Polymarket',
-        syncedAt: new Date().toISOString(),
-        volume:   parseFloat(m.volume || 0),
-      };
-      count++;
+  const urls = [
+    'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&tag_id=12',
+    'https://gamma-api.polymarket.com/markets?active=true&limit=50',
+    'https://clob.polymarket.com/markets?active=true&limit=50',
+  ];
+  for (const url of urls) {
+    try {
+      console.log('[MARKETS] Trying Polymarket URL:', url);
+      const ctrl = new AbortController();
+      setTimeout(() => ctrl.abort(), 12000);
+      const resp = await fetch(url, {
+        signal: ctrl.signal,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; SUPERCOACH/9.0)',
+        }
+      });
+      console.log('[MARKETS] Polymarket response status:', resp.status, 'url:', url);
+      if (!resp.ok) {
+        const txt = await resp.text().catch(()=>'');
+        console.warn('[MARKETS] Polymarket non-ok:', resp.status, txt.slice(0,200));
+        continue;
+      }
+      const raw = await resp.text();
+      console.log('[MARKETS] Polymarket raw length:', raw.length, 'preview:', raw.slice(0,200));
+      const markets = JSON.parse(raw);
+      const arr = Array.isArray(markets) ? markets : (markets.data || markets.markets || []);
+      console.log('[MARKETS] Polymarket parsed:', arr.length, 'items');
+      let count = 0;
+      for (const m of arr) {
+        const q = (m.question || m.title || '').toLowerCase();
+        const outcomsArr = m.outcomePrices || [];
+        const homeP = parseFloat(outcomsArr[0] || m.bestBid || m.probability || 0.5);
+        const awayP = parseFloat(outcomsArr[1] || (1 - homeP));
+        const key = 'pm_' + (m.slug || m.id || count);
+        MARKET_CONSENSUS[key] = {
+          question: m.question || m.title || '',
+          homeProb: homeP,
+          awayProb: awayP,
+          drawProb: 0,
+          source:   'Polymarket',
+          syncedAt: new Date().toISOString(),
+          volume:   parseFloat(m.volume || m.volume_num_min || 0),
+        };
+        count++;
+      }
+      console.log('[MARKETS] Polymarket loaded:', count, 'markets from', url);
+      return count;
+    } catch(e) {
+      console.warn('[MARKETS] Polymarket fetch error:', e.message, 'url:', url);
     }
-    console.log('[MARKETS] Polymarket:', count, 'markets loaded');
-    return count;
-  } catch(e) {
-    console.warn('[MARKETS] Polymarket error:', e.message);
-    return 0;
   }
+  console.warn('[MARKETS] Polymarket: all URLs failed');
+  return 0;
 }
 
 async function fetchManifoldSports() {
@@ -1458,6 +1473,28 @@ app.get('/fixtures', async (req, res) => {
   } catch (e) {
     console.error('[FIXTURES] Error:', e.message);
     res.status(500).json({ success: false, error: e.message, matches: [] });
+  }
+});
+
+// ── /markets/debug — Force refresh + logs ──
+app.get('/markets/debug', async (req, res) => {
+  console.log('[MARKETS] Manual debug refresh triggered');
+  try {
+    const total = await refreshMarketConsensus();
+    const markets = Object.values(MARKET_CONSENSUS);
+    res.json({
+      total,
+      sources: Object.fromEntries(
+        [...new Set(markets.map(m=>m.source))].map(s => [s, markets.filter(m=>m.source===s).length])
+      ),
+      sample: markets.slice(0,10).map(m => ({
+        question: m.question,
+        homeProb: Math.round(m.homeProb*100)+'%',
+        source: m.source,
+      })),
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
   }
 });
 
