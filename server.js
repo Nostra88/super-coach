@@ -185,6 +185,109 @@ const CACHE = {};
 function cacheGet(k) { const c=CACHE[k]; return (c&&Date.now()-c.ts<30*60*1000)?c.data:null; }
 function cacheSet(k,d) { CACHE[k]={data:d,ts:Date.now()}; }
 
+// ─────────────────────────────────────────────────────────────
+// COUCHE PREDICTION MARKETS v1.0
+// Sources : Polymarket + Manifold (APIs publiques, sans auth)
+// Worker : refresh toutes les heures, stockage en mémoire
+// ─────────────────────────────────────────────────────────────
+const MARKET_CONSENSUS = {}; // { key: { question, homeProb, awayProb, source, syncedAt, volume } }
+
+async function fetchPolymarketWC() {
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 10000);
+    const resp = await fetch(
+      'https://clob.polymarket.com/markets?active=true&closed=false&tag_slug=fifa-world-cup-2026&limit=100',
+      { signal: ctrl.signal, headers: { 'Accept': 'application/json' } }
+    );
+    if (!resp.ok) throw new Error('Polymarket HTTP ' + resp.status);
+    const data = await resp.json();
+    const markets = data.data || data.markets || (Array.isArray(data) ? data : []);
+    let count = 0;
+    for (const m of markets) {
+      const q = (m.question || m.title || '').toLowerCase();
+      const tokens = m.tokens || m.outcomes || [];
+      const yes = tokens.find(t => (t.outcome||t.name||'').toLowerCase() === 'yes');
+      const no  = tokens.find(t => (t.outcome||t.name||'').toLowerCase() === 'no');
+      if (!yes) continue;
+      const key = 'pm_' + (m.market_slug || m.slug || m.id || count);
+      MARKET_CONSENSUS[key] = {
+        question:  m.question || m.title || '',
+        homeProb:  parseFloat(yes.price || yes.probability || 0),
+        awayProb:  parseFloat(no ? (no.price || no.probability || 0) : 0),
+        drawProb:  0,
+        source:    'Polymarket',
+        syncedAt:  new Date().toISOString(),
+        volume:    parseFloat(m.volume || m.volume_num_min || 0),
+      };
+      count++;
+    }
+    console.log('[MARKETS] Polymarket WC:', count, 'markets');
+    return count;
+  } catch(e) { console.warn('[MARKETS] Polymarket:', e.message); return 0; }
+}
+
+async function fetchManifoldSports() {
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 10000);
+    const resp = await fetch(
+      'https://api.manifold.markets/v0/markets?limit=100&topic=sports&sort=liquidity',
+      { signal: ctrl.signal, headers: { 'Accept': 'application/json' } }
+    );
+    if (!resp.ok) throw new Error('Manifold HTTP ' + resp.status);
+    const markets = await resp.json();
+    let count = 0;
+    for (const m of markets) {
+      if (m.outcomeType !== 'BINARY') continue;
+      const q = (m.question || '').toLowerCase();
+      if (!q.includes('win') && !q.includes('vs') && !q.includes('beat')) continue;
+      const key = 'mf_' + m.slug;
+      MARKET_CONSENSUS[key] = {
+        question: m.question || '',
+        homeProb: parseFloat(m.probability || 0.5),
+        awayProb: parseFloat(1 - (m.probability || 0.5)),
+        drawProb: 0,
+        source:   'Manifold',
+        syncedAt: new Date().toISOString(),
+        volume:   parseFloat(m.totalLiquidity || 0),
+      };
+      count++;
+    }
+    console.log('[MARKETS] Manifold sports:', count, 'markets');
+    return count;
+  } catch(e) { console.warn('[MARKETS] Manifold:', e.message); return 0; }
+}
+
+async function refreshMarketConsensus() {
+  const t0 = Date.now();
+  await Promise.allSettled([fetchPolymarketWC(), fetchManifoldSports()]);
+  const total = Object.keys(MARKET_CONSENSUS).length;
+  console.log('[MARKETS] Synced — ' + total + ' markets (' + (Date.now()-t0) + 'ms)');
+  return total;
+}
+
+function findMarketConsensus(home, away) {
+  const norm = s => (s||'').toLowerCase().replace(/[^a-z]/g, '');
+  const h = norm(home), a = norm(away);
+  let best = null, bestScore = 0;
+  for (const m of Object.values(MARKET_CONSENSUS)) {
+    const q = norm(m.question);
+    let score = 0;
+    if (h.length >= 3 && q.includes(h.slice(0, 5))) score += 2;
+    if (a.length >= 3 && q.includes(a.slice(0, 5))) score += 2;
+    if (h.length >= 6 && q.includes(h)) score += 1;
+    if (a.length >= 6 && q.includes(a)) score += 1;
+    if (score >= 3 && score > bestScore) { best = m; bestScore = score; }
+  }
+  return best;
+}
+
+// Boot: refresh 5s apres demarrage, puis toutes les heures
+setTimeout(refreshMarketConsensus, 5000);
+setInterval(refreshMarketConsensus, 60 * 60 * 1000);
+
+
 async function validateViaOddsAPI(entities, webMode) {
   if (!ODDS_API_KEY || !entities.length) return null;
   const sport = entities[0]?.sport || 'foot';
@@ -348,6 +451,27 @@ function buildContainer(entities, validation, espnLines, prompt) {
   }
 
   b += '\n---\nRULE: Cotes above = VALUE EDGE input only. Your prediction comes from the pipeline.\n\n';
+
+  // Injection Prediction Markets
+  if (typeof findMarketConsensus === 'function' && entities.length >= 1) {
+    const home = entities[0]?.canonical || entities[0]?.name || '';
+    const away = entities[1]?.canonical || entities[1]?.name || '';
+    if (home && away) {
+      const mkt = findMarketConsensus(home, away);
+      if (mkt) {
+        const syncAge = mkt.syncedAt ? Math.round((Date.now() - new Date(mkt.syncedAt).getTime()) / 60000) : null;
+        b += '[PREDICTION MARKETS CONSENSUS]\n';
+        b += 'Source: ' + mkt.source + (syncAge !== null ? ' (synced ' + syncAge + 'min ago)' : '') + '\n';
+        b += 'Question: ' + mkt.question + '\n';
+        b += 'Market YES prob: ' + Math.round(mkt.homeProb * 100) + '%';
+        b += ' | Market NO prob: ' + Math.round(mkt.awayProb * 100) + '%\n';
+        if (mkt.volume > 0) b += 'Volume: $' + Math.round(mkt.volume).toLocaleString() + '\n';
+        b += 'RULE: This is crowd consensus. Use as signal only — your pipeline determines final probability.\n';
+        b += 'Compute market_edge_pct = (your_confidence/100 - market_yes_prob) * 100 and include in output.\n\n';
+      }
+    }
+  }
+
   return b;
 }
 
@@ -559,10 +683,32 @@ app.post('/analyze', async (req, res) => {
       } catch(e) {}
     }
 
+    // Market consensus pour la réponse UI
+    const home0 = entities[0]?.canonical || entities[0]?.name || '';
+    const away0 = entities[1]?.canonical || entities[1]?.name || '';
+    const marketData = (home0 && away0) ? findMarketConsensus(home0, away0) : null;
+
+    // Data richness : 1-5 étoiles selon sources disponibles
+    let dataRichness = 1;
+    if (validation?.status === 'VERIFIED') dataRichness += 2;
+    if (espnLines.length > 0) dataRichness += 1;
+    if (marketData) dataRichness += 1;
+    dataRichness = Math.min(5, dataRichness);
+
     clearTimeout(timeout);
     res.json({
       result: text,
       db_ids,
+      market: marketData ? {
+        source:    marketData.source,
+        question:  marketData.question,
+        homeProb:  Math.round(marketData.homeProb * 100),
+        awayProb:  Math.round(marketData.awayProb * 100),
+        syncedAt:  marketData.syncedAt,
+        volume:    marketData.volume || 0,
+        totalMarkets: Object.keys(MARKET_CONSENSUS).length,
+      } : null,
+      dataRichness,
       meta: {
         timing: { total_ms:T2-T0, fetch_ms:T1-T0, gemini_ms:T2-T1, prompt_tokens_est:tokens },
         model: usedModel,
@@ -1297,6 +1443,27 @@ app.get('/fixtures', async (req, res) => {
     console.error('[FIXTURES] Error:', e.message);
     res.status(500).json({ success: false, error: e.message, matches: [] });
   }
+});
+
+// ── /markets — Statut et données du consensus marchés ──
+app.get('/markets', (req, res) => {
+  const markets = Object.values(MARKET_CONSENSUS);
+  const bySource = {};
+  markets.forEach(m => { bySource[m.source] = (bySource[m.source] || 0) + 1; });
+  const lastSync = markets.length
+    ? markets.sort((a,b) => new Date(b.syncedAt) - new Date(a.syncedAt))[0].syncedAt
+    : null;
+  res.json({
+    total:   markets.length,
+    sources: bySource,
+    lastSync,
+    sample:  markets.slice(0, 5).map(m => ({
+      question: m.question,
+      homeProb: Math.round(m.homeProb * 100) + '%',
+      source:   m.source,
+      volume:   m.volume,
+    })),
+  });
 });
 
 app.listen(PORT, () => {
