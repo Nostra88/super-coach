@@ -255,7 +255,7 @@ async function fetchManifoldSports() {
     setTimeout(() => ctrl.abort(), 12000);
     // Manifold API publique — pas de restriction IP normalement
     const resp = await fetch(
-      'https://api.manifold.markets/v0/markets?limit=100&sort=liquidity&filter=open',
+      'https://api.manifold.markets/v0/search-markets?term=world+cup+2026&limit=100',
       { signal: ctrl.signal, headers: { 'Accept': 'application/json', 'User-Agent': 'SUPERCOACH/9.0' } }
     );
     if (!resp.ok) throw new Error('Manifold HTTP ' + resp.status);
@@ -265,7 +265,8 @@ async function fetchManifoldSports() {
       if (m.outcomeType !== 'BINARY') continue;
       const q = (m.question || '').toLowerCase();
       if (!q.includes('win') && !q.includes('vs') && !q.includes('beat') &&
-          !q.includes('champion') && !q.includes('qualify')) continue;
+          !q.includes('champion') && !q.includes('qualify') && !q.includes('score') &&
+          !q.includes('goal') && !q.includes('match') && !q.includes('cup')) continue;
       const key = 'mf_' + m.slug;
       MARKET_CONSENSUS[key] = {
         question: m.question || '',
