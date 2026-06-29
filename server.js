@@ -194,9 +194,9 @@ const MARKET_CONSENSUS = {}; // { key: { question, homeProb, awayProb, source, s
 
 async function fetchPolymarketWC() {
   const urls = [
-    'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=100&tag_id=12',
-    'https://gamma-api.polymarket.com/markets?active=true&limit=50',
-    'https://clob.polymarket.com/markets?active=true&limit=50',
+    'https://gamma-api.polymarket.com/markets?active=true&closed=false&limit=200',
+    'https://gamma-api.polymarket.com/markets?limit=200&order=volume&ascending=false',
+    'https://gamma-api.polymarket.com/events?active=true&closed=false&limit=100',
   ];
   for (const url of urls) {
     try {
