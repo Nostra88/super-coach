@@ -523,18 +523,19 @@ app.post('/analyze', rateLimit, async (req, res) => {
 
     // 0. Si le prompt est une URL → scraper d'abord
     let finalPrompt = prompt;
-    const urlPattern = /^https?:\/\//i;
-    if (urlPattern.test(prompt.trim())) {
-      console.log('[ANALYZE] URL détectée — scraping intégré');
+    const urlMatch = prompt.match(/https?:\/\/\S+/i);
+    if (urlMatch) {
+      const detectedUrl = urlMatch[0];
+      console.log('[ANALYZE] URL detectee:', detectedUrl);
       try {
-        const parsed = new URL(prompt.trim());
+        const parsed = new URL(detectedUrl);
         let scraped = null;
 
         // Étape A — fetch direct
         try {
           const ctrl = new AbortController();
           setTimeout(() => ctrl.abort(), 8000);
-          const r = await fetch(prompt.trim(), { signal: ctrl.signal, headers: {
+          const r = await fetch(detectedUrl, { signal: ctrl.signal, headers: {
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
             'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8',
             'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
@@ -571,7 +572,7 @@ app.post('/analyze', rateLimit, async (req, res) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   contents: [{ role: 'user', parts: [{ text:
-                    'Today is ' + dateStr + '. URL requested: ' + url + '\\n' +
+                    'Today is ' + dateStr + '. URL requested: ' + detectedUrl + '\\n' +
                     'Step 1: Search for current content of this URL or site.\\n' +
                     'Step 2: If unavailable, use the URL path to detect sport and find today\'s matches with odds.\\n' +
                     'Return ALL upcoming matches. Format: Home vs Away | Competition | Date | Odds1 | Odds2\\n' +
