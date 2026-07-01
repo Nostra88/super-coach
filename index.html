@@ -1316,7 +1316,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
     </div>
     <div class="hdr-actions">
       <button class="roi-btn" id="roiBtn" onclick="openROI()">📊</button>
-      <button class="roi-btn" id="btBtn" onclick="openSheet('backtestModal')" title="Backtest">🧪</button>
+      <!-- Backtest admin uniquement — bouton retiré de l'UI publique -->
       <button class="auth-btn" id="authBtn" onclick="openSheet('authModal')">👤</button>
     </div>
   </div>
@@ -3068,7 +3068,7 @@ function launchBacktest(isDry) {
   fetch(BACKEND + '/run-backtest', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ secret: 'supercoach-backtest-2026', dryRun: isDry })
+    body: JSON.stringify({ dryRun: isDry })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
