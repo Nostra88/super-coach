@@ -2117,7 +2117,7 @@ var L = {
     'authMagicSub':'We sent a magic link to',
     'authSignOut':'Sign out',
     'authProfile':'My Profile',
-    'langChangeNote':'New language applies to the next analysis'},
+    'langChangeNote':'New language applies to the next analysis','urlDetected':'URL detected - tap Analyze'},
   fr:{
     copilot:'⚡ Ton copilote IA sportif',
     sportAll:'Tous',sportFoot:'Football',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2257,7 +2257,7 @@ var L = {
     'authMagicSub':'Enlace mágico enviado a',
     'authSignOut':'Cerrar sesión',
     'authProfile':'Mi Perfil',
-    'langChangeNote':'El nuevo idioma se aplica al próximo análisis'},
+    'langChangeNote':'El nuevo idioma se aplica al próximo análisis','urlDetected':'URL detectada — toca Analizar'},
   pt:{
     copilot:'⚡ Seu copiloto IA esportivo',
     sportAll:'Todos',sportFoot:'Futebol',sportBasket:'Basquete',sportTennis:'Tennis',
@@ -2324,7 +2324,7 @@ var L = {
     'authMagicSub':'Link mágico enviado para',
     'authSignOut':'Sair',
     'authProfile':'Meu Perfil',
-    'langChangeNote':'O novo idioma aplica-se à próxima análise'},
+    'langChangeNote':'O novo idioma aplica-se à próxima análise','urlDetected':'URL detectada — toque Analisar'},
   it:{
     copilot:'⚡ Il tuo copilota sportivo IA',
     sportAll:'Tutti',sportFoot:'Calcio',sportBasket:'Basket',sportTennis:'Tennis',
@@ -2391,7 +2391,7 @@ var L = {
     'authMagicSub':'Link magico inviato a',
     'authSignOut':'Esci',
     'authProfile':'Il mio Profilo',
-    'langChangeNote':'La nuova lingua si applica alla prossima analisi'},
+    'langChangeNote':'La nuova lingua si applica alla prossima analisi','urlDetected':'URL rilevato — tocca Analizza'},
   de:{
     copilot:'⚡ Dein KI-Sport-Copilot',
     sportAll:'Alle',sportFoot:'Fussball',sportBasket:'Basketball',sportTennis:'Tennis',
@@ -2459,7 +2459,7 @@ var L = {
     'authMagicSub':'Magic Link gesendet an',
     'authSignOut':'Abmelden',
     'authProfile':'Mein Profil',
-    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse'},
+    'langChangeNote':'Die neue Sprache gilt für die nächste Analyse','urlDetected':'URL erkannt — tippe Analysieren'},
   ar:{
     copilot:'⚡ مساعدك الرياضي الذكي',
     sportAll:'الكل',sportFoot:'كرة القدم',sportBasket:'كرة السلة',sportTennis:'التنس',
@@ -2526,7 +2526,7 @@ var L = {
     'authMagicSub':'تم إرسال الرابط إلى',
     'authSignOut':'تسجيل الخروج',
     'authProfile':'ملفي',
-    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي'}
+    'langChangeNote':'اللغة الجديدة تُطبَّق على التحليل التالي','urlDetected':'تم اكتشاف الرابط — اضغط تحليل'}
 };
 
 function t(k){return (L[lang]||L.en)[k]||L.en[k]||k;}
@@ -3191,7 +3191,7 @@ window.onload = function(){
     var isUrl=v.startsWith('http://') || v.startsWith('https://');
     if(isUrl){
       if(fetchBtn) fetchBtn.style.display='none'; // FETCH intégré dans ANALYSER v9.0
-      if(st){ st.className='url-status ok'; st.textContent='🔗 URL détectée — clique ⚡ ANALYSER';}
+      if(st){ st.className='url-status ok'; st.textContent=t('urlDetected');}
     } else {
       if(fetchBtn) fetchBtn.style.display='none';
       if(st) st.textContent='';
