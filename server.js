@@ -511,6 +511,19 @@ function buildContainer(entities, validation, espnLines, prompt) {
 // ROUTES
 // ─────────────────────────────────────────────────────────────
 
+
+// RATE LIMITING
+const rateBuckets = new Map();
+function rateLimit(req, res, next) {
+  const ip = (req.headers["x-forwarded-for"]||"").split(",")[0].trim()||req.socket.remoteAddress||"?";
+  const now = Date.now();
+  let b = rateBuckets.get(ip);
+  if (!b || now - b.t > 60000) { b = {t: now, n: 0}; rateBuckets.set(ip, b); }
+  if (++b.n > 12) return res.status(429).json({ error: "Trop de requetes. Reessaie dans une minute." });
+  next();
+}
+setInterval(() => { const now = Date.now(); for (const [k,v] of rateBuckets) if (now-v.t>120000) rateBuckets.delete(k); }, 300000);
+
 app.post('/analyze', rateLimit, async (req, res) => {
   const timeout = setTimeout(()=>{ if(!res.headersSent) res.status(503).json({error:'Timeout'}); }, 120000);
 
