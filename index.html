@@ -1851,6 +1851,14 @@ function renderFluxList() {
         liveEl.className = 'flux-status-live';
         liveEl.textContent = '● LIVE';
         right.appendChild(liveEl);
+        // Afficher le temps de jeu si disponible
+        if (m.minute) {
+          var minEl = document.createElement('span');
+          minEl.className = 'flux-minute';
+          minEl.textContent = m.minute + '\'';
+          minEl.style.cssText = 'font-size:10px;font-weight:700;color:#ef4444;font-family:monospace;margin-left:4px;';
+          right.appendChild(minEl);
+        }
       }
 
       item.appendChild(right);
@@ -4173,8 +4181,13 @@ function renderResults(data){
     '<div class="stat-box" style="border-top:2px solid #ef4444"><div class="stat-num" style="color:#ef4444">'+losses+'</div><div class="stat-lbl">'+t('losses')+'</div></div></div>';
   var cards=M.map(function(m,i){
     var type=getType(m.result);var sp=getSport(m.sport_id);
-    var dh=(m.match_date&&m.match_date!=='?')||(m.match_time&&m.match_time!=='')?
-      '<span class="mc-date">📅 '+(m.match_date||'')+(m.match_time?' · '+m.match_time:'')+(m.date_uncertain?' ⚠️':'')+'</span>':'';
+    var dh='';
+    if (m.live && m.minute) {
+      // Match live — afficher timer + variantes
+      dh = renderLiveTimer(m.minute, m.score_home, m.score_away, m.sport_id||'foot');
+    } else if ((m.match_date&&m.match_date!=='?')||(m.match_time&&m.match_time!=='')) {
+      dh = '<span class="mc-date">📅 '+(m.match_date||'')+(m.match_time?' · '+m.match_time:'')+(m.date_uncertain?' ⚠️':'')+'</span>';
+    }
     return '<div class="mcard '+type+'" style="animation-delay:'+(i*55)+'ms" onclick="this.classList.toggle(\'expanded\')">'+
       '<div class="mc-sum"><div class="mc-top">'+
       '<div class="mc-rank">#'+m.rank+'</div>'+
