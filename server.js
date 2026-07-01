@@ -511,7 +511,7 @@ function buildContainer(entities, validation, espnLines, prompt) {
 // ROUTES
 // ─────────────────────────────────────────────────────────────
 
-app.post('/analyze', async (req, res) => {
+app.post('/analyze', rateLimit, async (req, res) => {
   const timeout = setTimeout(()=>{ if(!res.headersSent) res.status(503).json({error:'Timeout'}); }, 120000);
 
   try {
@@ -756,7 +756,7 @@ app.post('/analyze', async (req, res) => {
   }
 });
 
-app.post('/scrape', async (req, res) => {
+app.post('/scrape', rateLimit, async (req, res) => {
   const { url } = req.body;
   if (!url) return res.status(400).json({error:'URL manquante'});
   let parsed;
@@ -1023,7 +1023,7 @@ app.get('/user/me', async (req, res) => {
 
 // ── /analyze-match — Moteur engine.js complet ──────────────────
 // Reçoit apiData structuré, enrichit avec API-Football, appelle Gemini
-app.post('/analyze-match', async (req, res) => {
+app.post('/analyze-match', rateLimit, async (req, res) => {
   const timeout = setTimeout(() => {
     if (!res.headersSent) res.status(503).json({ error: 'Timeout' });
   }, 120000);
@@ -1147,10 +1147,10 @@ app.post('/analyze-match', async (req, res) => {
 // Optionnel : { "sport": "football", "limit": 20, "dryRun": false }
 app.post('/run-backtest', async (req, res) => {
   // Sécurité : clé secrète pour ne pas exposer publiquement
-  const secret = process.env.BACKTEST_SECRET || 'supercoach-backtest-2026';
-  if (req.body?.secret !== secret) {
-    return res.status(401).json({ error: 'Unauthorized. Provide correct secret.' });
-  }
+  const secret = process.env.BACKTEST_SECRET;
+  if (!secret) return res.status(503).json({ error: 'BACKTEST_SECRET manquant.' });
+  const provided = req.headers['x-backtest-key'];
+  if (provided !== secret) return res.status(401).json({ error: 'Unauthorized.' });
 
   const { sport: sportFilter, limit = 10, dryRun = false } = req.body || {};
   // Utiliser GEMINI_KEY directement depuis process.env (déjà chargée dans server.js)
@@ -1318,84 +1318,6 @@ app.get('/fbref-wc', async (req, res) => {
   const data = await fetchFBrefWC();
   if (!data) return res.status(503).json({ error: 'FBref indisponible' });
   res.json(data);
-});
-
-// ── /test-tennis — Diagnostic APIs tennis ────────────────────────
-app.get('/test-tennis', async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const R = {};
-  const BH = {
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
-    'Accept': 'application/json',
-    'Referer': 'https://www.sofascore.com/',
-    'Origin': 'https://www.sofascore.com',
-  };
-  try {
-    const r1 = await fetch('https://api.sofascore.com/api/v1/sport/tennis/scheduled-events/'+today, { headers: BH });
-    const d1 = await r1.json();
-    const ev = d1.events || [];
-    R.sofascore = { status: r1.status, total: ev.length,
-      sample: ev.slice(0,5).map(function(e){ return { home: (e.homeTeam||{}).name||'', away: (e.awayTeam||{}).name||'', tour: ((e.tournament||{}).name||'') }; })
-    };
-  } catch(e) { R.sofascore = { error: e.message }; }
-  res.json({ date: today, R });
-});
-
-app.get('/test-tennis', async (req, res) => {
-  const today = new Date().toISOString().split('T')[0];
-  const results = {};
-
-  // Test 1 : API-Sports tennis (clé existante)
-  try {
-    const r1 = await fetch(`https://v1.tennis.api-sports.io/games?date=${today}`, {
-      headers: { 'x-apisports-key': APISPORTS_KEY }
-    });
-    const d1 = await r1.json();
-    results.apiSports = {
-      status: r1.status,
-      results: d1.results || 0,
-      sample: (d1.response || []).slice(0,3).map(g => ({
-        home: g.players?.home?.name || '',
-        away: g.players?.away?.name || '',
-        tournament: g.tournament?.name || '',
-        date: g.date || ''
-      }))
-    };
-  } catch(e) { results.apiSports = { error: e.message }; }
-
-  // Test 2 : ESPN tennis
-  try {
-    const r2 = await fetch('https://site.api.espn.com/apis/site/v2/sports/tennis/scoreboard');
-    const d2 = await r2.json();
-    results.espn = {
-      status: r2.status,
-      events: (d2.events || []).length,
-      sample: (d2.events || []).slice(0,3).map(e => ({
-        name: e.name || '',
-        date: e.date || ''
-      }))
-    };
-  } catch(e) { results.espn = { error: e.message }; }
-
-  // Test 3 : SofaScore (non authentifié)
-  try {
-    const r3 = await fetch(`https://api.sofascore.com/api/v1/sport/tennis/scheduled-events/${today}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-    const d3 = await r3.json();
-    const events = d3.events || [];
-    results.sofascore = {
-      status: r3.status,
-      events: events.length,
-      sample: events.slice(0,3).map(e => ({
-        home: e.homeTeam?.name || '',
-        away: e.awayTeam?.name || '',
-        tournament: e.tournament?.name || ''
-      }))
-    };
-  } catch(e) { results.sofascore = { error: e.message }; }
-
-  res.json({ date: today, results });
 });
 
 app.get('/fixtures', async (req, res) => {
