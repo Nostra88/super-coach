@@ -679,47 +679,25 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 }
 
 /* ── SOUS-PARIS BADGES ── */
-.sub-bets{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:8px 13px 13px;
-  border-top:1px solid rgba(200,146,42,.1);
-  margin-top:2px;
-}
-.sub-bets-label{
-  width:100%;font-family:'JetBrains Mono',monospace;
-  font-size:9px;letter-spacing:2px;color:var(--gold);
-  opacity:.6;margin-bottom:2px;
-}
-.sub-bet{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 11px;border-radius:20px;
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  font-weight:600;letter-spacing:.3px;
-  background:linear-gradient(135deg,rgba(200,146,42,.10),rgba(200,146,42,.05));
-  border:1px solid rgba(200,146,42,.28);
-  color:#d4af37;
-  box-shadow:0 1px 8px rgba(200,146,42,.08);
-  transition:all .2s;
-}
-.sub-bet:active{transform:scale(.97)}
-.sub-bet.hot{
-  background:linear-gradient(135deg,rgba(200,146,42,.15),rgba(200,146,42,.07));
-  border-color:rgba(200,146,42,.4);color:#f0c060;
-}
-.sub-bet.premium{
-  background:linear-gradient(135deg,rgba(200,146,42,.18),rgba(180,120,20,.10));
-  border-color:rgba(212,175,55,.5);color:#fde68a;
-}
-.sub-bet.hot{
-  background:rgba(239,68,68,.07);
-  border-color:rgba(239,68,68,.2);
-  color:#fca5a5;
-}
-.sub-bet.strong{
-  background:rgba(139,92,246,.07);
-  border-color:rgba(139,92,246,.2);
-  color:#c4b5fd;
-}
+/* ── SMART PICKS v2 ── */
+.sub-bets{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.sub-bets-label{font-size:10px;letter-spacing:2px;color:var(--t2);margin-bottom:2px;font-family:'JetBrains Mono',monospace;}
+.sub-bet{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
+.sub-bet-icon{font-size:16px;min-width:22px;text-align:center;}
+.sub-bet-label{flex:1;color:var(--t1);font-weight:500;}
+.sub-bet.scorer{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.06);}
+.sub-bet.scorer .sub-bet-label{color:#4ade80;}
+.sub-bet.goals{border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.06);}
+.sub-bet.goals .sub-bet-label{color:#818cf8;}
+.sub-bet.btts{border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.06);}
+.sub-bet.btts .sub-bet-label{color:#fbbf24;}
+.sub-bet.handicap{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06);}
+.sub-bet.handicap .sub-bet-label{color:#f87171;}
+.sub-bet.winner{border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.08);}
+.sub-bet.winner .sub-bet-label{color:#4ade80;}
+.sub-bet.hot{border-color:rgba(249,115,22,.4);background:rgba(249,115,22,.08);}
+.sub-bet.hot .sub-bet-label{color:#fb923c;}
+
 
 /* ── SHARE BUTTON ── */
 .share-btn{
@@ -3405,6 +3383,12 @@ function buildPrompt(content,isPage){
   return [
     'SUPERCOACH v9.0 | Language:'+uLang+' | Sports:'+sf+(odds?' | Odds:'+odds:''),
     'MANDATORY: Write ALL analysis text (justification, summary, sub_bets, all_output) EXCLUSIVELY in '+uLang+'. No English unless uLang is English.',
+    'SUB_BETS RULES: Always return 2-3 picks. Each pick = {icon, label, type}.',
+    'Types: scorer (top scorer likely to score), goals (over/under X.5), btts (both teams score), handicap, winner.',
+    'If confidence>=80%: include scorer pick with most dangerous attacker by name.',
+    'If confidence>=70%: include goals pick (over 1.5 or 2.5 based on teams strength gap).',
+    'Always include btts pick for football matches with confidence 60-80%.',
+    'Icons: scorer=⚽ goals=🎯 btts=🤝 handicap=⚖️ winner=🏆',
     'You are a deterministic sports analytics engine. Current year: 2026.',
     chips_str?'Active: '+chips_str:'',
     '',
@@ -3436,7 +3420,7 @@ function buildPrompt(content,isPage){
     '"value":"light","value_text":"75% vs 74.1% implied","units":1,',
     '"rotation_alert":false,"rotation_text":"",',
     '"justification":"• step1: 55%+5%=60%. • Pilier3: relegation +15% → 75%.",',
-    '"sub_bets":["Over 2.5 goals","Both teams score"]}],',
+    '"sub_bets":[{"icon":"⚽","label":"Buteur: M.Salah","type":"scorer"},{"icon":"🎯","label":"Over 2.5 buts","type":"goals"},{"icon":"🤝","label":"Les 2 equipes marquent","type":"btts"}]}],',
     '"summary":"Global strategy in '+uLang+'","roi_potential":"Est. ROI: +X%"}',
     'sport_id: foot|basket|tennis|rugby|mma|boxing|hockey|handball|volley|f1|baseball|nfl|other',
     '',
@@ -3942,13 +3926,27 @@ function renderUnits(n){
   return '<div class="unit-dots">'+d+'</div><div class="ulbl">'+n+'/5 '+t('units').toUpperCase()+(n>1?'S':'')+'</div>';
 }
 function renderSubBets(bets){
-  if(!bets||bets.length===0)return '';
+  if(!bets||bets.length===0) return '';
   var html='<div class="sub-bets"><div class="sub-bets-label">⚡ SMART PICKS</div>';
   bets.forEach(function(b){
-    var cls='sub-bet';
-    if(b.indexOf('🔥')>-1||b.indexOf('🎯')>-1) cls='sub-bet hot';
-    if(b.indexOf('💎')>-1||b.indexOf('⚡')>-1) cls='sub-bet premium';
-    html+='<span class="'+cls+'">'+esc(b)+'</span>';
+    var icon='', label='', type='';
+    if(typeof b === 'object' && b !== null){
+      icon  = b.icon  || '🎯';
+      label = b.label || '';
+      type  = b.type  || '';
+    } else {
+      // Ancien format string
+      label = b;
+      if(b.indexOf('buteur')>-1||b.indexOf('scorer')>-1||b.indexOf('goal')>-1&&b.indexOf('over')===-1) { icon='⚽'; type='scorer'; }
+      else if(b.indexOf('Over')>-1||b.indexOf('Under')>-1||b.indexOf('buts')>-1||b.indexOf('goals')>-1) { icon='🎯'; type='goals'; }
+      else if(b.indexOf('both')>-1||b.indexOf('2 equipes')>-1||b.indexOf('BTTS')>-1) { icon='🤝'; type='btts'; }
+      else if(b.indexOf('handicap')>-1||b.indexOf('Handicap')>-1) { icon='⚖️'; type='handicap'; }
+      else { icon='🏆'; type='winner'; }
+    }
+    html += '<div class="sub-bet '+type+'">';
+    html += '<span class="sub-bet-icon">'+icon+'</span>';
+    html += '<span class="sub-bet-label">'+esc(label)+'</span>';
+    html += '</div>';
   });
   html+='</div>';
   return html;
