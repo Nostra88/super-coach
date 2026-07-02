@@ -715,6 +715,21 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .sub-bet.handicap .sub-bet-label{color:#f87171;}
 .sub-bet.winner{border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.08);}
 .sub-bet.winner .sub-bet-label{color:#4ade80;}
+
+.sub-bet.double_chance{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.06);}
+.sub-bet.double_chance .sub-bet-label{color:#c084fc;}
+.sub-bet.exact_score{border-color:rgba(20,184,166,.3);background:rgba(20,184,166,.06);}
+.sub-bet.exact_score .sub-bet-label{color:#2dd4bf;}
+.sub-bet.ht_ft{border-color:rgba(251,146,60,.3);background:rgba(251,146,60,.06);}
+.sub-bet.ht_ft .sub-bet-label{color:#fb923c;}
+.sub-bet.method{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06);}
+.sub-bet.method .sub-bet-label{color:#f87171;}
+.sub-bet.player_prop{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.06);}
+.sub-bet.player_prop .sub-bet-label{color:#38bdf8;}
+.sub-bet.dnb{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.06);}
+.sub-bet.dnb .sub-bet-label{color:#34d399;}
+.sub-bet.comeback{border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.06);}
+.sub-bet.comeback .sub-bet-label{color:#fb923c;}
 .sub-bet.hot{border-color:rgba(249,115,22,.4);background:rgba(249,115,22,.08);}
 .sub-bet.hot .sub-bet-label{color:#fb923c;}
 
@@ -3472,11 +3487,17 @@ function buildPrompt(content,isPage){
     'SUPERCOACH v9.0 | Language:'+uLang+' | Sports:'+sf+(odds?' | Odds:'+odds:''),
     'MANDATORY: Write ALL analysis text (justification, summary, sub_bets, all_output) EXCLUSIVELY in '+uLang+'. No English unless uLang is English.',
     'SUB_BETS RULES: Always return 2-3 picks. Each pick = {icon, label, type}.',
-    'Types: scorer (top scorer likely to score), goals (over/under X.5), btts (both teams score), handicap, winner.',
-    'If confidence>=80%: include scorer pick with most dangerous attacker by name.',
-    'If confidence>=70%: include goals pick (over 1.5 or 2.5 based on teams strength gap).',
-    'Always include btts pick for football matches with confidence 60-80%.',
-    'Icons: scorer=⚽ goals=🎯 btts=🤝 handicap=⚖️ winner=🏆',
+    'Available types and icons by sport:',
+    'FOOTBALL: ⚽ scorer (buteur par nom), 🎯 goals (Over/Under X.5), 🤝 btts, ⚖️ handicap (Asian Handicap ou DNB), 🏆 winner, 🃏 double_chance (1N/N2/12), 🎲 exact_score, ⏱️ ht_ft (mi-temps/fin), 🔄 comeback',
+    'BASKETBALL: 🎯 goals (Over/Under pts), ⚖️ handicap (spread), 🏆 winner, 👤 player_prop (points joueur), 🔄 ot (overtime)',
+    'TENNIS: 🏆 winner, 🎯 goals (Over/Under jeux), ⚖️ handicap (jeux/sets), 👤 player_prop (aces), 🤝 btts (les 2 sets)',
+    'HOCKEY: 🏆 winner, 🎯 goals (Over/Under buts), 🤝 btts, ⚖️ puck_line (+/-1.5), 🔄 so (shootout)',
+    'BASEBALL: 🎯 goals (Over/Under runs), ⚖️ run_line (+/-1.5), 👤 player_prop (bases totales), 🏆 winner',
+    'MMA/BOXE: 🏆 winner, 🎯 method (KO/TKO/Decision), ⏱️ round (round exact), ⚖️ distance',
+    'If confidence>=80%: scorer pick with attacker name for football, player_prop for others.',
+    'If confidence>=70%: goals pick (Over/Under) + handicap or double_chance.',
+    'If confidence 60-70%: safer bets = btts, double_chance, dnb.',
+    'ALWAYS pick variables relevant to the sport. NEVER suggest football picks for tennis.',
     'You are a deterministic sports analytics engine. Current year: 2026.',
     chips_str?'Active: '+chips_str:'',
     '',
@@ -4025,10 +4046,18 @@ function renderSubBets(bets){
     } else {
       // Ancien format string
       label = b;
-      if(b.indexOf('buteur')>-1||b.indexOf('scorer')>-1||b.indexOf('goal')>-1&&b.indexOf('over')===-1) { icon='⚽'; type='scorer'; }
-      else if(b.indexOf('Over')>-1||b.indexOf('Under')>-1||b.indexOf('buts')>-1||b.indexOf('goals')>-1) { icon='🎯'; type='goals'; }
-      else if(b.indexOf('both')>-1||b.indexOf('2 equipes')>-1||b.indexOf('BTTS')>-1) { icon='🤝'; type='btts'; }
-      else if(b.indexOf('handicap')>-1||b.indexOf('Handicap')>-1) { icon='⚖️'; type='handicap'; }
+      var bl = b.toLowerCase();
+      if(bl.indexOf('buteur')>-1||bl.indexOf('scorer')>-1||bl.indexOf('anytime')>-1) { icon='⚽'; type='scorer'; }
+      else if(bl.indexOf('over')>-1||bl.indexOf('under')>-1||bl.indexOf('buts')>-1||bl.indexOf('goals')>-1||bl.indexOf('points')>-1||bl.indexOf('runs')>-1||bl.indexOf('jeux')>-1) { icon='🎯'; type='goals'; }
+      else if(bl.indexOf('both')>-1||bl.indexOf('btts')>-1||bl.indexOf('2 equipes')>-1||bl.indexOf('marquent')>-1) { icon='🤝'; type='btts'; }
+      else if(bl.indexOf('handicap')>-1||bl.indexOf('asian')>-1||bl.indexOf('puck line')>-1||bl.indexOf('run line')>-1||bl.indexOf('spread')>-1) { icon='⚖️'; type='handicap'; }
+      else if(bl.indexOf('double chance')>-1||bl.indexOf('double_chance')>-1) { icon='🃏'; type='double_chance'; }
+      else if(bl.indexOf('score exact')>-1||bl.indexOf('exact score')>-1) { icon='🎲'; type='exact_score'; }
+      else if(bl.indexOf('mi-temps')>-1||bl.indexOf('ht/ft')>-1||bl.indexOf('half')>-1) { icon='⏱️'; type='ht_ft'; }
+      else if(bl.indexOf('ko')>-1||bl.indexOf('tko')>-1||bl.indexOf('decision')>-1||bl.indexOf('method')>-1) { icon='🥊'; type='method'; }
+      else if(bl.indexOf('prop')>-1||bl.indexOf('bases')>-1||bl.indexOf('aces')>-1||bl.indexOf('joueur')>-1) { icon='👤'; type='player_prop'; }
+      else if(bl.indexOf('dnb')>-1||bl.indexOf('draw no bet')>-1||bl.indexOf('remboursement')>-1) { icon='🛡️'; type='dnb'; }
+      else if(bl.indexOf('comeback')>-1||bl.indexOf('retournement')>-1) { icon='🔄'; type='comeback'; }
       else { icon='🏆'; type='winner'; }
     }
     html += '<div class="sub-bet '+type+'">';
