@@ -380,15 +380,60 @@ async function fetchESPN(url) {
     const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),4000);
     const r=await fetch(url,{signal:ctrl.signal}); if(!r.ok) return [];
     const j=await r.json();
-    const lines=(j.events||[]).map(e=>{
-      const comp=e.competitions?.[0]; const t=comp?.competitors||[];
-      const names=t.map(x=>x.team?.displayName||'').filter(Boolean);
-      const scores=t.map(x=>x.score||'').filter(Boolean);
-      const status=comp?.status?.type?.description||'';
-      const date=e.date?new Date(e.date).toLocaleString():'';
-      return names.join(' vs ')+' | '+scores.join('-')+' | '+status+' | '+date;
-    }).filter(l=>l.length>10);
-    cacheSet(url,lines); return lines;
+
+    // Detecter le sport depuis l'URL
+    const isWC      = url.includes('fifa.world');
+    const isChampions = url.includes('uefa.champions');
+    const isBasket  = url.includes('basketball');
+    const isHockey  = url.includes('hockey');
+    const isBaseball = url.includes('baseball');
+    const isNFL     = url.includes('football/nfl');
+    const isTennis  = url.includes('tennis');
+
+    const sportId = isWC ? 'wc' : isChampions ? 'foot' : isBasket ? 'basket' :
+                    isHockey ? 'hockey' : isBaseball ? 'base' : isNFL ? 'nfl' :
+                    isTennis ? 'tennis' : 'foot';
+
+    const matches = (j.events||[]).map(e=>{
+      const comp  = e.competitions?.[0];
+      const teams = comp?.competitors||[];
+      const home  = teams.find(x=>x.homeAway==='home');
+      const away  = teams.find(x=>x.homeAway==='away');
+      const homeN = home?.team?.displayName||teams[0]?.team?.displayName||'';
+      const awayN = away?.team?.displayName||teams[1]?.team?.displayName||'';
+      const homeS = home?.score||'';
+      const awayS = away?.score||'';
+      const status = comp?.status?.type?.description||'';
+      const state  = comp?.status?.type?.state||'';
+      const minute = comp?.status?.displayClock||'';
+      const compName = e.season?.type?.abbreviation||e.name||'';
+      const leagueName = j.leagues?.[0]?.name || (isWC ? 'World Cup' : compName);
+      const date = e.date ? new Date(e.date) : null;
+      const dateStr = date ? date.toLocaleDateString('fr-FR') : '';
+      const timeStr = date ? date.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) : '';
+      const live = state === 'in';
+
+      if (!homeN || !awayN) return null;
+
+      return {
+        id:          'espn_' + (e.id||Math.random()),
+        home:        homeN,
+        away:        awayN,
+        score_home:  homeS,
+        score_away:  awayS,
+        competition: leagueName,
+        sportId:     sportId,
+        match_date:  dateStr,
+        match_time:  timeStr,
+        live:        live,
+        minute:      live ? minute : '',
+        status:      status,
+        source:      'espn',
+      };
+    }).filter(Boolean);
+
+    cacheSet(url, matches);
+    return matches;
   } catch(e) { return []; }
 }
 
