@@ -23,6 +23,7 @@
   --b1:#30363d;--b2:#3d444d;
   --green:#1B5E35;--green2:#2d8a55;--green3:#4ade80;
   --gold:#C8922A;--gold2:#d4af88;--gold3:#fde68a;
+  --neon:#D4FF00; /* accent on-chain/Robinhood Chain — réservé Premium & wallet */
   --cream:#f0ede4;--red:#ef4444;--text:#e6edf3;
   --text2:#8b949e;--text3:#6e7681;
 }
@@ -548,8 +549,9 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .bt-launch-btn{width:100%;padding:14px;border:none;border-radius:10px;
   font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;
   cursor:pointer;transition:opacity .2s;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}
-.bt-launch-btn:disabled{opacity:0.4;}
+  background:var(--neon);color:#0d1117;
+  box-shadow:0 0 24px rgba(212,255,0,.35);}
+.bt-launch-btn:disabled{opacity:0.4;box-shadow:none;}
 .bt-progress{margin-top:14px;display:none;}
 .bt-progress-bar-wrap{background:var(--s2);border-radius:6px;height:6px;overflow:hidden;margin-bottom:8px;}
 .bt-progress-bar{height:100%;background:var(--green);transition:width .3s;width:0%;}
@@ -4233,7 +4235,6 @@ function renderResults(data){
       '<div class="mc-hint"><span>'+t('tapDetails')+'</span><span class="hint-arr">▼</span></div>'+
       '<div class="mc-det"><div class="mc-det-inner">'+renderVB(m)+renderMarketBadge(m._market||null, m.confidence)+renderDataRichness(m._dataRichness||null)+
       (m.rotation_alert&&m.rotation_text?'<div class="mc-rot-alert">⚠ '+esc(m.rotation_text)+'</div>':'')+
-      (m.justification?'<div class="mc-just">'+esc(m.justification)+'</div>':'')+
       '</div></div></div>';
   }).join('');
   var synth = renderLabBlock(M);
