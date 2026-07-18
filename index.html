@@ -3412,6 +3412,8 @@ function callBackend(prompt){
     window._lastDbIds = d.db_ids || [];  // Stocker les IDs Neon;
     // Stocker le meta pour les timings
     window._lastMeta = d.meta || null;
+    window._lastMarket = d.market || null;
+    window._lastDataRichness = d.dataRichness || null;
     return d.result;
   });
 }
@@ -3805,6 +3807,11 @@ function analyze(){
     var p=parse(raw);
     if(p&&p.matches){
       p.matches=normM(p.matches);
+      // Rattacher le consensus marché (calculé par le backend sur le match principal)
+      if(p.matches.length>0){
+        p.matches[0]._market = window._lastMarket || null;
+        p.matches[0]._dataRichness = window._lastDataRichness || null;
+      }
       // Filtre sport supprimé — detectIntention() côté serveur gère le sport
       if(p.matches.length===0){
         // Cas 1 : Gemini a retourné un message (match non trouvé, validation échouée)
