@@ -298,9 +298,57 @@ async function fetchManifoldSports() {
   }
 }
 
+async function fetchKalshiSports() {
+  // Kalshi — API publique, aucune authentification requise pour la lecture des marches
+  const KALSHI_BASE = 'https://external-api.kalshi.com/trade-api/v2/markets';
+  // Series tickers sportifs — pattern KX + code sport. "Football" chez Kalshi = NFL.
+  const seriesTickers = ['KXNBA','KXNFLGAME','KXNHL','KXMLB','KXUCL','KXEPL','KXUFC'];
+  let count = 0;
+  for (const series of seriesTickers) {
+    try {
+      const url = KALSHI_BASE + '?series_ticker=' + series + '&status=open&limit=200';
+      const ctrl = new AbortController();
+      setTimeout(() => ctrl.abort(), 10000);
+      const resp = await fetch(url, {
+        signal: ctrl.signal,
+        headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0 (compatible; SUPERCOACH/9.0)' }
+      });
+      if (!resp.ok) { console.warn('[MARKETS] Kalshi', series, 'HTTP', resp.status); continue; }
+      const data = await resp.json();
+      const markets = data.markets || [];
+      for (const m of markets) {
+        const home = m.yes_sub_title || '';
+        const away = m.no_sub_title || '';
+        if (!home || !away) continue;
+        let yesPrice = parseFloat(m.last_price_dollars);
+        if (!yesPrice) {
+          const bid = parseFloat(m.yes_bid_dollars) || 0;
+          const ask = parseFloat(m.yes_ask_dollars) || 0;
+          yesPrice = (bid + ask) / 2 || 0.5;
+        }
+        const key = 'kx_' + m.ticker;
+        MARKET_CONSENSUS[key] = {
+          question: home + ' vs ' + away + ' (' + series + ')',
+          homeProb: yesPrice,
+          awayProb: 1 - yesPrice,
+          drawProb: 0,
+          source:   'Kalshi',
+          syncedAt: new Date().toISOString(),
+          volume:   parseFloat(m.volume_fp) || 0,
+        };
+        count++;
+      }
+    } catch(e) {
+      console.warn('[MARKETS] Kalshi', series, 'error:', e.message);
+    }
+  }
+  console.log('[MARKETS] Kalshi:', count, 'markets loaded');
+  return count;
+}
+
 async function refreshMarketConsensus() {
   const t0 = Date.now();
-  const results = await Promise.allSettled([fetchPolymarketWC(), fetchManifoldSports()]);
+  const results = await Promise.allSettled([fetchPolymarketWC(), fetchManifoldSports(), fetchKalshiSports()]);
   const total = Object.keys(MARKET_CONSENSUS).length;
   const ms = Date.now() - t0;
   console.log(`[MARKETS] Refresh complete — ${total} markets in cache (${ms}ms)`);
