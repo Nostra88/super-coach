@@ -520,9 +520,13 @@ function buildContainer(entities, validation, espnLines, prompt) {
   }
 
   const espnFiltered = espnLines.filter(l => {
-    const lLow = l.toLowerCase();
+    const lTxt = typeof l === 'string' ? l : ((l.home||'')+' '+(l.away||'')+' '+(l.competition||''));
+    const lLow = lTxt.toLowerCase();
     return entities.some(e => lLow.includes((e.canonical||'').toLowerCase().split(' ')[0]));
-  });
+  }).map(l => typeof l === 'string' ? l :
+    (l.home+' vs '+l.away+(l.score_home!==''&&l.score_home!=null?' ('+l.score_home+'-'+l.score_away+')':'')+
+     ' — '+(l.competition||'')+(l.live?' [LIVE '+l.minute+']':l.status?' ['+l.status+']':''))
+  );
   if (espnFiltered.length) {
     b += '\n[ESPN CONTEXT]\n'+espnFiltered.slice(0,5).join('\n')+'\n';
   }
