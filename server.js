@@ -224,14 +224,25 @@ async function fetchPolymarketWC() {
       let count = 0;
       for (const m of arr) {
         const q = (m.question || m.title || '').toLowerCase();
-        const outcomsArr = m.outcomePrices || [];
-        const homeP = parseFloat(outcomsArr[0] || m.bestBid || m.probability || 0.5);
-        const awayP = parseFloat(outcomsArr[1] || (1 - homeP));
+        // Filtre sport — sans ça on récupère les marchés Polymarket les plus actifs tous sujets confondus
+        if (!q.includes('win') && !q.includes('vs') && !q.includes('beat') &&
+            !q.includes('champion') && !q.includes('qualify') && !q.includes('score') &&
+            !q.includes('goal') && !q.includes('match') && !q.includes('cup') &&
+            !q.includes('nba') && !q.includes('nfl') && !q.includes('nhl') &&
+            !q.includes('world series') && !q.includes('playoff') && !q.includes('finals')) continue;
+        // outcomePrices arrive en string JSON chez Polymarket gamma-api, pas en array natif
+        let outcomsArr = m.outcomePrices;
+        if (typeof outcomsArr === 'string') {
+          try { outcomsArr = JSON.parse(outcomsArr); } catch(e) { outcomsArr = []; }
+        }
+        if (!Array.isArray(outcomsArr)) outcomsArr = [];
+        const homeP = parseFloat(outcomsArr[0] ?? m.bestBid ?? m.probability ?? 0.5);
+        const awayP = parseFloat(outcomsArr[1] ?? (1 - homeP));
         const key = 'pm_' + (m.slug || m.id || count);
         MARKET_CONSENSUS[key] = {
           question: m.question || m.title || '',
-          homeProb: homeP,
-          awayProb: awayP,
+          homeProb: isNaN(homeP) ? 0.5 : homeP,
+          awayProb: isNaN(awayP) ? 0.5 : awayP,
           drawProb: 0,
           source:   'Polymarket',
           syncedAt: new Date().toISOString(),
