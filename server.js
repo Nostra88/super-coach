@@ -50,6 +50,29 @@ async function verifySupabaseToken(token) {
   } catch { return null; }
 }
 
+// Helper : statut Premium réel de l'utilisateur (autorité serveur)
+async function getPremiumStatus(req) {
+  try {
+    const auth = req.headers['authorization'] || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    if (!token || !SUPABASE_KEY) return { premium: false, userId: null };
+    const userId = await verifySupabaseToken(token);
+    if (!userId) return { premium: false, userId: null };
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${userId}&select=status,current_period_end&order=current_period_end.desc&limit=1`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const rows = await r.json();
+    const sub = Array.isArray(rows) ? rows[0] : null;
+    const active = sub && sub.status === 'active' &&
+      (!sub.current_period_end || new Date(sub.current_period_end) > new Date());
+    return { premium: !!active, userId };
+  } catch (e) {
+    console.warn('[getPremiumStatus]', e.message);
+    return { premium: false, userId: null };
+  }
+}
+
 // Helper : mettre à jour les stats d'un utilisateur
 async function updateUserStats(userId, result) {
   if (!userId || !SUPABASE_KEY) return;
@@ -849,11 +872,13 @@ app.post('/analyze', rateLimit, async (req, res) => {
     if (marketData) dataRichness += 1;
     dataRichness = Math.min(5, dataRichness);
 
+    const { premium } = await getPremiumStatus(req);
+
     clearTimeout(timeout);
     res.json({
       result: text,
       db_ids,
-      market: marketData ? {
+      market: (marketData && premium) ? {
         source:    marketData.source,
         question:  marketData.question,
         homeProb:  Math.round(marketData.homeProb * 100),
@@ -862,6 +887,7 @@ app.post('/analyze', rateLimit, async (req, res) => {
         volume:    marketData.volume || 0,
         totalMarkets: Object.keys(MARKET_CONSENSUS).length,
       } : null,
+      marketLocked: !!(marketData && !premium),
       dataRichness,
       meta: {
         timing: { total_ms:T2-T0, fetch_ms:T1-T0, gemini_ms:T2-T1, prompt_tokens_est:tokens },
@@ -1253,9 +1279,15 @@ app.post('/analyze-match', rateLimit, async (req, res) => {
 
     // ── Kelly & Value Edge ──
     const kelly = odds ? computeKellyAndValueEdge(geminiResult, parseFloat(odds)) : null;
+    const { premium } = await getPremiumStatus(req);
 
     clearTimeout(timeout);
-    res.json({ success: true, result: geminiResult, kelly });
+    res.json({
+      success: true,
+      result: geminiResult,
+      kelly: premium ? kelly : null,
+      kellyLocked: !!(kelly && !premium),
+    });
 
   } catch(e) {
     clearTimeout(timeout);
