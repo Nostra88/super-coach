@@ -2853,9 +2853,8 @@ function getSB() {
 
 function initAuth() {
   var sb = getSB();
-  if (!sb) { alert('[DEBUG] getSB() a échoué au chargement'); return; }
+  if (!sb) return;
   sb.auth.onAuthStateChange(function(event, session) {
-    alert('[DEBUG] onAuthStateChange: event=' + event + ' session=' + (session ? 'OUI (user: ' + session.user.email + ')' : 'NON'));
     if (session && session.user) {
       window._currentUser = session.user;
       fetchAndApplyProfile(session.user);
@@ -2865,7 +2864,6 @@ function initAuth() {
     }
   });
   sb.auth.getSession().then(function(res) {
-    alert('[DEBUG] getSession() au chargement: ' + (res.data && res.data.session ? 'session trouvée (' + res.data.session.user.email + ')' : 'AUCUNE session'));
     if (res.data && res.data.session) {
       window._currentUser = res.data.session.user;
       fetchAndApplyProfile(res.data.session.user);
@@ -2875,10 +2873,9 @@ function initAuth() {
 
 function fetchAndApplyProfile(user) {
   var sb = getSB();
-  if (!sb) { alert('[DEBUG] fetchAndApplyProfile: getSB() a échoué'); return; }
+  if (!sb) return;
   sb.from('profiles').select('*').eq('id', user.id).single()
   .then(function(res) {
-    alert('[DEBUG] fetchAndApplyProfile résultat: data=' + (res.data ? 'OUI' : 'NON') + ' error=' + (res.error ? res.error.message : 'aucune'));
     if (res.data) {
       window._userProfile = res.data;
       updateAuthUI(user, res.data);
@@ -2887,7 +2884,7 @@ function fetchAndApplyProfile(user) {
       updateAuthUI(user, null);
     }
   }).catch(function(e) {
-    alert('[DEBUG] fetchAndApplyProfile CRASH: ' + e.message);
+    console.error('[fetchAndApplyProfile]', e);
   });
 }
 
