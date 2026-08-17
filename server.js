@@ -6,6 +6,7 @@
 
 const express = require('express');
 const cors    = require('cors');
+const crypto  = require('crypto');
 
 // ── Neon PostgreSQL ──────────────────────────────────────────
 let sql = null;
@@ -1594,6 +1595,114 @@ app.get('/markets', (req, res) => {
       volume:   m.volume,
     })),
   });
+});
+
+// ── NOWPayments — webhook (IPN) ─────────────────────────────────
+// Vérifie la signature HMAC-SHA512, active/renouvelle l'abonnement Premium
+function sortObjectKeys(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(sortObjectKeys);
+  return Object.keys(obj).sort().reduce((acc, k) => {
+    acc[k] = sortObjectKeys(obj[k]);
+    return acc;
+  }, {});
+}
+
+app.post('/nowpayments/webhook', async (req, res) => {
+  try {
+    const sig = req.headers['x-nowpayments-sig'];
+    const ipnSecret = process.env.NOWPAYMENTS_IPN_SECRET;
+    if (!ipnSecret) {
+      console.error('[NOWPayments webhook] NOWPAYMENTS_IPN_SECRET manquant');
+      return res.status(500).json({ error: 'IPN secret non configuré' });
+    }
+    if (!sig) return res.status(401).json({ error: 'Signature manquante' });
+
+    const sortedBody = sortObjectKeys(req.body);
+    const expectedSig = crypto
+      .createHmac('sha512', ipnSecret)
+      .update(JSON.stringify(sortedBody))
+      .digest('hex');
+
+    if (expectedSig !== sig) {
+      console.warn('[NOWPayments webhook] Signature invalide — requête rejetée');
+      return res.status(401).json({ error: 'Signature invalide' });
+    }
+
+    const { payment_status, order_id, payment_id } = req.body;
+    console.log('[NOWPayments webhook] status='+payment_status+' order='+order_id+' payment='+payment_id);
+
+    if ((payment_status === 'finished' || payment_status === 'confirmed') && order_id) {
+      const now = new Date();
+      const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({
+          user_id: order_id,
+          status: 'active',
+          plan: 'premium',
+          provider: 'nowpayments',
+          provider_ref: String(payment_id || ''),
+          current_period_start: now.toISOString(),
+          current_period_end: periodEnd.toISOString(),
+          cancel_at_period_end: false
+        })
+      });
+      if (!r.ok) {
+        const errText = await r.text();
+        console.error('[NOWPayments webhook] Échec écriture Supabase', r.status, errText);
+      } else {
+        console.log('[NOWPayments webhook] Premium activé pour user '+order_id);
+      }
+    }
+
+    res.status(200).json({ received: true });
+  } catch (e) {
+    console.error('[NOWPayments webhook] Erreur', e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── NOWPayments — création d'un paiement/abonnement ─────────────
+app.post('/nowpayments/create-payment', rateLimit, async (req, res) => {
+  try {
+    const auth = req.headers['authorization'] || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    const userId = token ? await verifySupabaseToken(token) : null;
+    if (!userId) return res.status(401).json({ error: 'Non authentifié' });
+
+    const apiKey = process.env.NOWPAYMENTS_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'NOWPayments non configuré côté serveur' });
+
+    const r = await fetch('https://api.nowpayments.io/v1/invoice', {
+      method: 'POST',
+      headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        price_amount: 29,
+        price_currency: 'usd',
+        order_id: userId,
+        order_description: 'SUPERCOACH Premium — abonnement mensuel',
+        success_url: 'https://supercoach-app.netlify.app/?premium=success',
+        cancel_url: 'https://supercoach-app.netlify.app/'
+      })
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      console.error('[NOWPayments create-payment] Erreur API', data);
+      return res.status(r.status).json(data);
+    }
+    res.json({ invoice_url: data.invoice_url });
+  } catch (e) {
+    console.error('[NOWPayments create-payment] Erreur', e);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.listen(PORT, () => {

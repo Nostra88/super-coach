@@ -613,6 +613,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .profile-email{font-size:12px;color:var(--t2);margin:2px 0;}
 .profile-plan{display:inline-block;background:rgba(45,138,85,.2);color:var(--green);
   font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;}
+.premium-upgrade-btn{background:linear-gradient(135deg,#8b5cf6,#D4FF00);color:#050608;
+  border:none;border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;
+  font-weight:700;font-size:13px;cursor:pointer;width:100%;}
+.premium-upgrade-btn:disabled{opacity:.6;}
 .profile-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px;}
 .profile-stat{background:var(--s2);border-radius:10px;padding:12px 8px;text-align:center;}
 .profile-stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--green);}
@@ -2962,6 +2966,32 @@ function handleSignOut() {
   });
 }
 
+function handleUpgradePremium() {
+  var sb = getSB();
+  if (!sb) { alert('Connexion en cours de chargement, réessaie dans 2 secondes.'); return; }
+  sb.auth.getSession().then(function(res) {
+    var token = res.data && res.data.session ? res.data.session.access_token : null;
+    if (!token) { alert('Connecte-toi d\'abord pour passer Premium.'); return; }
+    var btn = document.getElementById('premiumUpgradeBtn');
+    if (btn) { btn.textContent = '⏳ Chargement...'; btn.disabled = true; }
+    fetch(BACKEND_URL + '/nowpayments/create-payment', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.invoice_url) {
+        window.location.href = data.invoice_url;
+      } else {
+        alert('Erreur : ' + (data.error || 'impossible de créer le paiement'));
+        if (btn) { btn.textContent = '⚡ Passer Premium — 29$/mois'; btn.disabled = false; }
+      }
+    }).catch(function(e) {
+      alert('Erreur : ' + e.message);
+      if (btn) { btn.textContent = '⚡ Passer Premium — 29$/mois'; btn.disabled = false; }
+    });
+  });
+}
+
 function loadProfileModal(user, profile) {
   var sb = getSB();
   document.getElementById('profileAvatarDisplay').textContent = getAvatarEmoji(profile && profile.avatar_id);
@@ -2984,11 +3014,13 @@ function loadProfileModal(user, profile) {
           res.data.current_bankroll + ' ' + (res.data.currency || 'EUR');
       }
     });
-    sb.from('subscriptions').select('plan').eq('user_id', user.id).single()
+    sb.from('subscriptions').select('plan,status,current_period_end').eq('user_id', user.id).single()
     .then(function(res) {
-      if (res.data) {
-        document.getElementById('profilePlanDisplay').textContent = (res.data.plan || 'free').toUpperCase();
-      }
+      var btn = document.getElementById('premiumUpgradeBtn');
+      var isActive = res.data && res.data.status === 'active' &&
+        (!res.data.current_period_end || new Date(res.data.current_period_end) > new Date());
+      document.getElementById('profilePlanDisplay').textContent = isActive ? 'PREMIUM' : 'FREE';
+      if (btn) btn.style.display = isActive ? 'none' : 'block';
     });
   }
 }
@@ -4709,6 +4741,7 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
               <div class="profile-name" id="profileNameDisplay">—</div>
               <div class="profile-email" id="profileEmailDisplay">—</div>
               <div class="profile-plan" id="profilePlanDisplay">FREE</div>
+              <button class="premium-upgrade-btn" id="premiumUpgradeBtn" onclick="handleUpgradePremium()" style="display:none;margin-top:8px;">⚡ Passer Premium — 29$/mois</button>
             </div>
           </div>
           <div class="profile-stats-grid">
