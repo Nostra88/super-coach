@@ -2930,7 +2930,11 @@ function handleMagicLink() {
 
 function handleGoogleAuth() {
   var sb = getSB();
-  if (!sb) return;
+  if (!sb) {
+    alert('Connexion en cours de chargement, réessaie dans 2 secondes.');
+    console.error('[Google OAuth] Supabase SDK pas encore prêt (window.supabase indisponible)');
+    return;
+  }
   sb.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin }
