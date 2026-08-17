@@ -3013,7 +3013,7 @@ function handleUpgradePremium() {
     var controller = new AbortController();
     var timeoutId = setTimeout(function(){ controller.abort(); }, 20000);
 
-    fetch(BACKEND_URL + '/nowpayments/create-payment', {
+    fetch(BACKEND + '/nowpayments/create-payment', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + token },
       signal: controller.signal
@@ -3034,6 +3034,14 @@ function handleUpgradePremium() {
       alert(t('premiumError') + ' : ' + msg);
       resetBtn();
     });
+  }).catch(function(e) {
+    console.error('[handleUpgradePremium] Erreur non gérée', e);
+    alert(t('premiumError') + ' : ' + e.message);
+    var btn = document.getElementById('premiumUpgradeBtn');
+    if (btn) {
+      btn.innerHTML = '⚡ <span id="premiumUpgradeLbl">' + t('premiumUpgrade') + '</span>';
+      btn.disabled = false;
+    }
   });
 }
 
