@@ -3253,6 +3253,7 @@ function renderLabBlock(matches) {
 }
 
 window.onload = function(){
+  initAuth();
   // S'assurer que les modals sont fermés au chargement
   var sm = document.getElementById('settingsModa');
   if(sm) sm.classList.remove('open');
