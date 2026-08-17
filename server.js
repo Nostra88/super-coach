@@ -107,7 +107,7 @@ async function updateUserStats(userId, result) {
 
 const MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
 
-app.use(cors({ origin:'*', methods:['GET','POST','OPTIONS'], allowedHeaders:['Content-Type','Accept'] }));
+app.use(cors({ origin:'*', methods:['GET','POST','OPTIONS'], allowedHeaders:['Content-Type','Accept','Authorization'] }));
 app.options('*', cors());
 app.use(express.json({ limit:'10mb' }));
 
