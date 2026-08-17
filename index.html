@@ -2714,7 +2714,20 @@ function applyLang(){
   el=document.getElementById('authMagicSub'); if(el) el.textContent=t('authMagicSub');
 }
 function setText(id,val){var e=document.getElementById(id);if(e)e.textContent=val;}
-function setLang(l,ev){if(ev)ev.stopPropagation();lang=l;localStorage.setItem('sc_lang',l);closeLangPanel();applyLang();}
+function setLang(l,ev){
+  if(ev)ev.stopPropagation();
+  lang=l;
+  localStorage.setItem('sc_lang',l);
+  closeLangPanel();
+  applyLang();
+  var sb = getSB();
+  if (sb && window._currentUser) {
+    sb.from('profiles').update({language: l}).eq('id', window._currentUser.id)
+    .then(function(res) {
+      if (res.error) console.error('[setLang] Échec sauvegarde langue', res.error);
+    });
+  }
+}
 function toggleLang(ev){ev.stopPropagation();var p=document.getElementById('langPanel');p.classList.toggle('open');}
 function closeLangPanel(){document.getElementById('langPanel').classList.remove('open');}
 document.addEventListener('click',function(){closeLangPanel();});
