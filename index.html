@@ -2140,7 +2140,7 @@ var L = {
     'errParseFail':'AI response could not be parsed. Try with fewer matches.',
     'errParseFailLive':'AI response could not be parsed. Check the teams and score.',
     'analysisFailed':'INCOMPLETE ANALYSIS',
-    'authSignInSub':'Sign in to save your analyses',
+    'authSignInSub':'Sign in to save your analyses','premiumUpgrade':'Go Premium — $29/mo',
     'authContinueEmail':'Continue with email',
     'authOr':'or',
     'authContinueGoogle':'Continue with Google',
@@ -2218,7 +2218,7 @@ var L = {
     'errParseFail':'Réponse IA non parseable. Essaie avec moins de matchs.',
     'errParseFailLive':'Réponse IA non parseable. Vérifie les équipes et le score.',
     'analysisFailed':'ANALYSE INCOMPLÈTE',
-    'authSignInSub':'Connecte-toi pour sauvegarder tes analyses',
+    'authSignInSub':'Connecte-toi pour sauvegarder tes analyses','premiumUpgrade':'Passer Premium — 29$/mois',
     'authContinueEmail':'Continuer avec email',
     'authOr':'ou',
     'authContinueGoogle':'Continuer avec Google',
@@ -2290,7 +2290,7 @@ var L = {
     'errParseFail':'Respuesta IA no parseada. Prueba con menos partidos.',
     'errParseFailLive':'Respuesta IA no parseada. Verifica los equipos y el marcador.',
     'analysisFailed':'ANÁLISIS INCOMPLETO',
-    'authSignInSub':'Inicia sesión para guardar tus análisis',
+    'authSignInSub':'Inicia sesión para guardar tus análisis','premiumUpgrade':'Hazte Premium — 29$/mes',
     'authContinueEmail':'Continuar con email',
     'authOr':'o',
     'authContinueGoogle':'Continuar con Google',
@@ -2362,7 +2362,7 @@ var L = {
     'errParseFail':'Resposta IA não parseada. Tenta com menos jogos.',
     'errParseFailLive':'Resposta IA não parseada. Verifica os times e o placar.',
     'analysisFailed':'ANÁLISE INCOMPLETA',
-    'authSignInSub':'Entre para salvar suas análises',
+    'authSignInSub':'Entre para salvar suas análises','premiumUpgrade':'Seja Premium — 29$/mês',
     'authContinueEmail':'Continuar com email',
     'authOr':'ou',
     'authContinueGoogle':'Continuar com Google',
@@ -2434,7 +2434,7 @@ var L = {
     'errParseFail':'Risposta IA non elaborata. Prova con meno partite.',
     'errParseFailLive':'Risposta IA non elaborata. Verifica squadre e punteggio.',
     'analysisFailed':'ANALISI INCOMPLETA',
-    'authSignInSub':'Accedi per salvare le tue analisi',
+    'authSignInSub':'Accedi per salvare le tue analisi','premiumUpgrade':'Passa a Premium — 29$/mese',
     'authContinueEmail':'Continua con email',
     'authOr':'o',
     'authContinueGoogle':'Continua con Google',
@@ -2507,7 +2507,7 @@ var L = {
     'errParseFail':'KI-Antwort nicht verarbeitet. Versuche mit weniger Spielen.',
     'errParseFailLive':'KI-Antwort nicht verarbeitet. Prüfe die Mannschaften und das Ergebnis.',
     'analysisFailed':'ANALYSE UNVOLLSTÄNDIG',
-    'authSignInSub':'Einloggen zum Speichern deiner Analysen',
+    'authSignInSub':'Einloggen zum Speichern deiner Analysen','premiumUpgrade':'Premium werden — 29$/Monat',
     'authContinueEmail':'Mit Email fortfahren',
     'authOr':'oder',
     'authContinueGoogle':'Mit Google fortfahren',
@@ -2579,7 +2579,7 @@ var L = {
     'errParseFail':'لم يتم معالجة استجابة الذكاء الاصطناعي. جرب مع مباريات أقل.',
     'errParseFailLive':'لم تتم معالجة الاستجابة. تحقق من الفرق والنتيجة.',
     'analysisFailed':'تحليل غير مكتمل',
-    'authSignInSub':'سجل دخولك لحفظ تحليلاتك',
+    'authSignInSub':'سجل دخولك لحفظ تحليلاتك','premiumUpgrade':'الترقية إلى بريميوم — 29$/شهر',
     'authContinueEmail':'المتابعة بالبريد',
     'authOr':'أو',
     'authContinueGoogle':'المتابعة مع Google',
@@ -2630,6 +2630,7 @@ function applyLang(){
   setText('htScoreLbl',t('htScore'));setText('liveOddsLbl',t('liveOdds'));setText('liveBtnLbl',t('liveBtn'));
   setText('roiTitle',t('roiTitle'));setText('roiBtn',t('roiBtn'));
   setText('navAnalyzeLbl',t('navAnalyze'));setText('navRoiLbl',t('navRoi'));setText('navSettingsLbl',t('navSettings'));
+  setText('premiumUpgradeLbl',t('premiumUpgrade'));
   // Update lang selector
   var btn = document.getElementById('langBtn');
   var flags = {en:'🇺🇸',fr:'🇫🇷',es:'🇪🇸',pt:'🇧🇷',ar:'🇸🇦',it:'🇮🇹',de:'🇩🇪'};
@@ -4770,7 +4771,7 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
               <div class="profile-name" id="profileNameDisplay">—</div>
               <div class="profile-email" id="profileEmailDisplay">—</div>
               <div class="profile-plan" id="profilePlanDisplay">FREE</div>
-              <button class="premium-upgrade-btn" id="premiumUpgradeBtn" onclick="handleUpgradePremium()" style="display:none;margin-top:8px;">⚡ Passer Premium — 29$/mois</button>
+              <button class="premium-upgrade-btn" id="premiumUpgradeBtn" onclick="handleUpgradePremium()" style="display:none;margin-top:8px;">⚡ <span id="premiumUpgradeLbl">Go Premium — $29/mo</span></button>
             </div>
           </div>
           <div class="profile-stats-grid">
