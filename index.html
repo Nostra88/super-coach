@@ -2912,7 +2912,7 @@ function updateAuthUI(user, profile) {
       sb.from('subscriptions').select('status,current_period_end').eq('user_id', user.id).single()
       .then(function(res) {
         var isActive = res.data && res.data.status === 'active' &&
-          (!res.data.current_period_end || new Date(res.data.current_period_end) > new Date());
+          res.data.current_period_end && new Date(res.data.current_period_end) > new Date();
         if (isActive) btn.classList.add('is-premium');
       });
     }
@@ -3034,7 +3034,7 @@ function loadProfileModal(user, profile) {
     .then(function(res) {
       var btn = document.getElementById('premiumUpgradeBtn');
       var isActive = res.data && res.data.status === 'active' &&
-        (!res.data.current_period_end || new Date(res.data.current_period_end) > new Date());
+        res.data.current_period_end && new Date(res.data.current_period_end) > new Date();
       document.getElementById('profilePlanDisplay').textContent = isActive ? 'PREMIUM' : 'FREE';
       if (btn) btn.style.display = isActive ? 'none' : 'block';
     });

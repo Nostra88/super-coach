@@ -66,7 +66,7 @@ async function getPremiumStatus(req) {
     const rows = await r.json();
     const sub = Array.isArray(rows) ? rows[0] : null;
     const active = sub && sub.status === 'active' &&
-      (!sub.current_period_end || new Date(sub.current_period_end) > new Date());
+      sub.current_period_end && new Date(sub.current_period_end) > new Date();
     return { premium: !!active, userId };
   } catch (e) {
     console.warn('[getPremiumStatus]', e.message);
