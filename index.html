@@ -2934,6 +2934,14 @@ function handleGoogleAuth() {
   sb.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin }
+  }).then(function(res) {
+    if (res && res.error) {
+      alert('Erreur connexion Google: ' + res.error.message);
+      console.error('[Google OAuth]', res.error);
+    }
+  }).catch(function(e) {
+    alert('Erreur connexion Google: ' + e.message);
+    console.error('[Google OAuth]', e);
   });
 }
 
