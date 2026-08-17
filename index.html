@@ -579,8 +579,12 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
 .hdr-actions{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .auth-btn{background:rgba(45,138,85,.15);border:1px solid rgba(45,138,85,.3);
   border-radius:20px;width:34px;height:34px;color:var(--t1);cursor:pointer;font-size:16px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;}
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;
+  transition:box-shadow .2s,border-color .2s,background .2s;}
 .auth-btn:active{opacity:.7;}
+.auth-btn.is-connected{background:rgba(45,138,85,.35);border-color:var(--green);}
+.auth-btn.is-premium{background:rgba(139,92,246,.25);border-color:#D4FF00;
+  box-shadow:0 0 10px rgba(212,255,0,.5);}
 .auth-btn:active{opacity:.7;}
 #authName{max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
@@ -1336,7 +1340,7 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
     <div class="hdr-actions">
       <button class="roi-btn" id="roiBtn" onclick="openROI()">📊</button>
       <!-- Backtest admin uniquement — bouton retiré de l'UI publique -->
-      <button class="auth-btn" id="authBtn" onclick="openSheet('authModal')">👤</button>
+      <button class="auth-btn" id="authBtn" onclick="openSheet('authModal')"><span id="authAvatar">👤</span></button>
     </div>
   </div>
 </div>
@@ -2901,10 +2905,22 @@ function updateAuthUI(user, profile) {
     btn.onclick = function(){ openSheet('profileModal'); loadProfileModal(user, profile); };
     if (avatar) avatar.textContent = getAvatarEmoji(profile && profile.avatar_id);
     if (name) name.textContent = (profile && profile.username) || user.email.split('@')[0];
+    btn.classList.add('is-connected');
+    btn.classList.remove('is-premium');
+    var sb = getSB();
+    if (sb) {
+      sb.from('subscriptions').select('status,current_period_end').eq('user_id', user.id).single()
+      .then(function(res) {
+        var isActive = res.data && res.data.status === 'active' &&
+          (!res.data.current_period_end || new Date(res.data.current_period_end) > new Date());
+        if (isActive) btn.classList.add('is-premium');
+      });
+    }
   } else {
     btn.onclick = function(){ openSheet('authModal'); };
     if (avatar) avatar.textContent = '👤';
     if (name) name.textContent = '';
+    btn.classList.remove('is-connected', 'is-premium');
   }
 }
 
