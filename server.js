@@ -1681,18 +1681,26 @@ app.post('/nowpayments/create-payment', rateLimit, async (req, res) => {
     const apiKey = process.env.NOWPAYMENTS_API_KEY;
     if (!apiKey) return res.status(500).json({ error: 'NOWPayments non configuré côté serveur' });
 
-    const r = await fetch('https://api.nowpayments.io/v1/invoice', {
-      method: 'POST',
-      headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        price_amount: 29,
-        price_currency: 'usd',
-        order_id: userId,
+    const npCtrl = new AbortController();
+    const npTimeout = setTimeout(() => npCtrl.abort(), 12000);
+    let r;
+    try {
+      r = await fetch('https://api.nowpayments.io/v1/invoice', {
+        method: 'POST',
+        signal: npCtrl.signal,
+        headers: { 'x-api-key': apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          price_amount: 29,
+          price_currency: 'usd',
+          order_id: userId,
         order_description: 'SUPERCOACH Premium — abonnement mensuel',
         success_url: 'https://supercoach-app.netlify.app/?premium=success',
         cancel_url: 'https://supercoach-app.netlify.app/'
       })
-    });
+      });
+    } finally {
+      clearTimeout(npTimeout);
+    }
     const data = await r.json();
     if (!r.ok) {
       console.error('[NOWPayments create-payment] Erreur API', data);
@@ -1701,7 +1709,8 @@ app.post('/nowpayments/create-payment', rateLimit, async (req, res) => {
     res.json({ invoice_url: data.invoice_url });
   } catch (e) {
     console.error('[NOWPayments create-payment] Erreur', e);
-    res.status(500).json({ error: e.message });
+    const msg = e.name === 'AbortError' ? 'NOWPayments ne répond pas (timeout)' : e.message;
+    res.status(500).json({ error: msg });
   }
 });
 
