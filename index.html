@@ -3041,7 +3041,7 @@ function loadProfileModal(user, profile) {
     .then(function(res) {
       if (res.data) {
         document.getElementById('profileBankroll').textContent =
-          res.data.current_bankroll + ' ' + (res.data.currency || 'EUR');
+          res.data.current_bankroll + ' ' + (res.data.currency || 'USD');
       }
     });
     sb.from('subscriptions').select('plan,status,current_period_end').eq('user_id', user.id).single()
