@@ -1813,9 +1813,27 @@ function renderFluxList() {
       item.className = 'flux-item' + (isSelected ? ' selected' : '') + (m.isFriendly ? ' friendly' : '');
       item.dataset.matchId = m.id;
       var _mid = m.id;
-      function _onTap(e){ e.preventDefault(); toggleFluxMatch(_mid); }
+      var _touchStartX = 0, _touchStartY = 0, _wasScroll = false;
+      function _onTouchStart(e) {
+        var t = e.touches && e.touches[0];
+        if (t) { _touchStartX = t.clientX; _touchStartY = t.clientY; }
+        _wasScroll = false;
+      }
+      function _onTouchEnd(e) {
+        var t = e.changedTouches && e.changedTouches[0];
+        if (t) {
+          var dx = Math.abs(t.clientX - _touchStartX);
+          var dy = Math.abs(t.clientY - _touchStartY);
+          // Doigt déplacé de plus de 10px = défilement, pas un tap → on ignore
+          if (dx > 10 || dy > 10) { _wasScroll = true; return; }
+        }
+        e.preventDefault();
+        toggleFluxMatch(_mid);
+      }
+      function _onTap(e){ if (_wasScroll) { _wasScroll = false; return; } e.preventDefault(); toggleFluxMatch(_mid); }
       item.addEventListener('click', _onTap);
-      item.addEventListener('touchend', _onTap);
+      item.addEventListener('touchstart', _onTouchStart, { passive: true });
+      item.addEventListener('touchend', _onTouchEnd);
 
       // Checkbox
       var check = document.createElement('div');
