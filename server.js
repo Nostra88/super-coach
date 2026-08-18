@@ -34,10 +34,11 @@ const SUPABASE_KEY  = process.env.SUPABASE_SERVICE_KEY || '';
 
 // Helper : vérifier un JWT Supabase et retourner l'user_id
 async function verifySupabaseToken(token) {
-  if (!token || !SUPABASE_KEY) return null;
+  if (!token) { console.warn('[verifySupabaseToken] Pas de token fourni'); return null; }
+  if (!SUPABASE_KEY) { console.warn('[verifySupabaseToken] SUPABASE_KEY manquant côté serveur'); return null; }
   try {
     const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), 5000);
+    setTimeout(() => ctrl.abort(), 10000);
     const resp = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       signal: ctrl.signal,
       headers: {
@@ -45,10 +46,16 @@ async function verifySupabaseToken(token) {
         'apikey': SUPABASE_KEY,
       }
     });
-    if (!resp.ok) return null;
+    if (!resp.ok) {
+      console.warn('[verifySupabaseToken] Supabase a refusé le token, status='+resp.status);
+      return null;
+    }
     const data = await resp.json();
     return data.id || null;
-  } catch { return null; }
+  } catch (e) {
+    console.warn('[verifySupabaseToken] Échec:', e.name, e.message);
+    return null;
+  }
 }
 
 // Helper : statut Premium réel de l'utilisateur (autorité serveur)
