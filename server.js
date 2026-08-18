@@ -456,6 +456,11 @@ const ESPN = {
     'https://site.api.espn.com/apis/site/v2/sports/soccer/bra.1/scoreboard',
     'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard',
     'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions_qual/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa_qual/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf/scoreboard',
+    'https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.europa.conf_qual/scoreboard',
   ],
   basket: ['https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard'],
   hockey: ['https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'],
@@ -473,7 +478,7 @@ async function fetchESPN(url) {
 
     // Detecter le sport depuis l'URL
     const isWC      = url.includes('fifa.world');
-    const isChampions = url.includes('uefa.champions');
+    const isChampions = url.includes('uefa.champions') || url.includes('uefa.europa');
     const isBasket  = url.includes('basketball');
     const isHockey  = url.includes('hockey');
     const isBaseball = url.includes('baseball');
