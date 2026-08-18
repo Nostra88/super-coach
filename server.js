@@ -72,7 +72,7 @@ async function getPremiumStatus(req) {
     );
     const rows = await r.json();
     const sub = Array.isArray(rows) ? rows[0] : null;
-    const active = sub && sub.status === 'active' &&
+    const active = sub && (sub.status === 'active' || sub.status === 'trialing') &&
       sub.current_period_end && new Date(sub.current_period_end) > new Date();
     return { premium: !!active, userId };
   } catch (e) {
@@ -1678,6 +1678,79 @@ app.post('/nowpayments/webhook', async (req, res) => {
 });
 
 // ── NOWPayments — création d'un paiement/abonnement ─────────────
+// ── Essai gratuit 7 jours — anti-abus vérifié côté serveur ──────
+app.post('/trial/start', rateLimit, async (req, res) => {
+  try {
+    const auth = req.headers['authorization'] || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    const userId = token ? await verifySupabaseToken(token) : null;
+    if (!userId) return res.status(401).json({ error: 'Non authentifié' });
+
+    // Vérifie si l'essai a déjà été utilisé
+    const profileRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=trial_used`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const profileRows = await profileRes.json();
+    const profile = Array.isArray(profileRows) ? profileRows[0] : null;
+    if (profile && profile.trial_used) {
+      return res.status(403).json({ error: 'Essai déjà utilisé sur ce compte' });
+    }
+
+    const now = new Date();
+    const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    // Marque l'essai comme utilisé EN PREMIER (verrou anti-abus) —
+    // si l'étape suivante échoue, l'utilisateur ne peut pas juste réessayer indéfiniment
+    const markRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ trial_used: true })
+    });
+    if (!markRes.ok) {
+      const errText = await markRes.text();
+      console.error('[trial/start] Échec marquage trial_used', markRes.status, errText);
+      return res.status(500).json({ error: 'Impossible de démarrer l\'essai' });
+    }
+
+    // Active le statut trialing dans subscriptions
+    const subRes = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=minimal'
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        status: 'trialing',
+        plan: 'premium',
+        provider: 'trial',
+        provider_ref: null,
+        current_period_start: now.toISOString(),
+        current_period_end: trialEnd.toISOString(),
+        cancel_at_period_end: true
+      })
+    });
+    if (!subRes.ok) {
+      const errText = await subRes.text();
+      console.error('[trial/start] Échec écriture subscriptions', subRes.status, errText);
+      return res.status(500).json({ error: 'Impossible de démarrer l\'essai' });
+    }
+
+    res.json({ success: true, trial_end: trialEnd.toISOString() });
+  } catch (e) {
+    console.error('[trial/start] Erreur', e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.post('/nowpayments/create-payment', rateLimit, async (req, res) => {
   try {
     const auth = req.headers['authorization'] || '';

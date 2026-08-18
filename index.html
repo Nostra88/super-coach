@@ -621,6 +621,10 @@ textarea::placeholder,input[type=text]::placeholder{color:var(--text3)}
   border:none;border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;
   font-weight:700;font-size:13px;cursor:pointer;width:100%;}
 .premium-upgrade-btn:disabled{opacity:.6;}
+.trial-start-btn{background:var(--green);color:#050608;
+  border:none;border-radius:10px;padding:10px 16px;font-family:'JetBrains Mono',monospace;
+  font-weight:700;font-size:13px;cursor:pointer;width:100%;}
+.trial-start-btn:disabled{opacity:.6;}
 .profile-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:24px;}
 .profile-stat{background:var(--s2);border-radius:10px;padding:12px 8px;text-align:center;}
 .profile-stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--green);}
@@ -2140,7 +2144,7 @@ var L = {
     'errParseFail':'AI response could not be parsed. Try with fewer matches.',
     'errParseFailLive':'AI response could not be parsed. Check the teams and score.',
     'analysisFailed':'INCOMPLETE ANALYSIS',
-    'authSignInSub':'Sign in to save your analyses','premiumUpgrade':'Go Premium — $29/mo','premiumLoading':'Loading...','premiumLoadingApp':'App is still loading, try again in a moment.','premiumMustLogin':'Sign in first to go Premium.','premiumError':'Error','premiumErrorGeneric':'could not create payment','premiumTimeout':'request timed out, please try again.',
+    'authSignInSub':'Sign in to save your analyses','premiumUpgrade':'Go Premium — $29/mo','premiumLoading':'Loading...','premiumLoadingApp':'App is still loading, try again in a moment.','premiumMustLogin':'Sign in first to go Premium.','premiumError':'Error','premiumErrorGeneric':'could not create payment','premiumTimeout':'request timed out, please try again.','trialStartBtn':'Start 7-day free trial','trialStarted':'Free trial started! Enjoy Premium for 7 days.',
     'authContinueEmail':'Continue with email',
     'authOr':'or',
     'authContinueGoogle':'Continue with Google',
@@ -2218,7 +2222,7 @@ var L = {
     'errParseFail':'Réponse IA non parseable. Essaie avec moins de matchs.',
     'errParseFailLive':'Réponse IA non parseable. Vérifie les équipes et le score.',
     'analysisFailed':'ANALYSE INCOMPLÈTE',
-    'authSignInSub':'Connecte-toi pour sauvegarder tes analyses','premiumUpgrade':'Passer Premium — 29$/mois','premiumLoading':'Chargement...','premiumLoadingApp':'Connexion en cours de chargement, réessaie dans 2 secondes.','premiumMustLogin':'Connecte-toi d\'abord pour passer Premium.','premiumError':'Erreur','premiumErrorGeneric':'impossible de créer le paiement','premiumTimeout':'délai dépassé, réessaie.',
+    'authSignInSub':'Connecte-toi pour sauvegarder tes analyses','premiumUpgrade':'Passer Premium — 29$/mois','premiumLoading':'Chargement...','premiumLoadingApp':'Connexion en cours de chargement, réessaie dans 2 secondes.','premiumMustLogin':'Connecte-toi d\'abord pour passer Premium.','premiumError':'Erreur','premiumErrorGeneric':'impossible de créer le paiement','premiumTimeout':'délai dépassé, réessaie.','trialStartBtn':'Essai gratuit 7 jours','trialStarted':'Essai gratuit activé ! Profite du Premium pendant 7 jours.',
     'authContinueEmail':'Continuer avec email',
     'authOr':'ou',
     'authContinueGoogle':'Continuer avec Google',
@@ -2290,7 +2294,7 @@ var L = {
     'errParseFail':'Respuesta IA no parseada. Prueba con menos partidos.',
     'errParseFailLive':'Respuesta IA no parseada. Verifica los equipos y el marcador.',
     'analysisFailed':'ANÁLISIS INCOMPLETO',
-    'authSignInSub':'Inicia sesión para guardar tus análisis','premiumUpgrade':'Hazte Premium — 29$/mes','premiumLoading':'Cargando...','premiumLoadingApp':'La app aún está cargando, inténtalo de nuevo en un momento.','premiumMustLogin':'Inicia sesión antes de hacerte Premium.','premiumError':'Error','premiumErrorGeneric':'no se pudo crear el pago','premiumTimeout':'tiempo de espera agotado, inténtalo de nuevo.',
+    'authSignInSub':'Inicia sesión para guardar tus análisis','premiumUpgrade':'Hazte Premium — 29$/mes','premiumLoading':'Cargando...','premiumLoadingApp':'La app aún está cargando, inténtalo de nuevo en un momento.','premiumMustLogin':'Inicia sesión antes de hacerte Premium.','premiumError':'Error','premiumErrorGeneric':'no se pudo crear el pago','premiumTimeout':'tiempo de espera agotado, inténtalo de nuevo.','trialStartBtn':'Prueba gratis 7 días','trialStarted':'¡Prueba gratuita activada! Disfruta Premium 7 días.',
     'authContinueEmail':'Continuar con email',
     'authOr':'o',
     'authContinueGoogle':'Continuar con Google',
@@ -2362,7 +2366,7 @@ var L = {
     'errParseFail':'Resposta IA não parseada. Tenta com menos jogos.',
     'errParseFailLive':'Resposta IA não parseada. Verifica os times e o placar.',
     'analysisFailed':'ANÁLISE INCOMPLETA',
-    'authSignInSub':'Entre para salvar suas análises','premiumUpgrade':'Seja Premium — 29$/mês','premiumLoading':'Carregando...','premiumLoadingApp':'O app ainda está carregando, tente novamente em instantes.','premiumMustLogin':'Faça login antes de virar Premium.','premiumError':'Erro','premiumErrorGeneric':'não foi possível criar o pagamento','premiumTimeout':'tempo esgotado, tente novamente.',
+    'authSignInSub':'Entre para salvar suas análises','premiumUpgrade':'Seja Premium — 29$/mês','premiumLoading':'Carregando...','premiumLoadingApp':'O app ainda está carregando, tente novamente em instantes.','premiumMustLogin':'Faça login antes de virar Premium.','premiumError':'Erro','premiumErrorGeneric':'não foi possível criar o pagamento','premiumTimeout':'tempo esgotado, tente novamente.','trialStartBtn':'Teste grátis 7 dias','trialStarted':'Teste grátis ativado! Aproveite o Premium por 7 dias.',
     'authContinueEmail':'Continuar com email',
     'authOr':'ou',
     'authContinueGoogle':'Continuar com Google',
@@ -2434,7 +2438,7 @@ var L = {
     'errParseFail':'Risposta IA non elaborata. Prova con meno partite.',
     'errParseFailLive':'Risposta IA non elaborata. Verifica squadre e punteggio.',
     'analysisFailed':'ANALISI INCOMPLETA',
-    'authSignInSub':'Accedi per salvare le tue analisi','premiumUpgrade':'Passa a Premium — 29$/mese','premiumLoading':'Caricamento...','premiumLoadingApp':'L\'app è ancora in caricamento, riprova tra poco.','premiumMustLogin':'Accedi prima di passare a Premium.','premiumError':'Errore','premiumErrorGeneric':'impossibile creare il pagamento','premiumTimeout':'tempo scaduto, riprova.',
+    'authSignInSub':'Accedi per salvare le tue analisi','premiumUpgrade':'Passa a Premium — 29$/mese','premiumLoading':'Caricamento...','premiumLoadingApp':'L\'app è ancora in caricamento, riprova tra poco.','premiumMustLogin':'Accedi prima di passare a Premium.','premiumError':'Errore','premiumErrorGeneric':'impossibile creare il pagamento','premiumTimeout':'tempo scaduto, riprova.','trialStartBtn':'Prova gratis 7 giorni','trialStarted':'Prova gratuita attivata! Goditi Premium per 7 giorni.',
     'authContinueEmail':'Continua con email',
     'authOr':'o',
     'authContinueGoogle':'Continua con Google',
@@ -2507,7 +2511,7 @@ var L = {
     'errParseFail':'KI-Antwort nicht verarbeitet. Versuche mit weniger Spielen.',
     'errParseFailLive':'KI-Antwort nicht verarbeitet. Prüfe die Mannschaften und das Ergebnis.',
     'analysisFailed':'ANALYSE UNVOLLSTÄNDIG',
-    'authSignInSub':'Einloggen zum Speichern deiner Analysen','premiumUpgrade':'Premium werden — 29$/Monat','premiumLoading':'Lädt...','premiumLoadingApp':'App lädt noch, versuch es gleich nochmal.','premiumMustLogin':'Melde dich zuerst an, um Premium zu werden.','premiumError':'Fehler','premiumErrorGeneric':'Zahlung konnte nicht erstellt werden','premiumTimeout':'Zeitüberschreitung, bitte erneut versuchen.',
+    'authSignInSub':'Einloggen zum Speichern deiner Analysen','premiumUpgrade':'Premium werden — 29$/Monat','premiumLoading':'Lädt...','premiumLoadingApp':'App lädt noch, versuch es gleich nochmal.','premiumMustLogin':'Melde dich zuerst an, um Premium zu werden.','premiumError':'Fehler','premiumErrorGeneric':'Zahlung konnte nicht erstellt werden','premiumTimeout':'Zeitüberschreitung, bitte erneut versuchen.','trialStartBtn':'7 Tage kostenlos testen','trialStarted':'Testphase gestartet! Genieße 7 Tage Premium.',
     'authContinueEmail':'Mit Email fortfahren',
     'authOr':'oder',
     'authContinueGoogle':'Mit Google fortfahren',
@@ -2579,7 +2583,7 @@ var L = {
     'errParseFail':'لم يتم معالجة استجابة الذكاء الاصطناعي. جرب مع مباريات أقل.',
     'errParseFailLive':'لم تتم معالجة الاستجابة. تحقق من الفرق والنتيجة.',
     'analysisFailed':'تحليل غير مكتمل',
-    'authSignInSub':'سجل دخولك لحفظ تحليلاتك','premiumUpgrade':'الترقية إلى بريميوم — 29$/شهر','premiumLoading':'جارٍ التحميل...','premiumLoadingApp':'التطبيق لا يزال قيد التحميل، حاول مرة أخرى بعد قليل.','premiumMustLogin':'سجّل الدخول أولاً للترقية إلى بريميوم.','premiumError':'خطأ','premiumErrorGeneric':'تعذر إنشاء الدفع','premiumTimeout':'انتهت مهلة الطلب، حاول مرة أخرى.',
+    'authSignInSub':'سجل دخولك لحفظ تحليلاتك','premiumUpgrade':'الترقية إلى بريميوم — 29$/شهر','premiumLoading':'جارٍ التحميل...','premiumLoadingApp':'التطبيق لا يزال قيد التحميل، حاول مرة أخرى بعد قليل.','premiumMustLogin':'سجّل الدخول أولاً للترقية إلى بريميوم.','premiumError':'خطأ','premiumErrorGeneric':'تعذر إنشاء الدفع','premiumTimeout':'انتهت مهلة الطلب، حاول مرة أخرى.','trialStartBtn':'تجربة مجانية 7 أيام','trialStarted':'بدأت التجربة المجانية! استمتع ببريميوم لمدة 7 أيام.',
     'authContinueEmail':'المتابعة بالبريد',
     'authOr':'أو',
     'authContinueGoogle':'المتابعة مع Google',
@@ -2631,6 +2635,7 @@ function applyLang(){
   setText('roiTitle',t('roiTitle'));setText('roiBtn',t('roiBtn'));
   setText('navAnalyzeLbl',t('navAnalyze'));setText('navRoiLbl',t('navRoi'));setText('navSettingsLbl',t('navSettings'));
   setText('premiumUpgradeLbl',t('premiumUpgrade'));
+  setText('trialStartLbl',t('trialStartBtn'));
   // Update lang selector
   var btn = document.getElementById('langBtn');
   var flags = {en:'🇺🇸',fr:'🇫🇷',es:'🇪🇸',pt:'🇧🇷',ar:'🇸🇦',it:'🇮🇹',de:'🇩🇪'};
@@ -2925,7 +2930,7 @@ function updateAuthUI(user, profile) {
     if (sb) {
       sb.from('subscriptions').select('status,current_period_end').eq('user_id', user.id).single()
       .then(function(res) {
-        var isActive = res.data && res.data.status === 'active' &&
+        var isActive = res.data && (res.data.status === 'active' || res.data.status === 'trialing') &&
           res.data.current_period_end && new Date(res.data.current_period_end) > new Date();
         if (isActive) btn.classList.add('is-premium');
       });
@@ -2993,6 +2998,46 @@ function handleSignOut() {
     window._userProfile = null;
     closeSheet('profileModal');
     updateAuthUI(null);
+  });
+}
+
+function handleStartTrial() {
+  var sb = getSB();
+  if (!sb) { alert(t('premiumLoadingApp')); return; }
+  sb.auth.getSession().then(function(res) {
+    var token = res.data && res.data.session ? res.data.session.access_token : null;
+    if (!token) { alert(t('premiumMustLogin')); return; }
+    var btn = document.getElementById('trialStartBtn');
+    if (btn) { btn.textContent = '⏳ ' + t('premiumLoading'); btn.disabled = true; }
+
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function(){ controller.abort(); }, 15000);
+
+    fetch(BACKEND + '/trial/start', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      signal: controller.signal
+    }).then(function(r) {
+      clearTimeout(timeoutId);
+      return r.json().then(function(data) { return { ok: r.ok, data: data }; });
+    }).then(function(result) {
+      if (result.ok && result.data.success) {
+        if (btn) { btn.style.display = 'none'; }
+        loadProfileModal(window._currentUser, window._userProfile);
+        alert('🎁 ' + t('trialStarted'));
+      } else {
+        alert(t('premiumError') + ' : ' + (result.data.error || t('premiumErrorGeneric')));
+        if (btn) { btn.innerHTML = '🎁 <span id="trialStartLbl">' + t('trialStartBtn') + '</span>'; btn.disabled = false; }
+      }
+    }).catch(function(e) {
+      clearTimeout(timeoutId);
+      var msg = e.name === 'AbortError' ? t('premiumTimeout') : e.message;
+      alert(t('premiumError') + ' : ' + msg);
+      if (btn) { btn.innerHTML = '🎁 <span id="trialStartLbl">' + t('trialStartBtn') + '</span>'; btn.disabled = false; }
+    });
+  }).catch(function(e) {
+    console.error('[handleStartTrial] Erreur non gérée', e);
+    alert(t('premiumError') + ' : ' + e.message);
   });
 }
 
@@ -3070,10 +3115,18 @@ function loadProfileModal(user, profile) {
     sb.from('subscriptions').select('plan,status,current_period_end').eq('user_id', user.id).single()
     .then(function(res) {
       var btn = document.getElementById('premiumUpgradeBtn');
-      var isActive = res.data && res.data.status === 'active' &&
+      var trialBtn = document.getElementById('trialStartBtn');
+      var isTrialing = res.data && res.data.status === 'trialing' &&
         res.data.current_period_end && new Date(res.data.current_period_end) > new Date();
-      document.getElementById('profilePlanDisplay').textContent = isActive ? 'PREMIUM' : 'FREE';
+      var isActive = res.data && (res.data.status === 'active' || isTrialing) &&
+        res.data.current_period_end && new Date(res.data.current_period_end) > new Date();
+      var label = isTrialing ? 'TRIAL' : (isActive ? 'PREMIUM' : 'FREE');
+      document.getElementById('profilePlanDisplay').textContent = label;
       if (btn) btn.style.display = isActive ? 'none' : 'block';
+      if (trialBtn) {
+        var canTrial = !isActive && profile && !profile.trial_used;
+        trialBtn.style.display = canTrial ? 'block' : 'none';
+      }
     });
   }
 }
@@ -4794,6 +4847,7 @@ window.onerror=function(msg,src,line){console.error('ERR:',msg,line);};
               <div class="profile-name" id="profileNameDisplay">—</div>
               <div class="profile-email" id="profileEmailDisplay">—</div>
               <div class="profile-plan" id="profilePlanDisplay">FREE</div>
+              <button class="trial-start-btn" id="trialStartBtn" onclick="handleStartTrial()" style="display:none;margin-top:8px;">🎁 <span id="trialStartLbl">Start 7-day free trial</span></button>
               <button class="premium-upgrade-btn" id="premiumUpgradeBtn" onclick="handleUpgradePremium()" style="display:none;margin-top:8px;">⚡ <span id="premiumUpgradeLbl">Go Premium — $29/mo</span></button>
             </div>
           </div>
