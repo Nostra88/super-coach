@@ -1679,6 +1679,109 @@ app.post('/nowpayments/webhook', async (req, res) => {
 
 // ── NOWPayments — création d'un paiement/abonnement ─────────────
 // ── Essai gratuit 7 jours — anti-abus vérifié côté serveur ──────
+// ── Parrainage — code déterministe à partir de l'ID utilisateur ─
+function referralCodeFromUserId(userId) {
+  return userId.replace(/-/g, '').slice(0, 8).toUpperCase();
+}
+
+app.get('/referral/me', rateLimit, async (req, res) => {
+  try {
+    const auth = req.headers['authorization'] || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    const userId = token ? await verifySupabaseToken(token) : null;
+    if (!userId) return res.status(401).json({ error: 'Non authentifié' });
+    res.json({ code: referralCodeFromUserId(userId) });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/referral/redeem', rateLimit, async (req, res) => {
+  try {
+    const auth = req.headers['authorization'] || '';
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+    const userId = token ? await verifySupabaseToken(token) : null;
+    if (!userId) return res.status(401).json({ error: 'Non authentifié' });
+
+    const code = (req.body.code || '').trim().toUpperCase();
+    if (!code || code.length !== 8) return res.status(400).json({ error: 'Code invalide' });
+
+    // Bloque l'auto-parrainage
+    if (referralCodeFromUserId(userId) === code) {
+      return res.status(400).json({ error: 'Tu ne peux pas utiliser ton propre code' });
+    }
+
+    // Vérifie que ce compte n'a jamais déjà utilisé un code
+    const meRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}&select=referred_by`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const meRows = await meRes.json();
+    const me = Array.isArray(meRows) ? meRows[0] : null;
+    if (me && me.referred_by) {
+      return res.status(403).json({ error: 'Code de parrainage déjà utilisé sur ce compte' });
+    }
+
+    // Retrouve le parrain à partir du code (préfixe d'UUID)
+    const sponsorRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/profiles?id=ilike.${code.toLowerCase()}*&select=id&limit=2`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const sponsorRows = await sponsorRes.json();
+    if (!Array.isArray(sponsorRows) || sponsorRows.length !== 1) {
+      return res.status(404).json({ error: 'Code de parrainage introuvable' });
+    }
+    const sponsorId = sponsorRows[0].id;
+
+    // Verrouille immédiatement — un seul code utilisable par compte, pour toujours
+    const lockRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ referred_by: sponsorId })
+    });
+    if (!lockRes.ok) return res.status(500).json({ error: 'Impossible de valider le parrainage' });
+
+    // +7 jours pour les deux comptes (filleul et parrain)
+    async function extendSevenDays(uid) {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/subscriptions?user_id=eq.${uid}&select=status,current_period_end`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+      );
+      const rows = await r.json();
+      const existing = Array.isArray(rows) ? rows[0] : null;
+      const now = new Date();
+      const base = (existing && existing.current_period_end && new Date(existing.current_period_end) > now)
+        ? new Date(existing.current_period_end) : now;
+      const newEnd = new Date(base.getTime() + 7 * 24 * 60 * 60 * 1000);
+      await fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({
+          user_id: uid,
+          status: (existing && existing.status === 'active') ? 'active' : 'trialing',
+          plan: 'premium', provider: 'referral', provider_ref: null,
+          current_period_start: now.toISOString(),
+          current_period_end: newEnd.toISOString(),
+          cancel_at_period_end: true
+        })
+      });
+    }
+    await extendSevenDays(userId);
+    await extendSevenDays(sponsorId);
+
+    res.json({ success: true });
+  } catch (e) {
+    console.error('[referral/redeem] Erreur', e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.post('/trial/start', rateLimit, async (req, res) => {
   try {
     const auth = req.headers['authorization'] || '';
