@@ -1882,8 +1882,8 @@ app.post('/nowpayments/create-payment', rateLimit, async (req, res) => {
           price_currency: 'usd',
           order_id: userId,
         order_description: 'SUPERCOACH Premium — abonnement mensuel',
-        success_url: 'https://supercoach-app.netlify.app/?premium=success',
-        cancel_url: 'https://supercoach-app.netlify.app/'
+        success_url: 'https://supercoachlab.com/?premium=success',
+        cancel_url: 'https://supercoachlab.com/'
       })
       });
     } finally {

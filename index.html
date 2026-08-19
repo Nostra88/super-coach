@@ -3053,7 +3053,7 @@ function handleCopyReferralLink() {
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (!data.code) { alert(t('premiumError') + ' : ' + (data.error || t('premiumErrorGeneric'))); return; }
-      var link = 'https://supercoach-app.netlify.app/?ref=' + data.code;
+      var link = 'https://supercoachlab.com/?ref=' + data.code;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(link).then(function() {
           alert('🔗 ' + t('referralLinkCopied'));
