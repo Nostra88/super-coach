@@ -1808,25 +1808,8 @@ app.post('/trial/start', rateLimit, async (req, res) => {
     const now = new Date();
     const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-    // Marque l'essai comme utilisé EN PREMIER (verrou anti-abus) —
-    // si l'étape suivante échoue, l'utilisateur ne peut pas juste réessayer indéfiniment
-    const markRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
-      method: 'PATCH',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({ trial_used: true })
-    });
-    if (!markRes.ok) {
-      const errText = await markRes.text();
-      console.error('[trial/start] Échec marquage trial_used', markRes.status, errText);
-      return res.status(500).json({ error: 'Impossible de démarrer l\'essai' });
-    }
-
-    // Active le statut trialing dans subscriptions
+    // Active le statut trialing dans subscriptions D'ABORD —
+    // si ça échoue, le compte n'est pas bloqué (trial_used reste false, réessai possible)
     const subRes = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions?on_conflict=user_id`, {
       method: 'POST',
       headers: {
@@ -1850,6 +1833,21 @@ app.post('/trial/start', rateLimit, async (req, res) => {
       const errText = await subRes.text();
       console.error('[trial/start] Échec écriture subscriptions', subRes.status, errText);
       return res.status(500).json({ error: 'Impossible de démarrer l\'essai' });
+    }
+
+    // Marque l'essai comme utilisé SEULEMENT une fois l'accès réellement accordé
+    const markRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ trial_used: true })
+    });
+    if (!markRes.ok) {
+      console.error('[trial/start] Essai accordé mais trial_used non marqué — vérifier manuellement si abus');
     }
 
     res.json({ success: true, trial_end: trialEnd.toISOString() });
