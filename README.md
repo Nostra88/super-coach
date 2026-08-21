@@ -1,62 +1,45 @@
-# 🧢⚡ SUPERCOACH — Guide de déploiement
+# 🧢⚡ SUPERCOACH
 
-## Architecture
+**L'IA qui analyse. Toi qui gagnes.**
 
-- **Frontend** → Netlify (gratuit)
-- **Backend** → Render (7$/mois, déjà payé)
-- **IA** → Gemini 1.5 Flash (gratuit)
+App PWA d'analyse sportive et de prediction markets intelligence, avec paiement crypto intégré.
 
------
+---
 
-## ÉTAPE 1 — Backend sur Render
+## Architecture (état actuel — v9.0)
 
-1. Va sur **render.com** → New → Web Service
-1. Connecte ton repo GitHub (dossier `backend/`)
-1. Configure :
-- **Build Command** : `npm install`
-- **Start Command** : `node server.js`
-1. Variables d’environnement :
-- `GEMINI_KEY` = ta clé Gemini (AIzaSy…)
-1. Copie l’URL générée : `https://supercoach-xxx.onrender.com`
+- **Frontend** → Netlify (PWA, `index.html`) — supercoachlab.com
+- **Backend** → Render (`server.js` v9.0) — supercoach-api-acyw.onrender.com — 7$/mois
+- **Moteur IA** → `engine.js` v9.2, Google Gemini 2.5 Flash (gratuit, quota surveillé)
+- **Auth + Base de données** → Supabase (Magic Link + Google OAuth)
+- **Stockage secondaire** → Neon PostgreSQL
+- **Paiement** → NOWPayments (crypto, actif) · Lemon Squeezy (carte, en attente)
+- **Prediction Markets** → Polymarket + Manifold (actifs) · Kalshi (intégration en cours)
+- **Cotes bookmakers** → The Odds API (payant)
+- **Fixtures foot** → API-Football / api-sports.io
 
------
+Détail complet : voir `SUPERCOACH_carnet_technique.md` et `SUPERCOACH_APIs_abonnements.md` dans ce dossier.
 
-## ÉTAPE 2 — Frontend sur Netlify
+---
 
-1. Dans `frontend/index.html`, ligne :
-   
-   ```
-   var BACKEND_URL = 'https://supercoach-api.onrender.com';
-   ```
-   
-   Remplace par ton URL Render réelle.
-1. Va sur **netlify.com** → Add new site → Import from Git
-1. Sélectionne ton repo GitHub (dossier `frontend/`)
-1. Deploy !
-1. URL finale : `https://supercoach.netlify.app`
+## Fonctionnalités actives
 
------
+- SMART PICKS v2 avec badges VERDICT LAB
+- Value Bet + Kelly Fractionnel
+- Prediction Markets Intelligence (146+ marchés, refresh horaire)
+- Essai gratuit 7 jours (anti-abus server-side)
+- Parrainage (+7 jours Premium, référent + filleul)
+- Gating Premium server-side (Market Edge, Kelly)
+- 7 langues
+- Backtest interne (endpoint protégé, non public)
 
-## ÉTAPE 3 — Installer sur iPhone
+---
 
-1. Ouvre Safari → va sur ton URL Netlify
-1. Appuie sur **Partager** (icône carré avec flèche)
-1. **“Sur l’écran d’accueil”**
-1. SUPERCOACH s’installe comme une vraie app ! 🎉
+## Déploiement
 
------
+- **Netlify** et **Render** redéploient automatiquement à chaque commit sur `main`
+- Variables d'environnement (Render → Environment) : voir `SUPERCOACH_carnet_technique.md`, section Render, pour la liste complète et leur rôle
 
-## Structure des fichiers
+---
 
-```
-supercoach/
-├── backend/
-│   ├── server.js       ← Serveur proxy Gemini
-│   ├── package.json    ← Dépendances Node.js
-│   └── .env.example    ← Variables d'environnement
-└── frontend/
-    ├── index.html      ← App complète
-    ├── manifest.json   ← Config PWA
-    ├── sw.js           ← Service Worker (offline)
-    └── logo.svg        ← Logo SUPERCOACH
-```
+*Document mis à jour le 21/08/2026. Pour l'historique du dépannage et le détail de chaque service, voir le carnet technique.*
