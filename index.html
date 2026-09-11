@@ -77,8 +77,24 @@ function isUcl(m) {
 }
 function noisy(m) {
   var s = (m.competition || "") + " " + (m.home || "") + " " + (m.away || "");
-  return /u1[6-9]|u20|u21|academy|reserve|club friendly|amical/i.test(s);
+  return /u1[6-9]|u20|u21|academy|reserve|club friendly|amical|\\bii\\b|\\biii\\b|whl|ohl|ushl|mhl|tobol 2|widzew ii/i.test(s);
 }
+var HOME_PRIORITY_RE = /world cup|coupe du monde|champions league|europa league|premier league|la liga|ligue 1|serie a|bundesliga|nba|mlb|nhl|atp|wta|us open|wimbledon/i;
+function computeMatchScore(m) {
+  var score = 0;
+  if (m.isLive) score += 1000;
+  if (HOME_PRIORITY_RE.test(m.competition || "")) score += 400;
+  if (isUcl(m)) score += 350;
+  if (m.dateUTC) {
+    var hoursUntil = (new Date(m.dateUTC).getTime() - Date.now()) / 3600000;
+    if (hoursUntil >= -3 && hoursUntil <= 48) score += Math.max(0, 100 - Math.abs(hoursUntil));
+  }
+  var label = ((m.competition || "") + " " + (m.home || "") + " " + (m.away || "")).toLowerCase();
+  if (/npl|iii liga|1\\. division|v\\.league|south australia|thai league|national soccer|whl|junior/.test(label)) score -= 250;
+  if (/double|doubles/.test(label) || ((m.home || "").indexOf("/") >= 0)) score -= 280;
+  return score;
+}
+function byScore(a, b) { return computeMatchScore(b) - computeMatchScore(a); }
 function when(m) {
   if (m.time) return m.time;
   if (!m.dateUTC) return "";
@@ -101,7 +117,7 @@ function fillBox(id, matches, emptyText) {
   matches.forEach(function(m) {
     var c = el("div", "card" + (m.isLive ? " live" : ""));
     c.appendChild(el("div", "teams", m.home + " - " + m.away));
-    c.appendChild(el("div", "meta", (m.isLive ? "LIVE · " : "") + (m.competition || "") + " · " + when(m)));
+    c.appendChild(el("div", "meta", (m.isLive ? "LIVE \u00b7 " : "") + (m.competition || "") + " \u00b7 " + when(m)));
     box.appendChild(c);
   });
 }
@@ -117,7 +133,7 @@ function renderRows(targetId, matches) {
     row.appendChild(el("div", "ck", on ? "OK" : ""));
     var body = el("div");
     body.appendChild(el("div", "teams", m.home + " - " + m.away));
-    body.appendChild(el("div", "meta", (m.competition || "") + " · " + when(m)));
+    body.appendChild(el("div", "meta", (m.competition || "") + " \u00b7 " + when(m)));
     row.appendChild(body);
     row.addEventListener("click", function() {
       var i = selected.indexOf(id);
@@ -128,13 +144,13 @@ function renderRows(targetId, matches) {
   });
 }
 function draw() {
-  var live = pool.filter(function(m) { return m.isLive; });
+  var live = pool.filter(function(m) { return m.isLive; }).sort(byScore);
   var now = new Date();
   var tonight = pool.filter(function(m) {
     if (m.isLive || !m.dateUTC) return false;
     var h = (new Date(m.dateUTC) - now) / 3600000;
     return h >= -0.2 && h <= 24;
-  }).slice(0, 8);
+  }).sort(byScore).slice(0, 8);
   fillBox("liveBox", live.slice(0, 6), "Aucun match en direct pour le moment.");
   fillBox("tonightBox", tonight, "Aucune rencontre ce soir.");
   var sports = document.getElementById("sports");
@@ -147,7 +163,7 @@ function draw() {
     b.addEventListener("click", function() { sport = id; draw(); });
     sports.appendChild(b);
   });
-  var rows = pool.filter(function(m) { return sport === "all" || (m.sport || m.sportId) === sport; }).slice(0, 80);
+  var rows = pool.filter(function(m) { return sport === "all" || (m.sport || m.sportId) === sport; }).sort(byScore).slice(0, 80);
   renderRows("list", rows);
   var go = document.getElementById("go");
   go.disabled = !selected.length;
