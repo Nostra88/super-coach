@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050807">
 <title>SUPERCOACH</title>
+<meta name="sc-build" content="2026-09-12-rank">
 <style>
 :root{--bg:#050807;--s1:#0E1C16;--s2:#13241C;--gold:#E0C36A;--g:#14F195;--red:#FF4D6D;--t:#FBFAF4;--t3:#8FA196}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -77,7 +78,7 @@ function isUcl(m) {
 }
 function noisy(m) {
   var s = (m.competition || "") + " " + (m.home || "") + " " + (m.away || "");
-  return /u1[6-9]|u20|u21|academy|reserve|club friendly|amical|\\bii\\b|\\biii\\b|whl|ohl|ushl|mhl|tobol 2|widzew ii/i.test(s);
+  return /u16|u17|u18|u19|u20|u21|academy|reserve|club friendly|amical|whl|ohl|ushl|mhl|iii liga|widzew|tobol 2|npl|v.league|south australia/i.test(s);
 }
 var HOME_PRIORITY_RE = /world cup|coupe du monde|champions league|europa league|premier league|la liga|ligue 1|serie a|bundesliga|nba|mlb|nhl|atp|wta|us open|wimbledon/i;
 function computeMatchScore(m) {
@@ -90,7 +91,7 @@ function computeMatchScore(m) {
     if (hoursUntil >= -3 && hoursUntil <= 48) score += Math.max(0, 100 - Math.abs(hoursUntil));
   }
   var label = ((m.competition || "") + " " + (m.home || "") + " " + (m.away || "")).toLowerCase();
-  if (/npl|iii liga|1\\. division|v\\.league|south australia|thai league|national soccer|whl|junior/.test(label)) score -= 250;
+  if (/npl|iii liga|1. division|v.league|south australia|thai league|national soccer|whl|junior/.test(label)) score -= 250;
   if (/double|doubles/.test(label) || ((m.home || "").indexOf("/") >= 0)) score -= 280;
   return score;
 }
